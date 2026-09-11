@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Accueil — Administration NANOBO</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%23ff6b7a'/%3E%3Ctext x='50' y='68' font-size='55' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='700'%3EN%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/admin/admin.css">
+<style>
+  .single-image-slot { display: flex; gap: 16px; align-items: flex-start; }
+  .single-image-slot .image-card { width: 140px; }
+  .single-image-slot .dropzone { flex: 1; padding: 18px; margin-bottom: 0; }
+  .insta-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 12px; margin-bottom: 16px; }
+  .insta-grid .image-card { aspect-ratio: 1/1; }
+  .insta-grid .image-card img { height: 100%; }
+</style>
+</head>
+<body>
+
+<div class="admin-shell">
+  <aside class="admin-sidebar">
+    <div class="admin-logo">Nano<span>bo</span></div>
+    <div class="admin-logo-sub">Administration</div>
+    <nav class="admin-nav">
+      <a href="/admin" id="nav-products"></a>
+      <a href="/admin/categories" id="nav-categories"></a>
+      <a href="/admin/accueil" class="active" id="nav-home"></a>
+    </nav>
+    <div class="admin-sidebar-footer">
+      <a href="/" target="_blank" id="nav-view-shop"></a>
+      <a href="#" id="nav-logout"></a>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-topbar">
+      <div>
+        <div class="admin-breadcrumb">Administration</div>
+        <h1 class="admin-title">Personnalisation de l'accueil</h1>
+      </div>
+      <div class="admin-topbar-actions">
+        <a href="/" target="_blank" class="btn btn-outline">Voir la page ↗</a>
+        <button class="btn btn-primary" id="btn-save">Enregistrer</button>
+      </div>
+    </div>
+
+    <p class="card-sub" style="margin-bottom:20px">Modifie les textes et les photos du hero, de la bannière promo et de la galerie Instagram de la page d'accueil. Laisse un champ vide pour garder le pictogramme / texte par défaut.</p>
+
+    <!-- ========== HERO ========== -->
+    <div class="card">
+      <h3>Hero (bandeau principal)</h3>
+      <p class="card-sub">Le grand bandeau tout en haut de l'accueil.</p>
+
+      <div class="field">
+        <label>Étiquette (au-dessus du titre)</label>
+        <input type="text" id="h-eyebrow" placeholder="✨ Nouvelle collection Printemps">
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Titre</label>
+          <input type="text" id="h-headline" placeholder="Des tenues qui donnent le sourire à chaque aventure">
+        </div>
+        <div class="field">
+          <label>Mot à mettre en couleur dans le titre</label>
+          <input type="text" id="h-highlight" placeholder="sourire">
+        </div>
+      </div>
+      <div class="field">
+        <label>Texte d'introduction</label>
+        <textarea id="h-lead" rows="2"></textarea>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Bouton principal — texte</label>
+          <input type="text" id="h-cta1-text" placeholder="Découvrir la boutique">
+        </div>
+        <div class="field">
+          <label>Bouton principal — lien</label>
+          <input type="text" id="h-cta1-link" placeholder="boutique.html">
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Bouton secondaire — texte</label>
+          <input type="text" id="h-cta2-text" placeholder="Voir les soldes">
+        </div>
+        <div class="field">
+          <label>Bouton secondaire — lien</label>
+          <input type="text" id="h-cta2-link" placeholder="boutique.html?sale=1">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Chiffres clés (3 statistiques)</label>
+        <div class="field-row">
+          <input type="text" id="h-stat1-value" placeholder="12k+">
+          <input type="text" id="h-stat1-label" placeholder="Familles conquises">
+        </div>
+        <div class="field-row" style="margin-top:8px">
+          <input type="text" id="h-stat2-value" placeholder="4.8/5">
+          <input type="text" id="h-stat2-label" placeholder="Note moyenne">
+        </div>
+        <div class="field-row" style="margin-top:8px">
+          <input type="text" id="h-stat3-value" placeholder="48h">
+          <input type="text" id="h-stat3-label" placeholder="Livraison express">
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Badge flottant (haut) — texte</label>
+          <input type="text" id="h-badge-top" placeholder="Livraison en 48h">
+        </div>
+        <div class="field">
+          <label>Badge flottant (bas) — texte</label>
+          <input type="text" id="h-badge-bottom" placeholder="Retours gratuits 30j">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Photo du hero</label>
+        <div class="single-image-slot">
+          <div id="hero-image-wrap"></div>
+          <div class="dropzone" id="hero-dropzone">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><polyline points="7 8 12 3 17 8"/><path d="M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg>
+            <div><strong>Glisser une photo</strong><br>ou cliquer pour parcourir — sinon le pictogramme par défaut est utilisé</div>
+          </div>
+          <input type="file" id="hero-file-input" accept="image/*" hidden>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== BANNIÈRE PROMO ========== -->
+    <div class="card">
+      <h3>Bannière promo</h3>
+      <p class="card-sub">Le grand bandeau sombre "Soldes de saison" au milieu de l'accueil.</p>
+
+      <div class="field">
+        <label>Étiquette</label>
+        <input type="text" id="p-tag" placeholder="Offre limitée">
+      </div>
+      <div class="field">
+        <label>Titre</label>
+        <input type="text" id="p-heading" placeholder="Soldes de saison, jusqu'à -30%">
+      </div>
+      <div class="field">
+        <label>Texte</label>
+        <textarea id="p-text" rows="2"></textarea>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Bouton — texte</label>
+          <input type="text" id="p-cta-text" placeholder="J'en profite">
+        </div>
+        <div class="field">
+          <label>Bouton — lien</label>
+          <input type="text" id="p-cta-link" placeholder="boutique.html?sale=1">
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== INSTAGRAM ========== -->
+    <div class="card">
+      <h3>Galerie "Suivez-nous"</h3>
+      <p class="card-sub">Jusqu'à 6 photos. Les emplacements vides gardent le pictogramme coloré par défaut.</p>
+
+      <div class="field">
+        <label>Identifiant affiché</label>
+        <input type="text" id="i-handle" placeholder="@nanobo.kids" style="max-width:280px">
+      </div>
+
+      <div class="field">
+        <label>Photos (<span id="insta-count">0</span> / 6)</label>
+        <div class="insta-grid" id="insta-grid"></div>
+        <div class="dropzone" id="insta-dropzone">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><polyline points="7 8 12 3 17 8"/><path d="M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg>
+          <div><strong>Glisser des photos</strong><br>ou cliquer pour en ajouter (jusqu'à 6)</div>
+        </div>
+        <input type="file" id="insta-file-input" accept="image/*" multiple hidden>
+      </div>
+    </div>
+
+    <div id="images-banner"></div>
+  </main>
+</div>
+
+<script src="/js/icons.js"></script>
+<script src="/js/products.js"></script>
+<script src="/admin/admin.js"></script>
+<script>
+(async function () {
+  const authed = await requireAuthOrRedirect();
+  if (!authed) return;
+
+  document.getElementById('nav-products').innerHTML = uiIcon('bag') + ' Produits';
+  document.getElementById('nav-categories').innerHTML = uiIcon('sliders') + ' Catégories';
+  document.getElementById('nav-home').innerHTML = uiIcon('sparkle') + ' Accueil';
+  document.getElementById('nav-view-shop').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> Voir la boutique`;
+  document.getElementById('nav-logout').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Déconnexion`;
+  document.getElementById('nav-logout').addEventListener('click', (e) => { e.preventDefault(); logoutAdmin(); });
+
+  let meta = { imageStorageConfigured: true };
+  try { meta = await api('/api/admin/meta'); } catch {}
+  if (!meta.imageStorageConfigured) {
+    document.getElementById('images-banner').innerHTML = `
+      <div class="banner banner-warning">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <div><strong>Upload de photos désactivé.</strong> Configure Cloudflare R2 (voir le formulaire produit) pour pouvoir uploader de vraies photos ici.</div>
+      </div>`;
+    document.getElementById('hero-dropzone').style.display = 'none';
+    document.getElementById('insta-dropzone').style.display = 'none';
+  }
+
+  let heroImage = null;
+  let instaImages = [];
+
+  let s;
+  try {
+    s = (await api('/api/admin/site-settings')).settings;
+  } catch (err) {
+    toast(err.message, 'error');
+    return;
+  }
+
+  document.getElementById('h-eyebrow').value = s.hero.eyebrow;
+  document.getElementById('h-headline').value = s.hero.headline;
+  document.getElementById('h-highlight').value = s.hero.highlight;
+  document.getElementById('h-lead').value = s.hero.lead;
+  document.getElementById('h-cta1-text').value = s.hero.ctaPrimaryText;
+  document.getElementById('h-cta1-link').value = s.hero.ctaPrimaryLink;
+  document.getElementById('h-cta2-text').value = s.hero.ctaSecondaryText;
+  document.getElementById('h-cta2-link').value = s.hero.ctaSecondaryLink;
+  document.getElementById('h-stat1-value').value = s.hero.stat1Value;
+  document.getElementById('h-stat1-label').value = s.hero.stat1Label;
+  document.getElementById('h-stat2-value').value = s.hero.stat2Value;
+  document.getElementById('h-stat2-label').value = s.hero.stat2Label;
+  document.getElementById('h-stat3-value').value = s.hero.stat3Value;
+  document.getElementById('h-stat3-label').value = s.hero.stat3Label;
+  document.getElementById('h-badge-top').value = s.hero.badgeTopText;
+  document.getElementById('h-badge-bottom').value = s.hero.badgeBottomText;
+  heroImage = s.hero.image;
+
+  document.getElementById('p-tag').value = s.promoBanner.tag;
+  document.getElementById('p-heading').value = s.promoBanner.heading;
+  document.getElementById('p-text').value = s.promoBanner.text;
+  document.getElementById('p-cta-text').value = s.promoBanner.ctaText;
+  document.getElementById('p-cta-link').value = s.promoBanner.ctaLink;
+
+  document.getElementById('i-handle').value = s.instagram.handle;
+  instaImages = s.instagram.images || [];
+
+  function renderHeroImage() {
+    const wrap = document.getElementById('hero-image-wrap');
+    if (!heroImage) {
+      wrap.innerHTML = '';
+      return;
+    }
+    wrap.innerHTML = `
+      <div class="image-card is-main">
+        <img src="${heroImage.url}" alt="">
+        <div class="image-actions"><button type="button" id="hero-remove">${uiIconAdmin('trash')}</button></div>
+      </div>`;
+    document.getElementById('hero-remove').addEventListener('click', async () => {
+      if (heroImage && heroImage.key) {
+        try { await api('/api/admin/images/delete', { method: 'POST', body: JSON.stringify({ key: heroImage.key }) }); } catch {}
+      }
+      heroImage = null;
+      renderHeroImage();
+    });
+  }
+  renderHeroImage();
+
+  function renderInstaGrid() {
+    document.getElementById('insta-count').textContent = instaImages.length;
+    document.getElementById('insta-grid').innerHTML = instaImages
+      .map(
+        (img, idx) => `
+        <div class="image-card">
+          <img src="${img.url}" alt="">
+          <div class="image-actions"><button type="button" data-remove="${idx}">${uiIconAdmin('trash')}</button></div>
+        </div>`
+      )
+      .join('');
+    document.querySelectorAll('#insta-grid [data-remove]').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const idx = Number(btn.dataset.remove);
+        const [removed] = instaImages.splice(idx, 1);
+        renderInstaGrid();
+        if (removed && removed.key) {
+          try { await api('/api/admin/images/delete', { method: 'POST', body: JSON.stringify({ key: removed.key }) }); } catch {}
+        }
+      });
+    });
+    document.getElementById('insta-dropzone').style.display = instaImages.length >= 6 ? 'none' : (meta.imageStorageConfigured ? 'block' : 'none');
+  }
+  renderInstaGrid();
+
+  // ---------- Upload hero ----------
+  const heroDropzone = document.getElementById('hero-dropzone');
+  const heroFileInput = document.getElementById('hero-file-input');
+  heroDropzone.addEventListener('click', () => heroFileInput.click());
+  ['dragenter', 'dragover'].forEach((evt) => heroDropzone.addEventListener(evt, (e) => { e.preventDefault(); heroDropzone.classList.add('dragover'); }));
+  ['dragleave', 'drop'].forEach((evt) => heroDropzone.addEventListener(evt, (e) => { e.preventDefault(); heroDropzone.classList.remove('dragover'); }));
+  heroDropzone.addEventListener('drop', (e) => uploadHero(e.dataTransfer.files[0]));
+  heroFileInput.addEventListener('change', () => { uploadHero(heroFileInput.files[0]); heroFileInput.value = ''; });
+
+  async function uploadHero(file) {
+    if (!file || !meta.imageStorageConfigured) return;
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+      formData.append('productId', 'site-hero');
+      const { image } = await apiUpload('/api/admin/upload', formData);
+      if (heroImage && heroImage.key) {
+        try { await api('/api/admin/images/delete', { method: 'POST', body: JSON.stringify({ key: heroImage.key }) }); } catch {}
+      }
+      heroImage = image;
+      renderHeroImage();
+      toast('Photo du hero mise à jour.');
+    } catch (err) {
+      toast(err.message, 'error');
+    }
+  }
+
+  // ---------- Upload instagram ----------
+  const instaDropzone = document.getElementById('insta-dropzone');
+  const instaFileInput = document.getElementById('insta-file-input');
+  instaDropzone.addEventListener('click', () => instaFileInput.click());
+  ['dragenter', 'dragover'].forEach((evt) => instaDropzone.addEventListener(evt, (e) => { e.preventDefault(); instaDropzone.classList.add('dragover'); }));
+  ['dragleave', 'drop'].forEach((evt) => instaDropzone.addEventListener(evt, (e) => { e.preventDefault(); instaDropzone.classList.remove('dragover'); }));
+  instaDropzone.addEventListener('drop', (e) => uploadInsta(e.dataTransfer.files));
+  instaFileInput.addEventListener('change', () => { uploadInsta(instaFileInput.files); instaFileInput.value = ''; });
+
+  async function uploadInsta(fileList) {
+    if (!meta.imageStorageConfigured) return;
+    for (const file of Array.from(fileList)) {
+      if (instaImages.length >= 6) {
+        toast('Maximum 6 photos pour cette galerie.', 'error');
+        break;
+      }
+      try {
+        const formData = new FormData();
+        formData.append('image', file);
+        formData.append('productId', 'site-instagram');
+        const { image } = await apiUpload('/api/admin/upload', formData);
+        instaImages.push(image);
+        renderInstaGrid();
+      } catch (err) {
+        toast(err.message, 'error');
+      }
+    }
+  }
+
+  // ---------- Enregistrement ----------
+  document.getElementById('btn-save').addEventListener('click', async () => {
+    const payload = {
+      hero: {
+        eyebrow: document.getElementById('h-eyebrow').value.trim(),
+        headline: document.getElementById('h-headline').value.trim(),
+        highlight: document.getElementById('h-highlight').value.trim(),
+        lead: document.getElementById('h-lead').value.trim(),
+        ctaPrimaryText: document.getElementById('h-cta1-text').value.trim(),
+        ctaPrimaryLink: document.getElementById('h-cta1-link').value.trim(),
+        ctaSecondaryText: document.getElementById('h-cta2-text').value.trim(),
+        ctaSecondaryLink: document.getElementById('h-cta2-link').value.trim(),
+        stat1Value: document.getElementById('h-stat1-value').value.trim(),
+        stat1Label: document.getElementById('h-stat1-label').value.trim(),
+        stat2Value: document.getElementById('h-stat2-value').value.trim(),
+        stat2Label: document.getElementById('h-stat2-label').value.trim(),
+        stat3Value: document.getElementById('h-stat3-value').value.trim(),
+        stat3Label: document.getElementById('h-stat3-label').value.trim(),
+        badgeTopText: document.getElementById('h-badge-top').value.trim(),
+        badgeBottomText: document.getElementById('h-badge-bottom').value.trim(),
+        image: heroImage,
+      },
+      promoBanner: {
+        tag: document.getElementById('p-tag').value.trim(),
+        heading: document.getElementById('p-heading').value.trim(),
+        text: document.getElementById('p-text').value.trim(),
+        ctaText: document.getElementById('p-cta-text').value.trim(),
+        ctaLink: document.getElementById('p-cta-link').value.trim(),
+      },
+      instagram: {
+        handle: document.getElementById('i-handle').value.trim(),
+        images: instaImages,
+      },
+    };
+    const btn = document.getElementById('btn-save');
+    btn.disabled = true;
+    try {
+      await api('/api/admin/site-settings', { method: 'PUT', body: JSON.stringify(payload) });
+      toast('Accueil mis à jour.');
+    } catch (err) {
+      toast(err.message, 'error');
+    } finally {
+      btn.disabled = false;
+    }
+  });
+})();
+</script>
+</body>
+</html>

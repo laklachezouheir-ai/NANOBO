@@ -8,6 +8,7 @@ const config = require('./lib/config');
 const adminAuth = require('./lib/adminAuth');
 const products = require('./lib/productsStore');
 const categories = require('./lib/categoriesStore');
+const siteSettings = require('./lib/siteSettingsStore');
 const r2 = require('./lib/r2');
 
 const app = express();
@@ -72,6 +73,10 @@ app.get('/api/products/:slug', (req, res) => {
 
 app.get('/api/categories', (_req, res) => {
   res.json({ categories: categories.getVisible() });
+});
+
+app.get('/api/site-settings', (_req, res) => {
+  res.json({ settings: siteSettings.get() });
 });
 
 /* ============================================================
@@ -162,6 +167,17 @@ app.delete('/api/admin/categories/:id', (req, res) => {
   const ok = categories.remove(req.params.id);
   if (!ok) return res.status(404).json({ error: 'Catégorie introuvable.' });
   res.json({ ok: true });
+});
+
+/* ---------- Personnalisation de l'accueil (hero, bannière, Instagram) ---------- */
+
+app.get('/api/admin/site-settings', (_req, res) => {
+  res.json({ settings: siteSettings.get() });
+});
+
+app.put('/api/admin/site-settings', (req, res) => {
+  const settings = siteSettings.update(req.body || {});
+  res.json({ settings });
 });
 
 /* ---------- Produits (CRUD complet) ---------- */
@@ -282,6 +298,9 @@ app.get('/admin/produits/:id', (_req, res) => {
 });
 app.get('/admin/categories', (_req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'admin', 'categories.html'));
+});
+app.get('/admin/accueil', (_req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'admin', 'accueil.html'));
 });
 
 app.get('/api/health', (_req, res) => {

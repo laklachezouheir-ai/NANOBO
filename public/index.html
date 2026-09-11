@@ -64,14 +64,14 @@
     <div class="hero-blob b2"></div>
     <div class="container hero-inner">
       <div>
-        <span class="hero-eyebrow">✨ Nouvelle collection Printemps</span>
-        <h1>Des tenues qui donnent le <span class="highlight">sourire</span> à chaque aventure</h1>
-        <p class="lead">Vêtements doux, colorés et résistants, pensés pour accompagner les petites aventures du quotidien — de la crèche à la cour de récré.</p>
+        <span class="hero-eyebrow" id="hero-eyebrow">✨ Nouvelle collection Printemps</span>
+        <h1 id="hero-headline">Des tenues qui donnent le <span class="highlight">sourire</span> à chaque aventure</h1>
+        <p class="lead" id="hero-lead">Vêtements doux, colorés et résistants, pensés pour accompagner les petites aventures du quotidien — de la crèche à la cour de récré.</p>
         <div class="hero-cta">
-          <a href="boutique.html" class="btn btn-primary">Découvrir la boutique</a>
-          <a href="boutique.html?sale=1" class="btn btn-outline">Voir les soldes</a>
+          <a href="boutique.html" class="btn btn-primary" id="hero-cta1">Découvrir la boutique</a>
+          <a href="boutique.html?sale=1" class="btn btn-outline" id="hero-cta2">Voir les soldes</a>
         </div>
-        <div class="hero-stats">
+        <div class="hero-stats" id="hero-stats">
           <div><strong>12k+</strong><span>Familles conquises</span></div>
           <div><strong>4.8/5</strong><span>Note moyenne</span></div>
           <div><strong>48h</strong><span>Livraison express</span></div>
@@ -79,8 +79,8 @@
       </div>
       <div class="hero-visual">
         <div class="hero-visual-card" id="hero-visual-card"></div>
-        <div class="hero-float-card top"><span class="dot"></span> Livraison en 48h</div>
-        <div class="hero-float-card bottom"><span class="dot"></span> Retours gratuits 30j</div>
+        <div class="hero-float-card top"><span class="dot"></span> <span id="hero-badge-top">Livraison en 48h</span></div>
+        <div class="hero-float-card bottom"><span class="dot"></span> <span id="hero-badge-bottom">Retours gratuits 30j</span></div>
       </div>
     </div>
   </section>
@@ -125,12 +125,12 @@
     <div class="container">
       <div class="promo-banner reveal">
         <div class="content">
-          <span class="tag">Offre limitée</span>
-          <h2>Soldes de saison, jusqu'à -30%</h2>
-          <p>Toute la collection été à petit prix, pendant un temps limité seulement. Les meilleures pièces partent vite !</p>
+          <span class="tag" id="promo-tag">Offre limitée</span>
+          <h2 id="promo-heading">Soldes de saison, jusqu'à -30%</h2>
+          <p id="promo-text">Toute la collection été à petit prix, pendant un temps limité seulement. Les meilleures pièces partent vite !</p>
         </div>
         <div class="cta">
-          <a href="boutique.html?sale=1" class="btn btn-primary">J'en profite</a>
+          <a href="boutique.html?sale=1" class="btn btn-primary" id="promo-cta">J'en profite</a>
         </div>
       </div>
     </div>
@@ -191,7 +191,7 @@
     <div class="container">
       <div class="section-head center reveal">
         <span class="eyebrow">Communauté</span>
-        <h2>Suivez-nous @nanobo.kids</h2>
+        <h2 id="insta-heading">Suivez-nous @nanobo.kids</h2>
       </div>
       <div class="insta-strip" id="insta-strip"></div>
     </div>
@@ -297,14 +297,69 @@
   const footerIcons = ['mapPin', 'phone', 'mail', 'clock'];
   document.querySelectorAll('.footer-contact li span').forEach((el, i) => (el.innerHTML = uiIcon(footerIcons[i])));
 
-  // Instagram strip (pictos colorés en guise d'aperçu communauté)
-  const instaPalette = [
-    ['#ffe1e6', '#ff6b7a', 'dress'], ['#e2f1fb', '#4ea8de', 'sneaker'], ['#fff3d6', '#f2b705', 'cap'],
-    ['#d9f7f2', '#2ec4b6', 'tshirt'], ['#efe9fe', '#a78bfa', 'bow'], ['#ffe8d6', '#ff9466', 'backpack'],
-  ];
-  document.getElementById('insta-strip').innerHTML = instaPalette
-    .map(([bg, ic, key]) => `<a href="#" class="insta-tile reveal" style="background:${bg}">${productIcon(key, ic, '#fff')}</a>`)
-    .join('');
+  function highlightWord(text, word) {
+    if (!word || !text.includes(word)) return text;
+    return text.replace(word, `<span class="highlight">${word}</span>`);
+  }
+
+  // Personnalisation de l'accueil (hero, bannière promo, Instagram) — gérée depuis /admin/accueil
+  (async () => {
+    let settings = null;
+    try {
+      settings = (await (await fetch('/api/site-settings')).json()).settings;
+    } catch (err) {
+      console.error('Impossible de charger la personnalisation de l\'accueil :', err);
+    }
+
+    if (settings) {
+      const h = settings.hero;
+      document.getElementById('hero-eyebrow').textContent = h.eyebrow;
+      document.getElementById('hero-headline').innerHTML = highlightWord(h.headline, h.highlight);
+      document.getElementById('hero-lead').textContent = h.lead;
+      document.getElementById('hero-cta1').textContent = h.ctaPrimaryText;
+      document.getElementById('hero-cta1').href = h.ctaPrimaryLink;
+      document.getElementById('hero-cta2').textContent = h.ctaSecondaryText;
+      document.getElementById('hero-cta2').href = h.ctaSecondaryLink;
+      document.getElementById('hero-badge-top').textContent = h.badgeTopText;
+      document.getElementById('hero-badge-bottom').textContent = h.badgeBottomText;
+      document.getElementById('hero-stats').innerHTML = [
+        [h.stat1Value, h.stat1Label], [h.stat2Value, h.stat2Label], [h.stat3Value, h.stat3Label],
+      ].map(([v, l]) => `<div><strong>${v}</strong><span>${l}</span></div>`).join('');
+
+      const heroCard = document.getElementById('hero-visual-card');
+      if (h.image) {
+        heroCard.style.background = '#f2efe9';
+        heroCard.innerHTML = `<img src="${h.image.url}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:inherit">`;
+      } else {
+        heroCard.innerHTML = productIcon('dress', '#ff6b7a', '#fff');
+      }
+
+      const pb = settings.promoBanner;
+      document.getElementById('promo-tag').textContent = pb.tag;
+      document.getElementById('promo-heading').textContent = pb.heading;
+      document.getElementById('promo-text').textContent = pb.text;
+      document.getElementById('promo-cta').textContent = pb.ctaText;
+      document.getElementById('promo-cta').href = pb.ctaLink;
+
+      const ig = settings.instagram;
+      document.getElementById('insta-heading').textContent = 'Suivez-nous ' + ig.handle;
+      if (ig.images && ig.images.length) {
+        document.getElementById('insta-strip').innerHTML = ig.images
+          .map((img) => `<a href="#" class="insta-tile reveal" style="background:#f2efe9"><img src="${img.url}" alt="" style="width:100%;height:100%;object-fit:cover"></a>`)
+          .join('');
+      } else {
+        const instaPalette = [
+          ['#ffe1e6', '#ff6b7a', 'dress'], ['#e2f1fb', '#4ea8de', 'sneaker'], ['#fff3d6', '#f2b705', 'cap'],
+          ['#d9f7f2', '#2ec4b6', 'tshirt'], ['#efe9fe', '#a78bfa', 'bow'], ['#ffe8d6', '#ff9466', 'backpack'],
+        ];
+        document.getElementById('insta-strip').innerHTML = instaPalette
+          .map(([bg, ic, key]) => `<a href="#" class="insta-tile reveal" style="background:${bg}">${productIcon(key, ic, '#fff')}</a>`)
+          .join('');
+      }
+    }
+
+    initReveal();
+  })();
 
   // Catégories, best-sellers & nouveautés (chargés depuis l'admin)
   (async () => {
