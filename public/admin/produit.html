@@ -402,6 +402,7 @@
           <img src="${img.url}" alt="">
           <div class="image-actions">
             ${idx !== 0 ? `<button type="button" data-make-main="${idx}" title="Définir comme image principale">${starIcon()}</button>` : ''}
+            <button type="button" data-open="${idx}" title="Ouvrir le lien de la photo dans un nouvel onglet">${linkIcon()}</button>
             <button type="button" data-remove="${idx}" title="Supprimer">${closeIcon()}</button>
           </div>
           <div class="image-meta">${formatBytes(img.originalBytes)} → ${formatBytes(img.bytes)} (${(img.format || '').toUpperCase()})</div>
@@ -417,6 +418,11 @@
         renderImageGrid();
       });
     });
+    grid.querySelectorAll('[data-open]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        window.open(currentImages[Number(btn.dataset.open)].url, '_blank');
+      });
+    });
     grid.querySelectorAll('[data-remove]').forEach((btn) => {
       btn.addEventListener('click', async () => {
         const idx = Number(btn.dataset.remove);
@@ -427,6 +433,10 @@
         }
       });
     });
+  }
+
+  function linkIcon() {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14 21 3"/><path d="M21 3h-6"/><path d="M21 3v6"/><path d="M19 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h6"/></svg>';
   }
 
   function starIcon() {
