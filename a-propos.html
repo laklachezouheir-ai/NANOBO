@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>À propos — NANOBO</title>
+<meta name="description" content="Découvrez l'histoire et les valeurs de NANOBO, la marque de mode enfant douce, colorée et responsable.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%23ff6b7a'/%3E%3Ctext x='50' y='68' font-size='55' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='700'%3EN%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="announce-bar">🎉 Livraison gratuite dès 49€ &nbsp;·&nbsp; <strong>Nouvelle collection Printemps</strong> disponible &nbsp;·&nbsp; Retours gratuits sous 30 jours</div>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <button class="nav-toggle" aria-label="Ouvrir le menu"></button>
+    <a href="index.html" class="logo">Nano<span>bo</span></a>
+    <nav class="main-nav">
+      <a href="index.html">Accueil</a>
+      <a href="boutique.html?cat=filles">Filles</a>
+      <a href="boutique.html?cat=garcons">Garçons</a>
+      <a href="boutique.html?cat=bebe">Bébé</a>
+      <a href="boutique.html?cat=accessoires">Accessoires</a>
+      <a href="boutique.html?sale=1">Soldes<span class="nav-tag">-30%</span></a>
+    </nav>
+    <form class="search-bar" onsubmit="event.preventDefault(); location.href='boutique.html?q=' + encodeURIComponent(this.q.value);">
+      <input type="text" name="q" placeholder="Rechercher un produit...">
+      <button type="submit" aria-label="Rechercher"></button>
+    </form>
+    <div class="header-icons">
+      <button class="icon-btn" aria-label="Mon compte"></button>
+      <a href="boutique.html" class="icon-btn" aria-label="Favoris"></a>
+      <a href="panier.html" class="icon-btn" aria-label="Panier"><span class="cart-count" data-cart-count>0</span></a>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-menu">
+  <div class="mobile-menu-panel">
+    <button class="mobile-menu-close" aria-label="Fermer"></button>
+    <nav>
+      <a href="index.html">Accueil</a>
+      <a href="boutique.html?cat=filles">Filles</a>
+      <a href="boutique.html?cat=garcons">Garçons</a>
+      <a href="boutique.html?cat=bebe">Bébé</a>
+      <a href="boutique.html?cat=accessoires">Accessoires</a>
+      <a href="boutique.html?cat=chaussures">Chaussures</a>
+      <a href="boutique.html?sale=1">Soldes</a>
+      <a href="a-propos.html" class="active">À propos</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </div>
+</div>
+
+<main>
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="index.html">Accueil</a> <span class="sep">/</span> <span class="current">À propos</span>
+    </div>
+
+    <section style="padding-top:10px">
+      <div class="about-hero">
+        <div class="reveal">
+          <span class="hero-eyebrow">Notre histoire</span>
+          <h1 style="font-size:clamp(1.9rem,3.5vw,2.7rem);margin:16px 0">Chez NANOBO, on habille les grandes aventures des petits</h1>
+          <p>NANOBO est né en 2019 de l'envie de trois parents fatigués de choisir entre des vêtements enfants jolis, solides ou abordables — sans jamais trouver les trois à la fois.</p>
+          <p>Depuis, nous dessinons des collections douces et colorées, pensées pour suivre le rythme des enfants : escalader, courir, se rouler dans l'herbe, recommencer le lendemain. Chaque pièce est testée pour résister aux vraies journées d'enfant, pas seulement aux photos de catalogue.</p>
+          <p>Nous travaillons avec des ateliers partenaires engagés sur des critères sociaux et environnementaux stricts, et privilégions des matières naturelles certifiées à chaque fois que c'est possible.</p>
+          <a href="boutique.html" class="btn btn-primary">Découvrir nos collections</a>
+        </div>
+        <div class="visual reveal" id="about-visual"></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head center reveal">
+        <span class="eyebrow">Ce qui nous anime</span>
+        <h2>Nos valeurs</h2>
+      </div>
+      <div class="values-grid">
+        <div class="value-card reveal">
+          <span class="icon" id="val-icon-0"></span>
+          <h4>Douceur avant tout</h4>
+          <p>Matières certifiées OEKO-TEX, pensées pour les peaux sensibles des tout-petits.</p>
+        </div>
+        <div class="value-card reveal">
+          <span class="icon" id="val-icon-1"></span>
+          <h4>Fabrication responsable</h4>
+          <p>Ateliers partenaires audités, production en séries limitées pour éviter le gaspillage.</p>
+        </div>
+        <div class="value-card reveal">
+          <span class="icon" id="val-icon-2"></span>
+          <h4>Prix justes</h4>
+          <p>Une qualité durable à prix accessible, sans intermédiaires superflus.</p>
+        </div>
+        <div class="value-card reveal">
+          <span class="icon" id="val-icon-3"></span>
+          <h4>À l'écoute</h4>
+          <p>Chaque collection s'améliore grâce aux retours de notre communauté de parents.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="stats-strip reveal">
+        <div><strong>50k+</strong><span>Vêtements vendus</span></div>
+        <div><strong>4.8/5</strong><span>Satisfaction client</span></div>
+        <div><strong>30j</strong><span>Retours gratuits</span></div>
+        <div><strong>12</strong><span>Pays livrés</span></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head center reveal">
+        <span class="eyebrow">L'équipe</span>
+        <h2>Les visages derrière NANOBO</h2>
+      </div>
+      <div class="team-grid" id="team-grid"></div>
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a href="index.html" class="logo">Nano<span>bo</span></a>
+        <p>Des vêtements doux, colorés et durables pensés pour l'aventure de chaque enfant, du berceau aux premiers pas à l'école.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Facebook"></a>
+          <a href="#" aria-label="Instagram"></a>
+          <a href="#" aria-label="TikTok"></a>
+          <a href="#" aria-label="Pinterest"></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Boutique</h4>
+        <ul>
+          <li><a href="boutique.html?cat=filles">Filles</a></li>
+          <li><a href="boutique.html?cat=garcons">Garçons</a></li>
+          <li><a href="boutique.html?cat=bebe">Bébé</a></li>
+          <li><a href="boutique.html?cat=accessoires">Accessoires</a></li>
+          <li><a href="boutique.html?sale=1">Soldes</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Informations</h4>
+        <ul>
+          <li><a href="a-propos.html">À propos de NANOBO</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="contact.html#faq">Livraison &amp; retours</a></li>
+          <li><a href="contact.html#faq">Guide des tailles</a></li>
+          <li><a href="contact.html#faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul class="footer-contact">
+          <li><span></span> 12 rue des Petits Pas, 75011 Paris</li>
+          <li><span></span> +33 1 23 45 67 89</li>
+          <li><span></span> bonjour@nanobo.fr</li>
+          <li><span></span> Lun–Ven, 9h–18h</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 NANOBO. Tous droits réservés. Boutique de démonstration.</span>
+      <div class="payment-icons">
+        <span>VISA</span><span>MASTERCARD</span><span>PAYPAL</span><span>APPLE PAY</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<button class="back-to-top" aria-label="Retour en haut"></button>
+<div class="toast" id="cart-toast"></div>
+
+<script src="js/icons.js"></script>
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/main.js"></script>
+<script>
+  document.querySelector('.nav-toggle').innerHTML = uiIcon('menu');
+  document.querySelector('.mobile-menu-close').innerHTML = uiIcon('close');
+  document.querySelector('.search-bar button').innerHTML = uiIcon('search');
+  document.querySelector('[aria-label="Mon compte"]').innerHTML = uiIcon('user');
+  document.querySelector('[aria-label="Favoris"]').innerHTML = uiIcon('heart');
+  document.querySelector('[aria-label="Panier"]').insertAdjacentHTML('afterbegin', uiIcon('cart'));
+  document.querySelector('.back-to-top').innerHTML = uiIcon('arrowUp');
+  document.querySelectorAll('.footer-social a')[0].innerHTML = uiIcon('facebook');
+  document.querySelectorAll('.footer-social a')[1].innerHTML = uiIcon('instagram');
+  document.querySelectorAll('.footer-social a')[2].innerHTML = uiIcon('tiktok');
+  document.querySelectorAll('.footer-social a')[3].innerHTML = uiIcon('pinterest');
+  const footerIcons = ['mapPin', 'phone', 'mail', 'clock'];
+  document.querySelectorAll('.footer-contact li span').forEach((el, i) => (el.innerHTML = uiIcon(footerIcons[i])));
+
+  document.getElementById('about-visual').innerHTML = productIcon('backpack', '#a78bfa', '#fff');
+  const valIcons = ['heart', 'shield', 'tag', 'headset'];
+  valIcons.forEach((name, i) => (document.getElementById('val-icon-' + i).innerHTML = uiIcon(name)));
+
+  const team = [
+    { name: 'Alice Nguyen', role: 'Fondatrice & Directrice création', bg: '#ffe1e6', icon: '#ff6b7a' },
+    { name: 'Thomas Roy', role: 'Responsable production', bg: '#e2f1fb', icon: '#4ea8de' },
+    { name: 'Meriem Aït', role: 'Responsable relation client', bg: '#fff3d6', icon: '#f2b705' },
+    { name: 'Léo Fontaine', role: 'Responsable qualité', bg: '#d9f7f2', icon: '#2ec4b6' },
+  ];
+  document.getElementById('team-grid').innerHTML = team
+    .map(
+      (t) => `<div class="team-card reveal">
+        <div class="avatar" style="background:${t.bg}">${uiIcon('user').replace('currentColor', t.icon)}</div>
+        <strong>${t.name}</strong><span>${t.role}</span>
+      </div>`
+    )
+    .join('');
+
+  initReveal();
+</script>
+</body>
+</html>

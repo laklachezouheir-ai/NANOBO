@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boutique — NANOBO</title>
+<meta name="description" content="Découvrez toute la collection NANOBO : vêtements et accessoires pour filles, garçons et bébés.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%23ff6b7a'/%3E%3Ctext x='50' y='68' font-size='55' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='700'%3EN%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="announce-bar">🎉 Livraison gratuite dès 49€ &nbsp;·&nbsp; <strong>Nouvelle collection Printemps</strong> disponible &nbsp;·&nbsp; Retours gratuits sous 30 jours</div>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <button class="nav-toggle" aria-label="Ouvrir le menu"></button>
+    <a href="index.html" class="logo">Nano<span>bo</span></a>
+    <nav class="main-nav">
+      <a href="index.html">Accueil</a>
+      <a href="boutique.html?cat=filles">Filles</a>
+      <a href="boutique.html?cat=garcons">Garçons</a>
+      <a href="boutique.html?cat=bebe">Bébé</a>
+      <a href="boutique.html?cat=accessoires">Accessoires</a>
+      <a href="boutique.html?sale=1">Soldes<span class="nav-tag">-30%</span></a>
+    </nav>
+    <form class="search-bar" onsubmit="event.preventDefault(); location.href='boutique.html?q=' + encodeURIComponent(this.q.value);">
+      <input type="text" name="q" placeholder="Rechercher un produit...">
+      <button type="submit" aria-label="Rechercher"></button>
+    </form>
+    <div class="header-icons">
+      <button class="icon-btn" aria-label="Mon compte"></button>
+      <a href="boutique.html" class="icon-btn" aria-label="Favoris"></a>
+      <a href="panier.html" class="icon-btn" aria-label="Panier"><span class="cart-count" data-cart-count>0</span></a>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-menu">
+  <div class="mobile-menu-panel">
+    <button class="mobile-menu-close" aria-label="Fermer"></button>
+    <nav>
+      <a href="index.html">Accueil</a>
+      <a href="boutique.html?cat=filles">Filles</a>
+      <a href="boutique.html?cat=garcons">Garçons</a>
+      <a href="boutique.html?cat=bebe">Bébé</a>
+      <a href="boutique.html?cat=accessoires">Accessoires</a>
+      <a href="boutique.html?cat=chaussures">Chaussures</a>
+      <a href="boutique.html?sale=1">Soldes</a>
+      <a href="a-propos.html">À propos</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </div>
+</div>
+
+<main>
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="index.html">Accueil</a> <span class="sep">/</span> <span class="current" id="breadcrumb-current">Boutique</span>
+    </div>
+
+    <div class="page-banner reveal">
+      <h1 id="banner-title">Toute la collection</h1>
+      <p id="banner-sub">Des pièces douces et colorées pour tous les âges, du 0 au 12 ans.</p>
+    </div>
+
+    <div class="filters-overlay"></div>
+    <div class="shop-layout">
+      <aside class="filters-panel">
+        <button class="mobile-menu-close" style="margin-bottom:12px;" id="close-filters" aria-label="Fermer les filtres"></button>
+
+        <div class="filter-group">
+          <h4>Catégorie</h4>
+          <label class="filter-option"><input type="checkbox" value="filles" class="cat-filter"> Filles <span class="count">(4)</span></label>
+          <label class="filter-option"><input type="checkbox" value="garcons" class="cat-filter"> Garçons <span class="count">(6)</span></label>
+          <label class="filter-option"><input type="checkbox" value="bebe" class="cat-filter"> Bébé <span class="count">(4)</span></label>
+          <label class="filter-option"><input type="checkbox" value="accessoires" class="cat-filter"> Accessoires <span class="count">(5)</span></label>
+          <label class="filter-option"><input type="checkbox" value="chaussures" class="cat-filter"> Chaussures <span class="count">(2)</span></label>
+        </div>
+
+        <div class="filter-group">
+          <h4>Taille / Âge</h4>
+          <div class="size-options" id="size-filters">
+            <button type="button" class="size-chip" data-size="0-3m">0-3m</button>
+            <button type="button" class="size-chip" data-size="2-3a">2-3a</button>
+            <button type="button" class="size-chip" data-size="4-5a">4-5a</button>
+            <button type="button" class="size-chip" data-size="6-7a">6-7a</button>
+            <button type="button" class="size-chip" data-size="8-9a">8-9a</button>
+            <button type="button" class="size-chip" data-size="10-11a">10-11a</button>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <h4>Couleur</h4>
+          <div class="color-options" id="color-filters"></div>
+        </div>
+
+        <div class="filter-group">
+          <h4>Prix maximum</h4>
+          <input type="range" min="5" max="60" value="60" class="price-range" id="price-range">
+          <div class="price-range-values"><span>5€</span><span id="price-range-val">60€</span></div>
+        </div>
+
+        <div class="filter-group">
+          <label class="filter-option"><input type="checkbox" id="sale-filter"> Uniquement les promos</label>
+        </div>
+
+        <button class="btn btn-dark btn-block" id="reset-filters">Réinitialiser les filtres</button>
+      </aside>
+
+      <div>
+        <div class="shop-toolbar">
+          <span class="count" id="results-count">20 produits</span>
+          <button class="mobile-filter-toggle">Filtres</button>
+          <select class="sort-select" id="sort-select">
+            <option value="popular">Trier par popularité</option>
+            <option value="new">Nouveautés</option>
+            <option value="price-asc">Prix croissant</option>
+            <option value="price-desc">Prix décroissant</option>
+            <option value="rating">Meilleures notes</option>
+          </select>
+        </div>
+        <div class="product-grid" id="shop-grid"></div>
+        <div class="pagination">
+          <span class="active">1</span>
+          <a href="#">2</a>
+          <a href="#">3</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a href="index.html" class="logo">Nano<span>bo</span></a>
+        <p>Des vêtements doux, colorés et durables pensés pour l'aventure de chaque enfant, du berceau aux premiers pas à l'école.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Facebook"></a>
+          <a href="#" aria-label="Instagram"></a>
+          <a href="#" aria-label="TikTok"></a>
+          <a href="#" aria-label="Pinterest"></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Boutique</h4>
+        <ul>
+          <li><a href="boutique.html?cat=filles">Filles</a></li>
+          <li><a href="boutique.html?cat=garcons">Garçons</a></li>
+          <li><a href="boutique.html?cat=bebe">Bébé</a></li>
+          <li><a href="boutique.html?cat=accessoires">Accessoires</a></li>
+          <li><a href="boutique.html?sale=1">Soldes</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Informations</h4>
+        <ul>
+          <li><a href="a-propos.html">À propos de NANOBO</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="contact.html#faq">Livraison &amp; retours</a></li>
+          <li><a href="contact.html#faq">Guide des tailles</a></li>
+          <li><a href="contact.html#faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul class="footer-contact">
+          <li><span></span> 12 rue des Petits Pas, 75011 Paris</li>
+          <li><span></span> +33 1 23 45 67 89</li>
+          <li><span></span> bonjour@nanobo.fr</li>
+          <li><span></span> Lun–Ven, 9h–18h</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 NANOBO. Tous droits réservés. Boutique de démonstration.</span>
+      <div class="payment-icons">
+        <span>VISA</span><span>MASTERCARD</span><span>PAYPAL</span><span>APPLE PAY</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<button class="back-to-top" aria-label="Retour en haut"></button>
+<div class="toast" id="cart-toast"></div>
+
+<script src="js/icons.js"></script>
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/main.js"></script>
+<script>
+  document.querySelector('.nav-toggle').innerHTML = uiIcon('menu');
+  document.querySelector('.mobile-menu-close').innerHTML = uiIcon('close');
+  document.querySelector('.search-bar button').innerHTML = uiIcon('search');
+  document.querySelector('[aria-label="Mon compte"]').innerHTML = uiIcon('user');
+  document.querySelector('[aria-label="Favoris"]').innerHTML = uiIcon('heart');
+  document.querySelector('[aria-label="Panier"]').insertAdjacentHTML('afterbegin', uiIcon('cart'));
+  document.querySelector('.mobile-filter-toggle').innerHTML = uiIcon('sliders') + ' Filtres';
+  document.getElementById('close-filters').innerHTML = uiIcon('close');
+  document.getElementById('close-filters').addEventListener('click', () => {
+    document.querySelector('.filters-panel').classList.remove('open');
+    document.querySelector('.filters-overlay').classList.remove('open');
+  });
+  document.querySelector('.back-to-top').innerHTML = uiIcon('arrowUp');
+  document.querySelectorAll('.footer-social a')[0].innerHTML = uiIcon('facebook');
+  document.querySelectorAll('.footer-social a')[1].innerHTML = uiIcon('instagram');
+  document.querySelectorAll('.footer-social a')[2].innerHTML = uiIcon('tiktok');
+  document.querySelectorAll('.footer-social a')[3].innerHTML = uiIcon('pinterest');
+  const footerIcons = ['mapPin', 'phone', 'mail', 'clock'];
+  document.querySelectorAll('.footer-contact li span').forEach((el, i) => (el.innerHTML = uiIcon(footerIcons[i])));
+
+  // Couleurs de filtre
+  document.getElementById('color-filters').innerHTML = Object.entries(COLOR_SWATCHES)
+    .map(([name, hex]) => `<button type="button" class="color-chip" data-color="${name}" title="${name}" style="background:${hex}"></button>`)
+    .join('');
+
+  /* ---------- Etat des filtres (à partir de l'URL) ---------- */
+  const params = new URLSearchParams(location.search);
+  const state = {
+    cats: params.get('cat') ? [params.get('cat')] : [],
+    sizes: [],
+    colors: [],
+    maxPrice: 60,
+    saleOnly: params.get('sale') === '1',
+    query: params.get('q') || '',
+    sort: params.get('sort') || 'popular',
+  };
+
+  if (state.cats.length) {
+    document.querySelectorAll('.cat-filter').forEach((cb) => { if (state.cats.includes(cb.value)) cb.checked = true; });
+  }
+  if (state.saleOnly) document.getElementById('sale-filter').checked = true;
+  document.getElementById('sort-select').value = state.sort;
+
+  function updateBanner() {
+    const title = document.getElementById('banner-title');
+    const sub = document.getElementById('banner-sub');
+    const crumb = document.getElementById('breadcrumb-current');
+    if (state.saleOnly) {
+      title.textContent = 'Soldes -30%';
+      sub.textContent = 'Les meilleures pièces à prix réduit, pendant un temps limité.';
+      crumb.textContent = 'Soldes';
+    } else if (state.cats.length === 1 && CATEGORY_LABELS[state.cats[0]]) {
+      title.textContent = CATEGORY_LABELS[state.cats[0]];
+      sub.textContent = 'Découvrez notre sélection ' + CATEGORY_LABELS[state.cats[0]].toLowerCase() + ', douce et colorée.';
+      crumb.textContent = CATEGORY_LABELS[state.cats[0]];
+    } else if (state.query) {
+      title.textContent = 'Résultats pour "' + state.query + '"';
+      sub.textContent = 'Voici ce que nous avons trouvé pour votre recherche.';
+      crumb.textContent = 'Recherche';
+    } else {
+      title.textContent = 'Toute la collection';
+      sub.textContent = 'Des pièces douces et colorées pour tous les âges, du 0 au 12 ans.';
+      crumb.textContent = 'Boutique';
+    }
+  }
+
+  function applyFilters() {
+    let list = PRODUCTS.slice();
+    if (state.cats.length) list = list.filter((p) => state.cats.includes(p.category));
+    if (state.sizes.length) list = list.filter((p) => p.sizes.some((s) => state.sizes.includes(s)));
+    if (state.colors.length) list = list.filter((p) => p.colors.some((c) => state.colors.includes(c)));
+    if (state.saleOnly) list = list.filter((p) => p.oldPrice);
+    if (state.query) {
+      const q = state.query.toLowerCase();
+      list = list.filter((p) => p.name.toLowerCase().includes(q) || CATEGORY_LABELS[p.category].toLowerCase().includes(q));
+    }
+    list = list.filter((p) => p.price <= state.maxPrice);
+
+    if (state.sort === 'new') list = list.filter((p) => p.tags.includes('nouveaute')).concat(list.filter((p) => !p.tags.includes('nouveaute')));
+    if (state.sort === 'price-asc') list.sort((a, b) => a.price - b.price);
+    if (state.sort === 'price-desc') list.sort((a, b) => b.price - a.price);
+    if (state.sort === 'rating') list.sort((a, b) => b.rating - a.rating);
+
+    document.getElementById('results-count').textContent = list.length + (list.length > 1 ? ' produits' : ' produit');
+    renderProductGrid(list, '#shop-grid');
+    updateBanner();
+  }
+
+  document.querySelectorAll('.cat-filter').forEach((cb) => {
+    cb.addEventListener('change', () => {
+      state.cats = Array.from(document.querySelectorAll('.cat-filter:checked')).map((c) => c.value);
+      applyFilters();
+    });
+  });
+
+  document.querySelectorAll('.size-chip').forEach((chip) => {
+    chip.addEventListener('click', () => {
+      chip.classList.toggle('selected');
+      state.sizes = Array.from(document.querySelectorAll('.size-chip.selected')).map((c) => c.dataset.size);
+      applyFilters();
+    });
+  });
+
+  document.getElementById('color-filters').addEventListener('click', (e) => {
+    const chip = e.target.closest('.color-chip');
+    if (!chip) return;
+    chip.classList.toggle('selected');
+    state.colors = Array.from(document.querySelectorAll('.color-chip.selected')).map((c) => c.dataset.color);
+    applyFilters();
+  });
+
+  document.getElementById('price-range').addEventListener('input', (e) => {
+    state.maxPrice = parseInt(e.target.value, 10);
+    document.getElementById('price-range-val').textContent = state.maxPrice + '€';
+    applyFilters();
+  });
+
+  document.getElementById('sale-filter').addEventListener('change', (e) => {
+    state.saleOnly = e.target.checked;
+    applyFilters();
+  });
+
+  document.getElementById('sort-select').addEventListener('change', (e) => {
+    state.sort = e.target.value;
+    applyFilters();
+  });
+
+  document.getElementById('reset-filters').addEventListener('click', () => {
+    state.cats = []; state.sizes = []; state.colors = []; state.maxPrice = 60; state.saleOnly = false; state.query = '';
+    document.querySelectorAll('.cat-filter').forEach((c) => (c.checked = false));
+    document.querySelectorAll('.size-chip.selected, .color-chip.selected').forEach((c) => c.classList.remove('selected'));
+    document.getElementById('sale-filter').checked = false;
+    document.getElementById('price-range').value = 60;
+    document.getElementById('price-range-val').textContent = '60€';
+    applyFilters();
+  });
+
+  applyFilters();
+</script>
+</body>
+</html>

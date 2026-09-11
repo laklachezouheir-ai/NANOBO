@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mon panier — NANOBO</title>
+<meta name="description" content="Consultez et modifiez votre panier NANOBO avant de passer commande.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%23ff6b7a'/%3E%3Ctext x='50' y='68' font-size='55' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='700'%3EN%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="announce-bar">🎉 Livraison gratuite dès 49€ &nbsp;·&nbsp; <strong>Nouvelle collection Printemps</strong> disponible &nbsp;·&nbsp; Retours gratuits sous 30 jours</div>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <button class="nav-toggle" aria-label="Ouvrir le menu"></button>
+    <a href="index.html" class="logo">Nano<span>bo</span></a>
+    <nav class="main-nav">
+      <a href="index.html">Accueil</a>
+      <a href="boutique.html?cat=filles">Filles</a>
+      <a href="boutique.html?cat=garcons">Garçons</a>
+      <a href="boutique.html?cat=bebe">Bébé</a>
+      <a href="boutique.html?cat=accessoires">Accessoires</a>
+      <a href="boutique.html?sale=1">Soldes<span class="nav-tag">-30%</span></a>
+    </nav>
+    <form class="search-bar" onsubmit="event.preventDefault(); location.href='boutique.html?q=' + encodeURIComponent(this.q.value);">
+      <input type="text" name="q" placeholder="Rechercher un produit...">
+      <button type="submit" aria-label="Rechercher"></button>
+    </form>
+    <div class="header-icons">
+      <button class="icon-btn" aria-label="Mon compte"></button>
+      <a href="boutique.html" class="icon-btn" aria-label="Favoris"></a>
+      <a href="panier.html" class="icon-btn" aria-label="Panier"><span class="cart-count" data-cart-count>0</span></a>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-menu">
+  <div class="mobile-menu-panel">
+    <button class="mobile-menu-close" aria-label="Fermer"></button>
+    <nav>
+      <a href="index.html">Accueil</a>
+      <a href="boutique.html?cat=filles">Filles</a>
+      <a href="boutique.html?cat=garcons">Garçons</a>
+      <a href="boutique.html?cat=bebe">Bébé</a>
+      <a href="boutique.html?cat=accessoires">Accessoires</a>
+      <a href="boutique.html?cat=chaussures">Chaussures</a>
+      <a href="boutique.html?sale=1">Soldes</a>
+      <a href="a-propos.html">À propos</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </div>
+</div>
+
+<main>
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="index.html">Accueil</a> <span class="sep">/</span> <span class="current">Mon panier</span>
+    </div>
+    <div class="page-banner reveal">
+      <h1>Mon panier</h1>
+      <p>Vérifiez vos articles avant de passer commande.</p>
+    </div>
+
+    <div id="cart-content"></div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a href="index.html" class="logo">Nano<span>bo</span></a>
+        <p>Des vêtements doux, colorés et durables pensés pour l'aventure de chaque enfant, du berceau aux premiers pas à l'école.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Facebook"></a>
+          <a href="#" aria-label="Instagram"></a>
+          <a href="#" aria-label="TikTok"></a>
+          <a href="#" aria-label="Pinterest"></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Boutique</h4>
+        <ul>
+          <li><a href="boutique.html?cat=filles">Filles</a></li>
+          <li><a href="boutique.html?cat=garcons">Garçons</a></li>
+          <li><a href="boutique.html?cat=bebe">Bébé</a></li>
+          <li><a href="boutique.html?cat=accessoires">Accessoires</a></li>
+          <li><a href="boutique.html?sale=1">Soldes</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Informations</h4>
+        <ul>
+          <li><a href="a-propos.html">À propos de NANOBO</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="contact.html#faq">Livraison &amp; retours</a></li>
+          <li><a href="contact.html#faq">Guide des tailles</a></li>
+          <li><a href="contact.html#faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul class="footer-contact">
+          <li><span></span> 12 rue des Petits Pas, 75011 Paris</li>
+          <li><span></span> +33 1 23 45 67 89</li>
+          <li><span></span> bonjour@nanobo.fr</li>
+          <li><span></span> Lun–Ven, 9h–18h</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 NANOBO. Tous droits réservés. Boutique de démonstration.</span>
+      <div class="payment-icons">
+        <span>VISA</span><span>MASTERCARD</span><span>PAYPAL</span><span>APPLE PAY</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<button class="back-to-top" aria-label="Retour en haut"></button>
+<div class="toast" id="cart-toast"></div>
+
+<script src="js/icons.js"></script>
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/main.js"></script>
+<script>
+  document.querySelector('.nav-toggle').innerHTML = uiIcon('menu');
+  document.querySelector('.mobile-menu-close').innerHTML = uiIcon('close');
+  document.querySelector('.search-bar button').innerHTML = uiIcon('search');
+  document.querySelector('[aria-label="Mon compte"]').innerHTML = uiIcon('user');
+  document.querySelector('[aria-label="Favoris"]').innerHTML = uiIcon('heart');
+  document.querySelector('[aria-label="Panier"]').insertAdjacentHTML('afterbegin', uiIcon('cart'));
+  document.querySelector('.back-to-top').innerHTML = uiIcon('arrowUp');
+  document.querySelectorAll('.footer-social a')[0].innerHTML = uiIcon('facebook');
+  document.querySelectorAll('.footer-social a')[1].innerHTML = uiIcon('instagram');
+  document.querySelectorAll('.footer-social a')[2].innerHTML = uiIcon('tiktok');
+  document.querySelectorAll('.footer-social a')[3].innerHTML = uiIcon('pinterest');
+  const footerIcons = ['mapPin', 'phone', 'mail', 'clock'];
+  document.querySelectorAll('.footer-contact li span').forEach((el, i) => (el.innerHTML = uiIcon(footerIcons[i])));
+
+  const SHIPPING_THRESHOLD = 49;
+  const SHIPPING_COST = 3.9;
+  let promoDiscount = 0;
+
+  function renderCart() {
+    const cart = getCart();
+    const container = document.getElementById('cart-content');
+
+    if (!cart.length) {
+      container.innerHTML = `
+        <div class="empty-state reveal">
+          ${uiIcon('bag')}
+          <h3>Votre panier est vide</h3>
+          <p>Découvrez notre collection et trouvez de quoi faire sourire vos enfants.</p>
+          <a href="boutique.html" class="btn btn-primary">Découvrir la boutique</a>
+        </div>`;
+      initReveal();
+      return;
+    }
+
+    const lines = cart.map((l) => ({ line: l, pr: getProductById(l.id) })).filter((x) => x.pr);
+    const subtotal = lines.reduce((s, x) => s + x.pr.price * x.line.qty, 0);
+    const shipping = subtotal >= SHIPPING_THRESHOLD || subtotal === 0 ? 0 : SHIPPING_COST;
+    const discount = subtotal * promoDiscount;
+    const total = Math.max(0, subtotal - discount) + shipping;
+
+    const rowsHtml = lines
+      .map(({ line, pr }) => {
+        const pal = PALETTE[pr.palette] || PALETTE.corail;
+        return `
+        <tr class="cart-row">
+          <td>
+            <div class="cart-product">
+              <div class="thumb" style="background:${pal.bg}">${productIcon(pr.icon, pal.icon, '#fff')}</div>
+              <div class="cart-product-info">
+                <a href="produit.html?id=${pr.id}" class="product-title" style="display:inline-block">${pr.name}</a><br>
+                <span>${line.color || ''}${line.color && line.size ? ' · ' : ''}${line.size || ''}</span>
+                <button class="cart-remove" data-remove="${line.id}|${line.size || ''}|${line.color || ''}">${uiIcon('trash')} Retirer</button>
+              </div>
+            </div>
+          </td>
+          <td class="cart-qty-cell">
+            <div class="qty-stepper" data-line="${line.id}|${line.size || ''}|${line.color || ''}">
+              <button type="button" aria-label="Diminuer">−</button>
+              <input type="text" value="${line.qty}" inputmode="numeric">
+              <button type="button" aria-label="Augmenter">+</button>
+            </div>
+          </td>
+          <td class="cart-price-cell">${formatPrice(pr.price * line.qty)}</td>
+        </tr>`;
+      })
+      .join('');
+
+    container.innerHTML = `
+      <div class="cart-layout">
+        <div class="reveal">
+          <table class="cart-table">
+            <thead><tr><th>Produit</th><th>Quantité</th><th>Total</th></tr></thead>
+            <tbody>${rowsHtml}</tbody>
+          </table>
+        </div>
+        <aside class="summary-card reveal">
+          <h3>Récapitulatif</h3>
+          <div class="summary-row"><span>Sous-total</span><span>${formatPrice(subtotal)}</span></div>
+          ${discount > 0 ? `<div class="summary-row"><span>Réduction</span><span>-${formatPrice(discount)}</span></div>` : ''}
+          <div class="summary-row"><span>Livraison</span><span>${shipping === 0 ? 'Offerte' : formatPrice(shipping)}</span></div>
+          <div class="summary-row total"><span>Total</span><span>${formatPrice(total)}</span></div>
+          <div class="promo-input">
+            <input type="text" id="promo-code" placeholder="Code promo (essayez NANOBO10)">
+            <button class="btn btn-outline btn-sm" id="apply-promo">Valider</button>
+          </div>
+          <a href="commande.html" class="btn btn-primary btn-block">Passer la commande</a>
+          <div class="trust-badges">
+            <div>${uiIcon('shield')} Paiement 100% sécurisé</div>
+            <div>${uiIcon('truck')} Livraison gratuite dès ${SHIPPING_THRESHOLD}€</div>
+            <div>${uiIcon('refresh')} Retours gratuits sous 30 jours</div>
+          </div>
+        </aside>
+      </div>`;
+
+    container.querySelectorAll('[data-remove]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const [id, size, color] = btn.dataset.remove.split('|');
+        removeCartLine(id, size || null, color || null);
+        renderCart();
+      });
+    });
+
+    container.querySelectorAll('[data-line]').forEach((stepper) => {
+      const [id, size, color] = stepper.dataset.line.split('|');
+      const input = stepper.querySelector('input');
+      const [minusBtn, plusBtn] = stepper.querySelectorAll('button');
+      minusBtn.addEventListener('click', () => {
+        const v = Math.max(0, (parseInt(input.value, 10) || 1) - 1);
+        updateCartLineQty(id, size || null, color || null, v);
+        renderCart();
+      });
+      plusBtn.addEventListener('click', () => {
+        const v = (parseInt(input.value, 10) || 1) + 1;
+        updateCartLineQty(id, size || null, color || null, v);
+        renderCart();
+      });
+      input.addEventListener('change', () => {
+        const v = Math.max(0, parseInt(input.value, 10) || 0);
+        updateCartLineQty(id, size || null, color || null, v);
+        renderCart();
+      });
+    });
+
+    const promoBtn = document.getElementById('apply-promo');
+    if (promoBtn) {
+      promoBtn.addEventListener('click', () => {
+        const code = document.getElementById('promo-code').value.trim().toUpperCase();
+        if (code === 'NANOBO10') {
+          promoDiscount = 0.1;
+        } else {
+          promoDiscount = 0;
+          if (code) alert('Code promo invalide. Essayez NANOBO10 pour -10%.');
+        }
+        renderCart();
+      });
+    }
+
+    initReveal();
+  }
+
+  renderCart();
+</script>
+</body>
+</html>

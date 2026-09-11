@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Commande — NANOBO</title>
+<meta name="description" content="Finalisez votre commande NANOBO en toute simplicité.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%23ff6b7a'/%3E%3Ctext x='50' y='68' font-size='55' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='700'%3EN%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="announce-bar">🎉 Livraison gratuite dès 49€ &nbsp;·&nbsp; <strong>Nouvelle collection Printemps</strong> disponible &nbsp;·&nbsp; Retours gratuits sous 30 jours</div>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <button class="nav-toggle" aria-label="Ouvrir le menu"></button>
+    <a href="index.html" class="logo">Nano<span>bo</span></a>
+    <nav class="main-nav">
+      <a href="index.html">Accueil</a>
+      <a href="boutique.html?cat=filles">Filles</a>
+      <a href="boutique.html?cat=garcons">Garçons</a>
+      <a href="boutique.html?cat=bebe">Bébé</a>
+      <a href="boutique.html?cat=accessoires">Accessoires</a>
+      <a href="boutique.html?sale=1">Soldes<span class="nav-tag">-30%</span></a>
+    </nav>
+    <form class="search-bar" onsubmit="event.preventDefault(); location.href='boutique.html?q=' + encodeURIComponent(this.q.value);">
+      <input type="text" name="q" placeholder="Rechercher un produit...">
+      <button type="submit" aria-label="Rechercher"></button>
+    </form>
+    <div class="header-icons">
+      <button class="icon-btn" aria-label="Mon compte"></button>
+      <a href="boutique.html" class="icon-btn" aria-label="Favoris"></a>
+      <a href="panier.html" class="icon-btn" aria-label="Panier"><span class="cart-count" data-cart-count>0</span></a>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-menu">
+  <div class="mobile-menu-panel">
+    <button class="mobile-menu-close" aria-label="Fermer"></button>
+    <nav>
+      <a href="index.html">Accueil</a>
+      <a href="boutique.html?cat=filles">Filles</a>
+      <a href="boutique.html?cat=garcons">Garçons</a>
+      <a href="boutique.html?cat=bebe">Bébé</a>
+      <a href="boutique.html?cat=accessoires">Accessoires</a>
+      <a href="boutique.html?cat=chaussures">Chaussures</a>
+      <a href="boutique.html?sale=1">Soldes</a>
+      <a href="a-propos.html">À propos</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </div>
+</div>
+
+<main>
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="index.html">Accueil</a> <span class="sep">/</span>
+      <a href="panier.html">Panier</a> <span class="sep">/</span>
+      <span class="current">Commande</span>
+    </div>
+
+    <div id="checkout-wrap">
+      <div class="checkout-steps reveal">
+        <div class="checkout-step"><span class="num">1</span> Livraison</div>
+        <div class="checkout-step"><span class="num">2</span> Paiement</div>
+        <div class="checkout-step active"><span class="num">3</span> Confirmation</div>
+      </div>
+
+      <form class="checkout-layout" id="checkout-form">
+        <div>
+          <div class="form-card reveal">
+            <h3>Informations de contact</h3>
+            <div class="form-grid">
+              <div class="form-field"><label>Prénom</label><input type="text" required placeholder="Camille"></div>
+              <div class="form-field"><label>Nom</label><input type="text" required placeholder="Dupont"></div>
+              <div class="form-field full"><label>E-mail</label><input type="email" required placeholder="camille.dupont@email.com"></div>
+              <div class="form-field full"><label>Téléphone</label><input type="tel" required placeholder="06 12 34 56 78"></div>
+            </div>
+          </div>
+
+          <div class="form-card reveal">
+            <h3>Adresse de livraison</h3>
+            <div class="form-grid">
+              <div class="form-field full"><label>Adresse</label><input type="text" required placeholder="12 rue des Petits Pas"></div>
+              <div class="form-field"><label>Ville</label><input type="text" required placeholder="Paris"></div>
+              <div class="form-field"><label>Code postal</label><input type="text" required placeholder="75011"></div>
+              <div class="form-field full"><label>Pays</label>
+                <select required>
+                  <option>France</option>
+                  <option>Belgique</option>
+                  <option>Suisse</option>
+                  <option>Canada</option>
+                </select>
+              </div>
+              <div class="form-field full"><label>Instructions de livraison (optionnel)</label><textarea rows="2" placeholder="Code d'entrée, étage..."></textarea></div>
+            </div>
+          </div>
+
+          <div class="form-card reveal">
+            <h3>Mode de paiement</h3>
+            <div class="payment-options">
+              <label class="payment-option selected"><input type="radio" name="payment" checked><span class="pay-icon"></span> Carte bancaire</label>
+              <label class="payment-option"><input type="radio" name="payment"><span class="pay-icon"></span> PayPal</label>
+              <label class="payment-option"><input type="radio" name="payment"><span class="pay-icon"></span> Paiement à la livraison</label>
+            </div>
+            <p style="font-size:0.78rem;color:var(--ink-light);margin-top:14px;margin-bottom:0">
+              Ceci est une boutique de démonstration : aucun paiement réel n'est effectué.
+            </p>
+          </div>
+        </div>
+
+        <aside class="summary-card reveal">
+          <h3>Votre commande</h3>
+          <div class="order-summary-list" id="order-summary-list"></div>
+          <div class="summary-row"><span>Sous-total</span><span id="co-subtotal">0,00 €</span></div>
+          <div class="summary-row"><span>Livraison</span><span id="co-shipping">Offerte</span></div>
+          <div class="summary-row total"><span>Total</span><span id="co-total">0,00 €</span></div>
+          <button type="submit" class="btn btn-primary btn-block" style="margin-top:6px">Confirmer la commande</button>
+          <div class="trust-badges">
+            <div><span class="trust-icon"></span> Paiement 100% sécurisé (démo)</div>
+            <div><span class="trust-icon"></span> Expédition sous 24h</div>
+          </div>
+        </aside>
+      </form>
+    </div>
+
+    <div class="confirm-box" id="confirm-box" style="display:none">
+      <div class="confirm-icon"></div>
+      <h2>Merci pour votre commande !</h2>
+      <p>Un e-mail de confirmation (fictif) vient de vous être envoyé. Votre colis sera préparé avec soin par notre équipe.</p>
+      <div class="confirm-order-num" id="order-number">Commande #NB-000000</div>
+      <p style="font-size:0.85rem">Ceci est une démonstration : aucune commande réelle n'a été passée ni aucun paiement prélevé.</p>
+      <a href="boutique.html" class="btn btn-primary">Continuer mes achats</a>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a href="index.html" class="logo">Nano<span>bo</span></a>
+        <p>Des vêtements doux, colorés et durables pensés pour l'aventure de chaque enfant, du berceau aux premiers pas à l'école.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Facebook"></a>
+          <a href="#" aria-label="Instagram"></a>
+          <a href="#" aria-label="TikTok"></a>
+          <a href="#" aria-label="Pinterest"></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Boutique</h4>
+        <ul>
+          <li><a href="boutique.html?cat=filles">Filles</a></li>
+          <li><a href="boutique.html?cat=garcons">Garçons</a></li>
+          <li><a href="boutique.html?cat=bebe">Bébé</a></li>
+          <li><a href="boutique.html?cat=accessoires">Accessoires</a></li>
+          <li><a href="boutique.html?sale=1">Soldes</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Informations</h4>
+        <ul>
+          <li><a href="a-propos.html">À propos de NANOBO</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="contact.html#faq">Livraison &amp; retours</a></li>
+          <li><a href="contact.html#faq">Guide des tailles</a></li>
+          <li><a href="contact.html#faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul class="footer-contact">
+          <li><span></span> 12 rue des Petits Pas, 75011 Paris</li>
+          <li><span></span> +33 1 23 45 67 89</li>
+          <li><span></span> bonjour@nanobo.fr</li>
+          <li><span></span> Lun–Ven, 9h–18h</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 NANOBO. Tous droits réservés. Boutique de démonstration.</span>
+      <div class="payment-icons">
+        <span>VISA</span><span>MASTERCARD</span><span>PAYPAL</span><span>APPLE PAY</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<button class="back-to-top" aria-label="Retour en haut"></button>
+<div class="toast" id="cart-toast"></div>
+
+<script src="js/icons.js"></script>
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/main.js"></script>
+<script>
+  document.querySelector('.nav-toggle').innerHTML = uiIcon('menu');
+  document.querySelector('.mobile-menu-close').innerHTML = uiIcon('close');
+  document.querySelector('.search-bar button').innerHTML = uiIcon('search');
+  document.querySelector('[aria-label="Mon compte"]').innerHTML = uiIcon('user');
+  document.querySelector('[aria-label="Favoris"]').innerHTML = uiIcon('heart');
+  document.querySelector('[aria-label="Panier"]').insertAdjacentHTML('afterbegin', uiIcon('cart'));
+  document.querySelector('.back-to-top').innerHTML = uiIcon('arrowUp');
+  document.querySelectorAll('.footer-social a')[0].innerHTML = uiIcon('facebook');
+  document.querySelectorAll('.footer-social a')[1].innerHTML = uiIcon('instagram');
+  document.querySelectorAll('.footer-social a')[2].innerHTML = uiIcon('tiktok');
+  document.querySelectorAll('.footer-social a')[3].innerHTML = uiIcon('pinterest');
+  const footerIcons = ['mapPin', 'phone', 'mail', 'clock'];
+  document.querySelectorAll('.footer-contact li span').forEach((el, i) => (el.innerHTML = uiIcon(footerIcons[i])));
+
+  document.querySelectorAll('.payment-option .pay-icon').forEach((el, i) => {
+    const icons = ['creditCard', 'wallet', 'cash'];
+    el.innerHTML = uiIcon(icons[i]);
+  });
+  document.querySelectorAll('.trust-badges .trust-icon').forEach((el, i) => {
+    const icons = ['shield', 'truck'];
+    el.innerHTML = uiIcon(icons[i]);
+  });
+  document.getElementById('confirm-box').querySelector('.confirm-icon').innerHTML = uiIcon('checkCircle');
+
+  document.querySelectorAll('.payment-option').forEach((opt) => {
+    opt.addEventListener('click', () => {
+      document.querySelectorAll('.payment-option').forEach((o) => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      opt.querySelector('input').checked = true;
+    });
+  });
+
+  const SHIPPING_THRESHOLD = 49;
+  const SHIPPING_COST = 3.9;
+
+  function renderOrderSummary() {
+    const cart = getCart();
+    const lines = cart.map((l) => ({ line: l, pr: getProductById(l.id) })).filter((x) => x.pr);
+    const subtotal = lines.reduce((s, x) => s + x.pr.price * x.line.qty, 0);
+    const shipping = subtotal === 0 || subtotal >= SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
+    const total = subtotal + shipping;
+
+    document.getElementById('order-summary-list').innerHTML = lines
+      .map(({ line, pr }) => {
+        const pal = PALETTE[pr.palette] || PALETTE.corail;
+        return `<div class="order-summary-item">
+          <div class="thumb" style="background:${pal.bg}">${productIcon(pr.icon, pal.icon, '#fff')}<span class="qty-badge">${line.qty}</span></div>
+          <div class="order-summary-item-info"><strong>${pr.name}</strong><span>${line.color || ''}${line.color && line.size ? ' · ' : ''}${line.size || ''}</span></div>
+          <span class="price">${formatPrice(pr.price * line.qty)}</span>
+        </div>`;
+      })
+      .join('') || '<p style="font-size:0.85rem;color:var(--ink-light)">Votre panier est vide.</p>';
+
+    document.getElementById('co-subtotal').textContent = formatPrice(subtotal);
+    document.getElementById('co-shipping').textContent = shipping === 0 ? 'Offerte' : formatPrice(shipping);
+    document.getElementById('co-total').textContent = formatPrice(total);
+
+    return lines.length > 0;
+  }
+
+  const hasItems = renderOrderSummary();
+  if (!hasItems) {
+    document.querySelector('#checkout-form button[type=submit]').disabled = true;
+  }
+
+  document.getElementById('checkout-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!getCart().length) return;
+    const orderNum = 'NB-' + Math.floor(100000 + Math.random() * 899999);
+    document.getElementById('order-number').textContent = 'Commande #' + orderNum;
+    document.getElementById('checkout-wrap').style.display = 'none';
+    document.getElementById('confirm-box').style.display = 'block';
+    saveCart([]);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>
+</body>
+</html>

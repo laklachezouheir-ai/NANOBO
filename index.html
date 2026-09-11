@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NANOBO — Mode enfant douce, colorée & responsable</title>
+<meta name="description" content="NANOBO, la boutique de mode enfant qui donne le sourire : vêtements doux, colorés et résistants pour filles, garçons et bébés.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%23ff6b7a'/%3E%3Ctext x='50' y='68' font-size='55' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='700'%3EN%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="announce-bar">🎉 Livraison gratuite dès 49€ &nbsp;·&nbsp; <strong>Nouvelle collection Printemps</strong> disponible &nbsp;·&nbsp; Retours gratuits sous 30 jours</div>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <button class="nav-toggle" aria-label="Ouvrir le menu"></button>
+    <a href="index.html" class="logo">Nano<span>bo</span></a>
+    <nav class="main-nav">
+      <a href="index.html" class="active">Accueil</a>
+      <a href="boutique.html?cat=filles">Filles</a>
+      <a href="boutique.html?cat=garcons">Garçons</a>
+      <a href="boutique.html?cat=bebe">Bébé</a>
+      <a href="boutique.html?cat=accessoires">Accessoires</a>
+      <a href="boutique.html?sale=1">Soldes<span class="nav-tag">-30%</span></a>
+    </nav>
+    <form class="search-bar" onsubmit="event.preventDefault(); location.href='boutique.html?q=' + encodeURIComponent(this.q.value);">
+      <input type="text" name="q" placeholder="Rechercher un produit...">
+      <button type="submit" aria-label="Rechercher"></button>
+    </form>
+    <div class="header-icons">
+      <button class="icon-btn" aria-label="Mon compte"></button>
+      <a href="boutique.html" class="icon-btn" aria-label="Favoris"></a>
+      <a href="panier.html" class="icon-btn" aria-label="Panier"><span class="cart-count" data-cart-count>0</span></a>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-menu">
+  <div class="mobile-menu-panel">
+    <button class="mobile-menu-close" aria-label="Fermer"></button>
+    <nav>
+      <a href="index.html">Accueil</a>
+      <a href="boutique.html?cat=filles">Filles</a>
+      <a href="boutique.html?cat=garcons">Garçons</a>
+      <a href="boutique.html?cat=bebe">Bébé</a>
+      <a href="boutique.html?cat=accessoires">Accessoires</a>
+      <a href="boutique.html?cat=chaussures">Chaussures</a>
+      <a href="boutique.html?sale=1">Soldes</a>
+      <a href="a-propos.html">À propos</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </div>
+</div>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-blob b1"></div>
+    <div class="hero-blob b2"></div>
+    <div class="container hero-inner">
+      <div>
+        <span class="hero-eyebrow">✨ Nouvelle collection Printemps</span>
+        <h1>Des tenues qui donnent le <span class="highlight">sourire</span> à chaque aventure</h1>
+        <p class="lead">Vêtements doux, colorés et résistants, pensés pour accompagner les petites aventures du quotidien — de la crèche à la cour de récré.</p>
+        <div class="hero-cta">
+          <a href="boutique.html" class="btn btn-primary">Découvrir la boutique</a>
+          <a href="boutique.html?sale=1" class="btn btn-outline">Voir les soldes</a>
+        </div>
+        <div class="hero-stats">
+          <div><strong>12k+</strong><span>Familles conquises</span></div>
+          <div><strong>4.8/5</strong><span>Note moyenne</span></div>
+          <div><strong>48h</strong><span>Livraison express</span></div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-visual-card" id="hero-visual-card"></div>
+        <div class="hero-float-card top"><span class="dot"></span> Livraison en 48h</div>
+        <div class="hero-float-card bottom"><span class="dot"></span> Retours gratuits 30j</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- USP -->
+  <section class="usp-strip">
+    <div class="container usp-grid">
+      <div class="usp-item"><span class="icon"></span><div><strong>Livraison gratuite</strong><span>Dès 49€ d'achat</span></div></div>
+      <div class="usp-item"><span class="icon"></span><div><strong>Paiement sécurisé</strong><span>100% protégé</span></div></div>
+      <div class="usp-item"><span class="icon"></span><div><strong>Retours faciles</strong><span>Sous 30 jours</span></div></div>
+      <div class="usp-item"><span class="icon"></span><div><strong>Support 7j/7</strong><span>Toujours là pour vous</span></div></div>
+    </div>
+  </section>
+
+  <!-- CATEGORIES -->
+  <section>
+    <div class="container">
+      <div class="section-head center reveal">
+        <span class="eyebrow">Nos univers</span>
+        <h2>Faites votre choix</h2>
+      </div>
+      <div class="category-grid">
+        <a href="boutique.html?cat=filles" class="category-card reveal">
+          <span class="circle" style="background:#ffe1e6"></span>
+          <strong>Filles</strong><span>Robes, jupes &amp; plus</span>
+        </a>
+        <a href="boutique.html?cat=garcons" class="category-card reveal">
+          <span class="circle" style="background:#e2f1fb"></span>
+          <strong>Garçons</strong><span>Tops, bas &amp; plus</span>
+        </a>
+        <a href="boutique.html?cat=bebe" class="category-card reveal">
+          <span class="circle" style="background:#ffe8d6"></span>
+          <strong>Bébé</strong><span>0 à 24 mois</span>
+        </a>
+        <a href="boutique.html?cat=accessoires" class="category-card reveal">
+          <span class="circle" style="background:#efe9fe"></span>
+          <strong>Accessoires</strong><span>Petits plus stylés</span>
+        </a>
+        <a href="boutique.html?cat=chaussures" class="category-card reveal">
+          <span class="circle" style="background:#d9f7f2"></span>
+          <strong>Chaussures</strong><span>Confort &amp; jeu</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- BEST SELLERS -->
+  <section class="bg-alt">
+    <div class="container">
+      <div class="section-head reveal">
+        <div>
+          <span class="eyebrow">Les préférés</span>
+          <h2>Nos best-sellers</h2>
+        </div>
+        <a href="boutique.html" class="btn btn-outline btn-sm">Voir toute la boutique</a>
+      </div>
+      <div class="product-grid" id="bestsellers-grid"></div>
+    </div>
+  </section>
+
+  <!-- PROMO BANNER -->
+  <section>
+    <div class="container">
+      <div class="promo-banner reveal">
+        <div class="content">
+          <span class="tag">Offre limitée</span>
+          <h2>Soldes de saison, jusqu'à -30%</h2>
+          <p>Toute la collection été à petit prix, pendant un temps limité seulement. Les meilleures pièces partent vite !</p>
+        </div>
+        <div class="cta">
+          <a href="boutique.html?sale=1" class="btn btn-primary">J'en profite</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEW ARRIVALS -->
+  <section>
+    <div class="container">
+      <div class="section-head reveal">
+        <div>
+          <span class="eyebrow">Fraîchement arrivé</span>
+          <h2>Nouveautés</h2>
+        </div>
+        <a href="boutique.html?sort=new" class="btn btn-outline btn-sm">Tout voir</a>
+      </div>
+      <div class="product-grid" id="new-grid"></div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="bg-alt">
+    <div class="container">
+      <div class="section-head center reveal">
+        <span class="eyebrow">Ils adorent NANOBO</span>
+        <h2>Ce que disent les parents</h2>
+      </div>
+      <div class="testimonial-grid">
+        <div class="testimonial-card reveal">
+          <div class="stars"></div>
+          <p>"Qualité au rendez-vous et coloris qui tiennent au lavage après lavage. Ma fille ne veut plus porter que ses robes NANOBO !"</p>
+          <div class="testimonial-author">
+            <span class="avatar" style="background:#ff6b7a">L</span>
+            <div><strong>Léa M.</strong><span>Maman de 2 enfants</span></div>
+          </div>
+        </div>
+        <div class="testimonial-card reveal">
+          <div class="stars"></div>
+          <p>"Livraison ultra rapide et service client adorable. Les tailles correspondent parfaitement au guide, on recommande !"</p>
+          <div class="testimonial-author">
+            <span class="avatar" style="background:#2ec4b6">K</span>
+            <div><strong>Karim B.</strong><span>Papa d'un garçon de 5 ans</span></div>
+          </div>
+        </div>
+        <div class="testimonial-card reveal">
+          <div class="stars"></div>
+          <p>"Le sac à dos renard est juste adorable et hyper résistant, il survit à toutes les récrés depuis 6 mois !"</p>
+          <div class="testimonial-author">
+            <span class="avatar" style="background:#4ea8de">S</span>
+            <div><strong>Sofia T.</strong><span>Maman de 3 enfants</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INSTAGRAM -->
+  <section>
+    <div class="container">
+      <div class="section-head center reveal">
+        <span class="eyebrow">Communauté</span>
+        <h2>Suivez-nous @nanobo.kids</h2>
+      </div>
+      <div class="insta-strip" id="insta-strip"></div>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER -->
+  <section>
+    <div class="container">
+      <div class="newsletter reveal">
+        <h2>Ne manquez aucune nouveauté</h2>
+        <p>Inscrivez-vous et recevez -10% sur votre première commande, ainsi que nos meilleures offres en avant-première.</p>
+        <form class="newsletter-form">
+          <input type="email" required placeholder="Votre adresse e-mail">
+          <button type="submit" class="btn btn-dark">S'inscrire</button>
+        </form>
+        <p class="form-note">En vous inscrivant, vous acceptez de recevoir nos e-mails. Désinscription possible à tout moment.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a href="index.html" class="logo">Nano<span>bo</span></a>
+        <p>Des vêtements doux, colorés et durables pensés pour l'aventure de chaque enfant, du berceau aux premiers pas à l'école.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Facebook"></a>
+          <a href="#" aria-label="Instagram"></a>
+          <a href="#" aria-label="TikTok"></a>
+          <a href="#" aria-label="Pinterest"></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Boutique</h4>
+        <ul>
+          <li><a href="boutique.html?cat=filles">Filles</a></li>
+          <li><a href="boutique.html?cat=garcons">Garçons</a></li>
+          <li><a href="boutique.html?cat=bebe">Bébé</a></li>
+          <li><a href="boutique.html?cat=accessoires">Accessoires</a></li>
+          <li><a href="boutique.html?sale=1">Soldes</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Informations</h4>
+        <ul>
+          <li><a href="a-propos.html">À propos de NANOBO</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="contact.html#faq">Livraison &amp; retours</a></li>
+          <li><a href="contact.html#faq">Guide des tailles</a></li>
+          <li><a href="contact.html#faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul class="footer-contact">
+          <li><span></span> 12 rue des Petits Pas, 75011 Paris</li>
+          <li><span></span> +33 1 23 45 67 89</li>
+          <li><span></span> bonjour@nanobo.fr</li>
+          <li><span></span> Lun–Ven, 9h–18h</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 NANOBO. Tous droits réservés. Boutique de démonstration.</span>
+      <div class="payment-icons">
+        <span>VISA</span><span>MASTERCARD</span><span>PAYPAL</span><span>APPLE PAY</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<button class="back-to-top" aria-label="Retour en haut"></button>
+<div class="toast" id="cart-toast"></div>
+
+<script src="js/icons.js"></script>
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/main.js"></script>
+<script>
+  // Icônes injectées dynamiquement (évite la répétition dans le markup)
+  document.querySelector('.nav-toggle').innerHTML = uiIcon('menu');
+  document.querySelector('.mobile-menu-close').innerHTML = uiIcon('close');
+  document.querySelector('.search-bar button').innerHTML = uiIcon('search');
+  document.querySelector('[aria-label="Mon compte"]').innerHTML = uiIcon('user');
+  document.querySelector('[aria-label="Favoris"]').innerHTML = uiIcon('heart');
+  document.querySelector('[aria-label="Panier"]').insertAdjacentHTML('afterbegin', uiIcon('cart'));
+  document.querySelectorAll('.usp-item .icon')[0].innerHTML = uiIcon('truck');
+  document.querySelectorAll('.usp-item .icon')[1].innerHTML = uiIcon('shield');
+  document.querySelectorAll('.usp-item .icon')[2].innerHTML = uiIcon('refresh');
+  document.querySelectorAll('.usp-item .icon')[3].innerHTML = uiIcon('headset');
+  document.querySelectorAll('.category-card .circle').forEach((c, i) => {
+    const icons = ['dress', 'tshirt', 'romper', 'bow', 'sneaker'];
+    const colors = ['#ff6b7a', '#4ea8de', '#ff9466', '#a78bfa', '#2ec4b6'];
+    c.innerHTML = productIcon(icons[i], colors[i], '#fff');
+  });
+  document.getElementById('hero-visual-card').innerHTML = productIcon('dress', '#ff6b7a', '#fff');
+  document.querySelectorAll('.hero-float-card .dot')[0].innerHTML = uiIcon('truck');
+  document.querySelectorAll('.hero-float-card .dot')[1].innerHTML = uiIcon('refresh');
+  document.querySelectorAll('.testimonial-card .stars').forEach((el) => (el.outerHTML = starRow(5)));
+  document.querySelector('.back-to-top').innerHTML = uiIcon('arrowUp');
+  document.querySelectorAll('.footer-social a')[0].innerHTML = uiIcon('facebook');
+  document.querySelectorAll('.footer-social a')[1].innerHTML = uiIcon('instagram');
+  document.querySelectorAll('.footer-social a')[2].innerHTML = uiIcon('tiktok');
+  document.querySelectorAll('.footer-social a')[3].innerHTML = uiIcon('pinterest');
+  const footerIcons = ['mapPin', 'phone', 'mail', 'clock'];
+  document.querySelectorAll('.footer-contact li span').forEach((el, i) => (el.innerHTML = uiIcon(footerIcons[i])));
+
+  // Instagram strip (pictos colorés en guise d'aperçu communauté)
+  const instaPalette = [
+    ['#ffe1e6', '#ff6b7a', 'dress'], ['#e2f1fb', '#4ea8de', 'sneaker'], ['#fff3d6', '#f2b705', 'cap'],
+    ['#d9f7f2', '#2ec4b6', 'tshirt'], ['#efe9fe', '#a78bfa', 'bow'], ['#ffe8d6', '#ff9466', 'backpack'],
+  ];
+  document.getElementById('insta-strip').innerHTML = instaPalette
+    .map(([bg, ic, key]) => `<a href="#" class="insta-tile reveal" style="background:${bg}">${productIcon(key, ic, '#fff')}</a>`)
+    .join('');
+
+  // Best-sellers & nouveautés
+  renderProductGrid(PRODUCTS.filter((p) => p.tags.includes('bestseller')).slice(0, 4), '#bestsellers-grid');
+  renderProductGrid(PRODUCTS.filter((p) => p.tags.includes('nouveaute')).slice(0, 4), '#new-grid');
+  initReveal();
+</script>
+</body>
+</html>

@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="page-title">Produit — NANOBO</title>
+<meta name="description" content="Découvrez ce produit NANOBO en détail : tailles, couleurs, composition et avis.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%23ff6b7a'/%3E%3Ctext x='50' y='68' font-size='55' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='700'%3EN%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="announce-bar">🎉 Livraison gratuite dès 49€ &nbsp;·&nbsp; <strong>Nouvelle collection Printemps</strong> disponible &nbsp;·&nbsp; Retours gratuits sous 30 jours</div>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <button class="nav-toggle" aria-label="Ouvrir le menu"></button>
+    <a href="index.html" class="logo">Nano<span>bo</span></a>
+    <nav class="main-nav">
+      <a href="index.html">Accueil</a>
+      <a href="boutique.html?cat=filles">Filles</a>
+      <a href="boutique.html?cat=garcons">Garçons</a>
+      <a href="boutique.html?cat=bebe">Bébé</a>
+      <a href="boutique.html?cat=accessoires">Accessoires</a>
+      <a href="boutique.html?sale=1">Soldes<span class="nav-tag">-30%</span></a>
+    </nav>
+    <form class="search-bar" onsubmit="event.preventDefault(); location.href='boutique.html?q=' + encodeURIComponent(this.q.value);">
+      <input type="text" name="q" placeholder="Rechercher un produit...">
+      <button type="submit" aria-label="Rechercher"></button>
+    </form>
+    <div class="header-icons">
+      <button class="icon-btn" aria-label="Mon compte"></button>
+      <a href="boutique.html" class="icon-btn" aria-label="Favoris"></a>
+      <a href="panier.html" class="icon-btn" aria-label="Panier"><span class="cart-count" data-cart-count>0</span></a>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-menu">
+  <div class="mobile-menu-panel">
+    <button class="mobile-menu-close" aria-label="Fermer"></button>
+    <nav>
+      <a href="index.html">Accueil</a>
+      <a href="boutique.html?cat=filles">Filles</a>
+      <a href="boutique.html?cat=garcons">Garçons</a>
+      <a href="boutique.html?cat=bebe">Bébé</a>
+      <a href="boutique.html?cat=accessoires">Accessoires</a>
+      <a href="boutique.html?cat=chaussures">Chaussures</a>
+      <a href="boutique.html?sale=1">Soldes</a>
+      <a href="a-propos.html">À propos</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </div>
+</div>
+
+<main>
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="index.html">Accueil</a> <span class="sep">/</span>
+      <a href="boutique.html" id="crumb-cat-link">Boutique</a> <span class="sep">/</span>
+      <span class="current" id="crumb-name">Produit</span>
+    </div>
+
+    <div class="product-detail" id="product-detail">
+      <!-- Rempli dynamiquement par JS -->
+    </div>
+
+    <section style="padding-top:0">
+      <div data-accordion-group>
+        <div class="accordion-item open">
+          <button class="accordion-trigger">Description<span></span></button>
+          <div class="accordion-body" id="acc-desc-body"><div class="accordion-body-inner" id="acc-desc"></div></div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-trigger">Composition &amp; entretien<span></span></button>
+          <div class="accordion-body"><div class="accordion-body-inner" id="acc-details"></div></div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-trigger">Livraison &amp; retours<span></span></button>
+          <div class="accordion-body"><div class="accordion-body-inner">
+            <ul>
+              <li>Livraison standard offerte dès 49€ d'achat (sinon 3,90€), en 3 à 5 jours ouvrés.</li>
+              <li>Livraison express en 48h disponible au panier.</li>
+              <li>Retours gratuits sous 30 jours, article non porté et étiquette conservée.</li>
+            </ul>
+          </div></div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-trigger">Guide des tailles<span></span></button>
+          <div class="accordion-body"><div class="accordion-body-inner">
+            <p>Nos coupes sont pensées pour laisser de l'aisance aux mouvements. En cas de doute entre deux tailles, nous conseillons de prendre la taille au-dessus pour une utilisation plus longue.</p>
+          </div></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head reveal">
+        <div>
+          <span class="eyebrow">Vous aimerez aussi</span>
+          <h2>Produits similaires</h2>
+        </div>
+      </div>
+      <div class="product-grid" id="related-grid"></div>
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a href="index.html" class="logo">Nano<span>bo</span></a>
+        <p>Des vêtements doux, colorés et durables pensés pour l'aventure de chaque enfant, du berceau aux premiers pas à l'école.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Facebook"></a>
+          <a href="#" aria-label="Instagram"></a>
+          <a href="#" aria-label="TikTok"></a>
+          <a href="#" aria-label="Pinterest"></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Boutique</h4>
+        <ul>
+          <li><a href="boutique.html?cat=filles">Filles</a></li>
+          <li><a href="boutique.html?cat=garcons">Garçons</a></li>
+          <li><a href="boutique.html?cat=bebe">Bébé</a></li>
+          <li><a href="boutique.html?cat=accessoires">Accessoires</a></li>
+          <li><a href="boutique.html?sale=1">Soldes</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Informations</h4>
+        <ul>
+          <li><a href="a-propos.html">À propos de NANOBO</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="contact.html#faq">Livraison &amp; retours</a></li>
+          <li><a href="contact.html#faq">Guide des tailles</a></li>
+          <li><a href="contact.html#faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul class="footer-contact">
+          <li><span></span> 12 rue des Petits Pas, 75011 Paris</li>
+          <li><span></span> +33 1 23 45 67 89</li>
+          <li><span></span> bonjour@nanobo.fr</li>
+          <li><span></span> Lun–Ven, 9h–18h</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 NANOBO. Tous droits réservés. Boutique de démonstration.</span>
+      <div class="payment-icons">
+        <span>VISA</span><span>MASTERCARD</span><span>PAYPAL</span><span>APPLE PAY</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<button class="back-to-top" aria-label="Retour en haut"></button>
+<div class="toast" id="cart-toast"></div>
+
+<script src="js/icons.js"></script>
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/main.js"></script>
+<script>
+  document.querySelector('.nav-toggle').innerHTML = uiIcon('menu');
+  document.querySelector('.mobile-menu-close').innerHTML = uiIcon('close');
+  document.querySelector('.search-bar button').innerHTML = uiIcon('search');
+  document.querySelector('[aria-label="Mon compte"]').innerHTML = uiIcon('user');
+  document.querySelector('[aria-label="Favoris"]').innerHTML = uiIcon('heart');
+  document.querySelector('[aria-label="Panier"]').insertAdjacentHTML('afterbegin', uiIcon('cart'));
+  document.querySelector('.back-to-top').innerHTML = uiIcon('arrowUp');
+  document.querySelectorAll('.footer-social a')[0].innerHTML = uiIcon('facebook');
+  document.querySelectorAll('.footer-social a')[1].innerHTML = uiIcon('instagram');
+  document.querySelectorAll('.footer-social a')[2].innerHTML = uiIcon('tiktok');
+  document.querySelectorAll('.footer-social a')[3].innerHTML = uiIcon('pinterest');
+  const footerIcons = ['mapPin', 'phone', 'mail', 'clock'];
+  document.querySelectorAll('.footer-contact li span').forEach((el, i) => (el.innerHTML = uiIcon(footerIcons[i])));
+  document.querySelectorAll('.accordion-trigger span').forEach((el) => (el.innerHTML = uiIcon('plus')));
+
+  const params = new URLSearchParams(location.search);
+  const pr = getProductById(params.get('id')) || PRODUCTS[0];
+  const pal = PALETTE[pr.palette] || PALETTE.corail;
+
+  document.getElementById('page-title').textContent = pr.name + ' — NANOBO';
+  document.getElementById('crumb-cat-link').textContent = CATEGORY_LABELS[pr.category];
+  document.getElementById('crumb-cat-link').href = 'boutique.html?cat=' + pr.category;
+  document.getElementById('crumb-name').textContent = pr.name;
+
+  const oldPriceHtml = pr.oldPrice ? `<span class="price-old">${formatPrice(pr.oldPrice)}</span><span class="badge badge-promo">-${Math.round((1 - pr.price / pr.oldPrice) * 100)}%</span>` : '';
+
+  document.getElementById('product-detail').innerHTML = `
+    <div class="gallery">
+      <div class="gallery-main" id="gallery-main" style="background:${pal.bg}">${productIcon(pr.icon, pal.icon, '#fff')}</div>
+      <div class="gallery-thumbs" id="gallery-thumbs">
+        <button class="active" data-bg="${pal.bg}">${productIcon(pr.icon, pal.icon, '#fff')}</button>
+        <button data-bg="#fff3d6">${productIcon(pr.icon, '#f2b705', '#fff')}</button>
+        <button data-bg="#e2f1fb">${productIcon(pr.icon, '#4ea8de', '#fff')}</button>
+        <button data-bg="#efe9fe">${productIcon(pr.icon, '#a78bfa', '#fff')}</button>
+      </div>
+    </div>
+    <div class="pd-info">
+      <div class="pd-category"><a href="boutique.html?cat=${pr.category}">${CATEGORY_LABELS[pr.category]}</a></div>
+      <h1 class="pd-title">${pr.name}</h1>
+      <div class="pd-rating">${starRow(pr.rating)} <span>${pr.rating} / 5 · ${pr.reviews} avis</span></div>
+      <div class="pd-price">
+        <span class="price-now">${formatPrice(pr.price)}</span>
+        ${oldPriceHtml}
+      </div>
+      <p class="pd-desc">${pr.desc}</p>
+
+      <div class="pd-option">
+        <h4>Couleur <span class="selected-val" id="selected-color">${pr.colors[0]}</span></h4>
+        <div class="color-options" id="pd-colors"></div>
+      </div>
+
+      <div class="pd-option">
+        <h4>Taille <span class="selected-val" id="selected-size">${pr.sizes[0]}</span></h4>
+        <div class="size-options" id="pd-sizes"></div>
+      </div>
+
+      <div class="pd-option">
+        <h4>Quantité</h4>
+        <div class="qty-stepper">
+          <button type="button" aria-label="Diminuer">−</button>
+          <input type="text" id="pd-qty" value="1" inputmode="numeric">
+          <button type="button" aria-label="Augmenter">+</button>
+        </div>
+      </div>
+
+      <div class="pd-actions">
+        <button class="btn btn-primary" id="add-to-cart-btn">${uiIcon('cart')} Ajouter au panier</button>
+        <a href="panier.html" class="btn btn-outline" id="buy-now-btn">Acheter maintenant</a>
+      </div>
+
+      <div class="pd-meta">
+        <span><strong>Réf. produit :</strong> NANOBO-${pr.id.toUpperCase()}</span>
+        <span><strong>Âge conseillé :</strong> ${pr.ageGroup}</span>
+        <span><strong>Disponibilité :</strong> En stock, expédié sous 24h</span>
+      </div>
+    </div>
+  `;
+
+  // Miniatures galerie
+  document.getElementById('gallery-thumbs').addEventListener('click', (e) => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    document.querySelectorAll('#gallery-thumbs button').forEach((b) => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('gallery-main').style.background = btn.dataset.bg;
+  });
+
+  // Sélecteurs couleur / taille
+  document.getElementById('pd-colors').innerHTML = pr.colors
+    .map((c, i) => `<button type="button" class="color-chip ${i === 0 ? 'selected' : ''}" data-color="${c}" title="${c}" style="background:${COLOR_SWATCHES[c] || '#ccc'}"></button>`)
+    .join('');
+  document.getElementById('pd-colors').addEventListener('click', (e) => {
+    const chip = e.target.closest('.color-chip');
+    if (!chip) return;
+    document.querySelectorAll('#pd-colors .color-chip').forEach((c) => c.classList.remove('selected'));
+    chip.classList.add('selected');
+    document.getElementById('selected-color').textContent = chip.dataset.color;
+  });
+
+  document.getElementById('pd-sizes').innerHTML = pr.sizes
+    .map((s, i) => `<button type="button" class="size-chip ${i === 0 ? 'selected' : ''}" data-size="${s}">${s}</button>`)
+    .join('');
+  document.getElementById('pd-sizes').addEventListener('click', (e) => {
+    const chip = e.target.closest('.size-chip');
+    if (!chip) return;
+    document.querySelectorAll('#pd-sizes .size-chip').forEach((c) => c.classList.remove('selected'));
+    chip.classList.add('selected');
+    document.getElementById('selected-size').textContent = chip.dataset.size;
+  });
+
+  initQtySteppers();
+
+  function currentSelection() {
+    const size = document.querySelector('#pd-sizes .size-chip.selected')?.dataset.size || pr.sizes[0];
+    const color = document.querySelector('#pd-colors .color-chip.selected')?.dataset.color || pr.colors[0];
+    const qty = parseInt(document.getElementById('pd-qty').value, 10) || 1;
+    return { size, color, qty };
+  }
+
+  document.getElementById('add-to-cart-btn').addEventListener('click', () => {
+    const { size, color, qty } = currentSelection();
+    addToCart(pr.id, size, color, qty);
+    showToast(pr);
+  });
+
+  document.getElementById('buy-now-btn').addEventListener('click', () => {
+    const { size, color, qty } = currentSelection();
+    addToCart(pr.id, size, color, qty);
+  });
+
+  // Description / détails
+  document.getElementById('acc-desc').innerHTML = `<p>${pr.desc}</p>`;
+  document.getElementById('acc-details').innerHTML = `<ul>${pr.details.map((d) => `<li>${d}</li>`).join('')}</ul>`;
+  document.getElementById('acc-desc-body').style.maxHeight = document.getElementById('acc-desc-body').scrollHeight + 'px';
+
+  // Produits similaires
+  const related = PRODUCTS.filter((p) => p.category === pr.category && p.id !== pr.id).slice(0, 4);
+  renderProductGrid(related.length ? related : PRODUCTS.filter((p) => p.id !== pr.id).slice(0, 4), '#related-grid');
+
+  initReveal();
+</script>
+</body>
+</html>
