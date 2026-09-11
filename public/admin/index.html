@@ -52,7 +52,7 @@
       </div>
     </div>
 
-    <div id="cloudinary-banner"></div>
+    <div id="images-banner"></div>
 
     <div class="kpi-grid">
       <div class="kpi-card"><span>Total produits</span><strong id="kpi-total">—</strong></div>
@@ -134,7 +134,7 @@
   }
 
   let allProducts = [];
-  let metaInfo = { categories: [], cloudinaryConfigured: true };
+  let metaInfo = { categories: [], imageStorageConfigured: true };
 
   async function setupDashboard() {
     document.getElementById('nav-products').innerHTML = uiIcon('bag') + ' Produits';
@@ -155,11 +155,11 @@
       catSelect.appendChild(opt);
     });
 
-    if (!metaInfo.cloudinaryConfigured) {
-      document.getElementById('cloudinary-banner').innerHTML = `
+    if (!metaInfo.imageStorageConfigured) {
+      document.getElementById('images-banner').innerHTML = `
         <div class="banner banner-warning">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          <div><strong>Upload de photos désactivé.</strong> Cloudinary n'est pas configuré sur ce serveur (variables CLOUDINARY_CLOUD_NAME / CLOUDINARY_API_KEY / CLOUDINARY_API_SECRET manquantes). Les produits utiliseront un pictogramme de secours tant que ce n'est pas configuré.</div>
+          <div><strong>Upload de photos désactivé.</strong> Le stockage d'images (Cloudflare R2) n'est pas configuré sur ce serveur (variables R2_ACCOUNT_ID / R2_ACCESS_KEY_ID / R2_SECRET_ACCESS_KEY / R2_BUCKET_NAME / R2_PUBLIC_URL manquantes). Les produits utiliseront un pictogramme de secours tant que ce n'est pas configuré.</div>
         </div>`;
     }
 

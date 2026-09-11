@@ -39,7 +39,7 @@
       </div>
     </div>
 
-    <div id="cloudinary-banner"></div>
+    <div id="images-banner"></div>
 
     <form id="product-form" class="form-layout" onsubmit="return false">
       <!-- ============ COLONNE PRINCIPALE ============ -->
@@ -255,7 +255,7 @@
   let currentImages = [];
   let slugTouchedManually = false;
 
-  let meta = { categories: [], badges: [], cloudinaryConfigured: true };
+  let meta = { categories: [], badges: [], imageStorageConfigured: true };
   try {
     meta = await api('/api/admin/meta');
   } catch (err) {
@@ -295,11 +295,11 @@
   iconSelect.addEventListener('change', updateFallbackPreview);
   paletteSelect.addEventListener('change', updateFallbackPreview);
 
-  if (!meta.cloudinaryConfigured) {
-    document.getElementById('cloudinary-banner').innerHTML = `
+  if (!meta.imageStorageConfigured) {
+    document.getElementById('images-banner').innerHTML = `
       <div class="banner banner-warning">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        <div><strong>Upload de photos désactivé.</strong> Configurez CLOUDINARY_CLOUD_NAME / CLOUDINARY_API_KEY / CLOUDINARY_API_SECRET sur le serveur pour activer l'ajout de vraies photos. En attendant, l'image de secours ci-dessous sera utilisée.</div>
+        <div><strong>Upload de photos désactivé.</strong> Configurez R2_ACCOUNT_ID / R2_ACCESS_KEY_ID / R2_SECRET_ACCESS_KEY / R2_BUCKET_NAME / R2_PUBLIC_URL sur le serveur pour activer l'ajout de vraies photos. En attendant, l'image de secours ci-dessous sera utilisée.</div>
       </div>`;
     document.getElementById('dropzone').style.display = 'none';
   }
@@ -376,8 +376,8 @@
   fileInput.addEventListener('change', () => { handleFiles(fileInput.files); fileInput.value = ''; });
 
   async function handleFiles(fileList) {
-    if (!meta.cloudinaryConfigured) {
-      toast("Configurez Cloudinary pour activer l'upload de photos.", 'error');
+    if (!meta.imageStorageConfigured) {
+      toast("Configurez Cloudflare R2 pour activer l'upload de photos.", 'error');
       return;
     }
     for (const file of Array.from(fileList)) {
@@ -415,8 +415,8 @@
         const idx = Number(btn.dataset.remove);
         const [removed] = currentImages.splice(idx, 1);
         renderImageGrid();
-        if (removed && removed.publicId) {
-          try { await api('/api/admin/images/delete', { method: 'POST', body: JSON.stringify({ publicId: removed.publicId }) }); } catch {}
+        if (removed && removed.key) {
+          try { await api('/api/admin/images/delete', { method: 'POST', body: JSON.stringify({ key: removed.key }) }); } catch {}
         }
       });
     });

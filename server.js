@@ -7,7 +7,7 @@ const multer = require('multer');
 const config = require('./lib/config');
 const adminAuth = require('./lib/adminAuth');
 const products = require('./lib/productsStore');
-const cloudinaryLib = require('./lib/cloudinary');
+const r2 = require('./lib/r2');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -110,7 +110,7 @@ app.get('/api/admin/meta', (_req, res) => {
     categories: products.CATEGORIES,
     badges: products.BADGES,
     statuses: products.STATUSES,
-    cloudinaryConfigured: cloudinaryLib.isConfigured(),
+    imageStorageConfigured: r2.isConfigured(),
   });
 });
 
@@ -149,10 +149,10 @@ app.delete('/api/admin/products/:id', async (req, res) => {
   const p = products.getById(req.params.id);
   if (!p) return res.status(404).json({ error: 'Produit introuvable.' });
 
-  // Nettoyage best-effort des images Cloudinary associées.
-  if (cloudinaryLib.isConfigured() && Array.isArray(p.images)) {
+  // Nettoyage best-effort des images R2 associées.
+  if (r2.isConfigured() && Array.isArray(p.images)) {
     await Promise.all(
-      p.images.map((img) => cloudinaryLib.deleteProductImage(img.publicId).catch(() => {}))
+      p.images.map((img) => r2.deleteProductImage(img.key).catch(() => {}))
     );
   }
 
@@ -163,11 +163,11 @@ app.delete('/api/admin/products/:id', async (req, res) => {
 /* ---------- Upload & gestion des photos produit ---------- */
 
 app.post('/api/admin/upload', upload.single('image'), async (req, res) => {
-  if (!cloudinaryLib.isConfigured()) {
+  if (!r2.isConfigured()) {
     return res.status(503).json({
-      code: 'CLOUDINARY_NOT_CONFIGURED',
+      code: 'R2_NOT_CONFIGURED',
       error:
-        "Cloudinary n'est pas configuré sur ce serveur. Ajoutez CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY et CLOUDINARY_API_SECRET dans les variables d'environnement pour activer l'upload et l'optimisation des photos.",
+        "Le stockage d'images (Cloudflare R2) n'est pas configuré sur ce serveur. Ajoutez R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET_NAME et R2_PUBLIC_URL dans les variables d'environnement pour activer l'upload et l'optimisation des photos."
     });
   }
   if (!req.file) {
@@ -176,11 +176,11 @@ app.post('/api/admin/upload', upload.single('image'), async (req, res) => {
 
   try {
     const productId = (req.body?.productId || 'temp').toString().replace(/[^a-z0-9_-]/gi, '');
-    const result = await cloudinaryLib.uploadProductImage(req.file.buffer, { productId });
+    const result = await r2.uploadProductImage(req.file.buffer, { productId });
     res.status(201).json({
       image: {
-        url: result.secure_url,
-        publicId: result.public_id,
+        url: result.url,
+        key: result.key,
         width: result.width,
         height: result.height,
         bytes: result.bytes,
@@ -189,22 +189,22 @@ app.post('/api/admin/upload', upload.single('image'), async (req, res) => {
       },
     });
   } catch (err) {
-    console.error('Erreur upload Cloudinary:', err);
+    console.error('Erreur upload R2:', err);
     res.status(500).json({ error: "Échec de l'upload de l'image. Réessayez." });
   }
 });
 
 app.post('/api/admin/images/delete', async (req, res) => {
-  const { publicId } = req.body || {};
-  if (!publicId) return res.status(400).json({ error: 'publicId manquant.' });
-  if (!cloudinaryLib.isConfigured()) {
-    return res.status(503).json({ error: "Cloudinary n'est pas configuré." });
+  const { key } = req.body || {};
+  if (!key) return res.status(400).json({ error: 'key manquante.' });
+  if (!r2.isConfigured()) {
+    return res.status(503).json({ error: "Le stockage d'images (Cloudflare R2) n'est pas configuré." });
   }
   try {
-    await cloudinaryLib.deleteProductImage(publicId);
+    await r2.deleteProductImage(key);
     res.json({ ok: true });
   } catch (err) {
-    console.error('Erreur suppression Cloudinary:', err);
+    console.error('Erreur suppression R2:', err);
     res.status(500).json({ error: "Échec de la suppression de l'image." });
   }
 });
@@ -233,7 +233,7 @@ app.get('/api/health', (_req, res) => {
   res.json({
     status: 'ok',
     productsCount: products.getAll().length,
-    cloudinaryConfigured: cloudinaryLib.isConfigured(),
+    imageStorageConfigured: r2.isConfigured(),
     adminPasswordSource,
   });
 });
@@ -255,9 +255,9 @@ app.listen(PORT, () => {
     console.log("Interface d'administration disponible sur /admin.");
   }
 
-  if (!cloudinaryLib.isConfigured()) {
+  if (!r2.isConfigured()) {
     console.log(
-      '⚠️  Cloudinary non configuré : l’upload de photos produit sera indisponible tant que CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY et CLOUDINARY_API_SECRET ne sont pas définis.'
+      '⚠️  Cloudflare R2 non configuré : l’upload de photos produit sera indisponible tant que R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET_NAME et R2_PUBLIC_URL ne sont pas définis.'
     );
   }
 });

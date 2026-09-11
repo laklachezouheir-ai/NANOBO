@@ -8,9 +8,13 @@ services:
     envVars:
       - key: ADMIN_PASSWORD
         sync: false
-      - key: CLOUDINARY_CLOUD_NAME
+      - key: R2_ACCOUNT_ID
         sync: false
-      - key: CLOUDINARY_API_KEY
+      - key: R2_ACCESS_KEY_ID
         sync: false
-      - key: CLOUDINARY_API_SECRET
+      - key: R2_SECRET_ACCESS_KEY
+        sync: false
+      - key: R2_BUCKET_NAME
+        sync: false
+      - key: R2_PUBLIC_URL
         sync: false

@@ -36,9 +36,10 @@ sur la boutique :
 - **Stock** et référence SKU
 - **Variantes** : tailles et couleurs disponibles (saisie par tags)
 - **Détails produit** : liste de caractéristiques (composition, entretien…)
-- **Photos produit** : glisser-déposer, upload vers Cloudinary avec
-  **optimisation automatique** (compression, format moderne, recadrage),
-  image principale et miniatures, taille avant/après affichée
+- **Photos produit** : glisser-déposer, upload vers Cloudflare R2 avec
+  **optimisation automatique côté serveur** (compression, conversion en
+  WebP, redimensionnement), image principale et miniatures, taille
+  avant/après affichée
 - **Référencement (SEO)** : meta titre / meta description avec compteurs
   de caractères et **aperçu Google** en direct
 - **Statut** : brouillon ou publié (seuls les produits publiés
@@ -59,8 +60,8 @@ nanobo/
 ├── server.js                  # Serveur Express : API publique + API admin + pages admin
 ├── lib/
 │   ├── productsStore.js       # CRUD produits (data/products.json)
-│   ├── cloudinary.js          # Upload & optimisation des photos produit
-│   ├── config.js              # Mot de passe admin + identifiants Cloudinary
+│   ├── r2.js                  # Upload, optimisation (sharp) & stockage des photos produit
+│   ├── config.js              # Mot de passe admin + identifiants Cloudflare R2
 │   └── adminAuth.js           # Sessions et middleware d'authentification admin
 ├── data/
 │   └── products.json          # Catalogue produit (données de démonstration en seed)
@@ -102,14 +103,31 @@ Puis ouvre `http://localhost:3000` (boutique) et `http://localhost:3000/admin`
 | Variable | Rôle | Obligatoire |
 |---|---|---|
 | `ADMIN_PASSWORD` | Mot de passe de connexion à `/admin`. Si absente, un mot de passe est généré automatiquement au premier démarrage et affiché dans les logs. | Non (mais recommandé en production) |
-| `CLOUDINARY_CLOUD_NAME` | Nom de ton compte Cloudinary. | Non — sans elle, l'upload de photos est désactivé (un pictogramme de secours est utilisé à la place) |
-| `CLOUDINARY_API_KEY` | Clé API Cloudinary. | Idem |
-| `CLOUDINARY_API_SECRET` | Secret API Cloudinary. | Idem |
+| `R2_ACCOUNT_ID` | Identifiant de ton compte Cloudflare. | Non — sans ces 5 variables, l'upload de photos est désactivé (un pictogramme de secours est utilisé à la place) |
+| `R2_ACCESS_KEY_ID` | Clé d'accès du jeton API R2. | Idem |
+| `R2_SECRET_ACCESS_KEY` | Secret du jeton API R2. | Idem |
+| `R2_BUCKET_NAME` | Nom du bucket R2 (ex. `nanobo`). | Idem |
+| `R2_PUBLIC_URL` | URL publique du bucket (sous-domaine `r2.dev` ou domaine personnalisé). | Idem |
 | `PORT` | Port d'écoute du serveur. | Non (3000 par défaut) |
 
-Un compte [Cloudinary](https://cloudinary.com/) gratuit (25 Go) suffit
-largement : crée un compte, récupère les 3 identifiants depuis le
-Dashboard (« Product Environment Credentials ») et colle-les dans `.env`.
+Un compte [Cloudflare](https://dash.cloudflare.com/) gratuit suffit
+(R2 offre 10 Go de stockage gratuits/mois, sans frais de sortie — une
+carte bancaire est demandée pour activer R2 mais rien n'est facturé sous
+le quota gratuit) :
+
+1. **R2 Object Storage** → **Create bucket** (ex. `nanobo`).
+2. Récupère l'**Account ID** affiché sur la page R2.
+3. **Manage R2 API Tokens** → **Create API Token** (permissions *Object
+   Read & Write*, scopé au bucket) → note l'**Access Key ID** et le
+   **Secret Access Key** affichés (le secret n'est montré qu'une fois).
+4. Dans les **Settings** du bucket → **Public Access** → active le
+   sous-domaine `r2.dev` (ou connecte un domaine personnalisé) pour
+   obtenir l'URL publique.
+
+Contrairement à Cloudinary, R2 est du stockage pur (pas de
+transformation à la volée) : l'optimisation (redimensionnement max
+1600px, compression, conversion en WebP) est donc faite une fois, côté
+serveur, avant l'upload (voir `lib/r2.js`, librairie `sharp`).
 
 ## Déploiement sur Render
 
@@ -123,7 +141,8 @@ l'administration a besoin d'un serveur).
 3. Render détecte `render.yaml` et propose de créer le service web `nanobo`
    (build : `npm install`, démarrage : `npm start`).
 4. Renseigne les variables d'environnement demandées (`ADMIN_PASSWORD`,
-   `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`).
+   `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`,
+   `R2_BUCKET_NAME`, `R2_PUBLIC_URL`).
 5. Clique sur **Apply** / **Create Web Service**. Render build et démarre
    l'app, puis fournit une URL publique du type
    `https://nanobo-xxxx.onrender.com`.
@@ -144,7 +163,7 @@ Deux options :
   toujours là au redémarrage.
 
 Les **photos produit**, elles, sont toujours persistantes puisqu'elles
-sont hébergées sur Cloudinary, pas sur le disque du serveur.
+sont hébergées sur Cloudflare R2, pas sur le disque du serveur.
 
 ## Personnalisation rapide
 
