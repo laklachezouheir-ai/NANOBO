@@ -102,28 +102,7 @@
         <span class="eyebrow">Nos univers</span>
         <h2>Faites votre choix</h2>
       </div>
-      <div class="category-grid">
-        <a href="boutique.html?cat=filles" class="category-card reveal">
-          <span class="circle" style="background:#ffe1e6"></span>
-          <strong>Filles</strong><span>Robes, jupes &amp; plus</span>
-        </a>
-        <a href="boutique.html?cat=garcons" class="category-card reveal">
-          <span class="circle" style="background:#e2f1fb"></span>
-          <strong>Garçons</strong><span>Tops, bas &amp; plus</span>
-        </a>
-        <a href="boutique.html?cat=bebe" class="category-card reveal">
-          <span class="circle" style="background:#ffe8d6"></span>
-          <strong>Bébé</strong><span>0 à 24 mois</span>
-        </a>
-        <a href="boutique.html?cat=accessoires" class="category-card reveal">
-          <span class="circle" style="background:#efe9fe"></span>
-          <strong>Accessoires</strong><span>Petits plus stylés</span>
-        </a>
-        <a href="boutique.html?cat=chaussures" class="category-card reveal">
-          <span class="circle" style="background:#d9f7f2"></span>
-          <strong>Chaussures</strong><span>Confort &amp; jeu</span>
-        </a>
-      </div>
+      <div class="category-grid" id="category-grid"></div>
     </div>
   </section>
 
@@ -306,11 +285,6 @@
   document.querySelectorAll('.usp-item .icon')[1].innerHTML = uiIcon('shield');
   document.querySelectorAll('.usp-item .icon')[2].innerHTML = uiIcon('refresh');
   document.querySelectorAll('.usp-item .icon')[3].innerHTML = uiIcon('headset');
-  document.querySelectorAll('.category-card .circle').forEach((c, i) => {
-    const icons = ['dress', 'tshirt', 'romper', 'bow', 'sneaker'];
-    const colors = ['#ff6b7a', '#4ea8de', '#ff9466', '#a78bfa', '#2ec4b6'];
-    c.innerHTML = productIcon(icons[i], colors[i], '#fff');
-  });
   document.getElementById('hero-visual-card').innerHTML = productIcon('dress', '#ff6b7a', '#fff');
   document.querySelectorAll('.hero-float-card .dot')[0].innerHTML = uiIcon('truck');
   document.querySelectorAll('.hero-float-card .dot')[1].innerHTML = uiIcon('refresh');
@@ -332,9 +306,18 @@
     .map(([bg, ic, key]) => `<a href="#" class="insta-tile reveal" style="background:${bg}">${productIcon(key, ic, '#fff')}</a>`)
     .join('');
 
-  // Best-sellers & nouveautés (chargés depuis le catalogue géré en admin)
+  // Catégories, best-sellers & nouveautés (chargés depuis l'admin)
   (async () => {
-    await loadProducts();
+    await Promise.all([loadProducts(), loadCategories()]);
+
+    document.getElementById('category-grid').innerHTML = CATEGORIES.map((c) => {
+      const pal = PALETTE[c.palette] || PALETTE.corail;
+      return `<a href="boutique.html?cat=${c.id}" class="category-card reveal">
+        <span class="circle" style="background:${pal.bg}">${productIcon(c.icon, pal.icon, '#fff')}</span>
+        <strong>${c.label}</strong><span>${c.tagline || ''}</span>
+      </a>`;
+    }).join('') || '<p style="color:var(--ink-light);grid-column:1/-1;text-align:center">Aucune catégorie pour le moment.</p>';
+
     renderProductGrid(PRODUCTS.filter((p) => p.tags.includes('bestseller')).slice(0, 4), '#bestsellers-grid');
     renderProductGrid(PRODUCTS.filter((p) => p.tags.includes('nouveaute')).slice(0, 4), '#new-grid');
     initReveal();

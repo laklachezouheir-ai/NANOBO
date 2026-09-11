@@ -19,6 +19,7 @@
     <div class="admin-logo-sub">Administration</div>
     <nav class="admin-nav">
       <a href="/admin" id="nav-products"></a>
+      <a href="/admin/categories" id="nav-categories"></a>
     </nav>
     <div class="admin-sidebar-footer">
       <a href="/" target="_blank" id="nav-view-shop"></a>
@@ -244,6 +245,7 @@
   if (!authed) return;
 
   document.getElementById('nav-products').innerHTML = uiIcon('bag') + ' Produits';
+  document.getElementById('nav-categories').innerHTML = uiIcon('sliders') + ' Catégories';
   document.getElementById('nav-view-shop').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> Voir la boutique`;
   document.getElementById('nav-logout').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Déconnexion`;
   document.getElementById('nav-logout').addEventListener('click', (e) => { e.preventDefault(); logoutAdmin(); });
@@ -264,10 +266,13 @@
 
   // Catégories
   const catSelect = document.getElementById('f-category');
+  if (!meta.categories.length) {
+    catSelect.innerHTML = '<option value="">Aucune catégorie — crée-en une</option>';
+  }
   meta.categories.forEach((c) => {
     const opt = document.createElement('option');
-    opt.value = c;
-    opt.textContent = CATEGORY_LABELS[c] || c;
+    opt.value = c.id;
+    opt.textContent = c.label;
     catSelect.appendChild(opt);
   });
 
@@ -467,7 +472,8 @@
       return;
     }
   } else {
-    document.getElementById('f-status').value = 'draft';
+    document.getElementById('f-status').value = 'published';
+    document.getElementById('f-status').className = 'is-published';
     document.getElementById('f-stock').value = 0;
     document.getElementById('f-rating').value = 5;
     document.getElementById('f-reviews').value = 0;
@@ -491,7 +497,7 @@
     document.getElementById('f-badge').value = p.badge || '';
     document.getElementById('f-sku').value = p.sku || '';
     document.getElementById('f-stock').value = p.stock ?? 0;
-    document.getElementById('f-category').value = p.category || meta.categories[0];
+    document.getElementById('f-category').value = p.category || (meta.categories[0] && meta.categories[0].id) || '';
     document.getElementById('f-age-group').value = p.ageGroup || '';
     document.getElementById('f-rating').value = p.rating ?? 5;
     document.getElementById('f-reviews').value = p.reviews ?? 0;

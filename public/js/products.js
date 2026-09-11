@@ -25,13 +25,26 @@ const COLOR_SWATCHES = {
   Rose: "#ffb3c1",
 };
 
-const CATEGORY_LABELS = {
-  filles: "Filles",
-  garcons: "Garçons",
-  bebe: "Bébé",
-  accessoires: "Accessoires",
-  chaussures: "Chaussures",
-};
+/* Catégories, chargées depuis /api/categories (gérées via /admin/categories).
+   CATEGORY_LABELS reste un simple dictionnaire id -> nom affiché, reconstruit
+   à chaque chargement pour rester compatible avec le code existant. */
+let CATEGORIES = [];
+let CATEGORY_LABELS = {};
+
+async function loadCategories() {
+  try {
+    const res = await fetch("/api/categories");
+    if (!res.ok) throw new Error("Réponse API invalide (" + res.status + ")");
+    const data = await res.json();
+    CATEGORIES = Array.isArray(data.categories) ? data.categories : [];
+  } catch (err) {
+    console.error("Impossible de charger les catégories :", err);
+    CATEGORIES = [];
+  }
+  CATEGORY_LABELS = {};
+  CATEGORIES.forEach((c) => (CATEGORY_LABELS[c.id] = c.label));
+  return CATEGORIES;
+}
 
 /* Catalogue produit courant, peuplé par loadProducts(). Vide tant que
    l'appel API n'a pas abouti : chaque page doit `await loadProducts()`

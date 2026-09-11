@@ -7,6 +7,7 @@ const multer = require('multer');
 const config = require('./lib/config');
 const adminAuth = require('./lib/adminAuth');
 const products = require('./lib/productsStore');
+const categories = require('./lib/categoriesStore');
 const r2 = require('./lib/r2');
 
 const app = express();
@@ -69,6 +70,10 @@ app.get('/api/products/:slug', (req, res) => {
   res.json({ product: toPublicShape(p) });
 });
 
+app.get('/api/categories', (_req, res) => {
+  res.json({ categories: categories.getVisible() });
+});
+
 /* ============================================================
    Authentification admin
    ============================================================ */
@@ -107,11 +112,56 @@ app.use('/api/admin', adminAuth.requireAdmin);
 
 app.get('/api/admin/meta', (_req, res) => {
   res.json({
-    categories: products.CATEGORIES,
+    categories: categories.getAllSorted(),
     badges: products.BADGES,
     statuses: products.STATUSES,
     imageStorageConfigured: r2.isConfigured(),
   });
+});
+
+/* ---------- Catégories (CRUD complet) ---------- */
+
+app.get('/api/admin/categories', (_req, res) => {
+  const list = categories.getAllSorted();
+  const allProducts = products.getAll();
+  const withCounts = list.map((c) => ({
+    ...c,
+    productCount: allProducts.filter((p) => p.category === c.id).length,
+  }));
+  res.json({ categories: withCounts });
+});
+
+app.post('/api/admin/categories', (req, res) => {
+  try {
+    const category = categories.create(req.body || {});
+    res.status(201).json({ category });
+  } catch (err) {
+    res.status(err.code === 'VALIDATION_ERROR' ? 400 : 500).json({ error: err.message });
+  }
+});
+
+app.put('/api/admin/categories/:id', (req, res) => {
+  try {
+    const category = categories.update(req.params.id, req.body || {});
+    if (!category) return res.status(404).json({ error: 'Catégorie introuvable.' });
+    res.json({ category });
+  } catch (err) {
+    res.status(err.code === 'VALIDATION_ERROR' ? 400 : 500).json({ error: err.message });
+  }
+});
+
+app.delete('/api/admin/categories/:id', (req, res) => {
+  const inUse = products.getAll().filter((p) => p.category === req.params.id).length;
+  if (inUse > 0 && req.query.force !== '1') {
+    return res.status(409).json({
+      code: 'CATEGORY_IN_USE',
+      error: `${inUse} produit(s) utilisent encore cette catégorie.`,
+      productCount: inUse,
+    });
+  }
+  const ok = categories.remove(req.params.id);
+  if (!ok) return res.status(404).json({ error: 'Catégorie introuvable.' });
+  res.json({ ok: true });
 });
 
 /* ---------- Produits (CRUD complet) ---------- */
@@ -190,7 +240,10 @@ app.post('/api/admin/upload', upload.single('image'), async (req, res) => {
     });
   } catch (err) {
     console.error('Erreur upload R2:', err);
-    res.status(500).json({ error: "Échec de l'upload de l'image. Réessayez." });
+    res.status(500).json({
+      error: "Échec de l'upload de l'image. Réessayez.",
+      detail: err.message || String(err),
+    });
   }
 });
 
@@ -226,6 +279,9 @@ app.get('/admin', (_req, res) => {
 });
 app.get('/admin/produits/:id', (_req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'admin', 'produit.html'));
+});
+app.get('/admin/categories', (_req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'admin', 'categories.html'));
 });
 
 app.get('/api/health', (_req, res) => {

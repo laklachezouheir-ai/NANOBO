@@ -260,7 +260,7 @@
   }
 
   (async () => {
-    await loadProducts();
+    await Promise.all([loadProducts(), loadCategories()]);
     const hasItems = renderOrderSummary();
     if (!hasItems) {
       document.querySelector('#checkout-form button[type=submit]').disabled = true;

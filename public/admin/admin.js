@@ -15,7 +15,8 @@ async function api(path, options = {}) {
     data = null;
   }
   if (!res.ok) {
-    const err = new Error((data && data.error) || `Erreur (${res.status})`);
+    const message = (data && data.error) || `Erreur (${res.status})`;
+    const err = new Error(data && data.detail ? `${message} (${data.detail})` : message);
     err.status = res.status;
     err.code = data && data.code;
     throw err;
@@ -32,7 +33,8 @@ async function apiUpload(path, formData) {
     data = null;
   }
   if (!res.ok) {
-    const err = new Error((data && data.error) || `Erreur (${res.status})`);
+    const message = (data && data.error) || `Erreur (${res.status})`;
+    const err = new Error(data && data.detail ? `${message} (${data.detail})` : message);
     err.status = res.status;
     err.code = data && data.code;
     throw err;

@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Catégories — Administration NANOBO</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%23ff6b7a'/%3E%3Ctext x='50' y='68' font-size='55' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='700'%3EN%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/admin/admin.css">
+<style>
+  .cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+  .cat-card { background: var(--white); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); padding: 20px; text-align: center; position: relative; }
+  .cat-card .circle { width: 72px; height: 72px; border-radius: 50%; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; }
+  .cat-card .circle svg { width: 42%; height: 42%; }
+  .cat-card strong { display: block; font-family: var(--font-heading); font-size: 1.05rem; }
+  .cat-card span.tagline { display: block; font-size: 0.8rem; color: var(--ink-light); margin-top: 2px; }
+  .cat-card .count { display: inline-block; margin-top: 10px; font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: #eeece8; color: var(--ink-soft); }
+  .cat-card .hidden-badge { position: absolute; top: 12px; left: 12px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; background: var(--yellow-light); color: #a56b00; padding: 3px 8px; border-radius: 999px; }
+  .cat-card .cat-actions { display: flex; gap: 6px; justify-content: center; margin-top: 12px; }
+  .cat-add-card { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; border: 2px dashed var(--line); border-radius: var(--radius-lg); padding: 20px; color: var(--ink-light); font-weight: 600; font-size: 0.9rem; min-height: 180px; }
+  .cat-add-card:hover { border-color: var(--coral); color: var(--coral-dark); }
+  .modal-box.modal-lg { max-width: 480px; text-align: left; }
+  .modal-box.modal-lg h3 { font-family: var(--font-heading); }
+  .picto-preview-row { display: flex; align-items: center; gap: 14px; margin-bottom: 4px; }
+  .picto-preview-row .preview { width: 56px; height: 56px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .picto-preview-row .preview svg { width: 60%; height: 60%; }
+  .picto-preview-row select { flex: 1; min-width: 0; }
+  .field-checkbox { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600; color: var(--ink-soft); }
+  .field-checkbox input { width: 16px; height: 16px; accent-color: var(--coral); }
+</style>
+</head>
+<body>
+
+<div class="admin-shell">
+  <aside class="admin-sidebar">
+    <div class="admin-logo">Nano<span>bo</span></div>
+    <div class="admin-logo-sub">Administration</div>
+    <nav class="admin-nav">
+      <a href="/admin" id="nav-products"></a>
+      <a href="/admin/categories" class="active" id="nav-categories"></a>
+    </nav>
+    <div class="admin-sidebar-footer">
+      <a href="/" target="_blank" id="nav-view-shop"></a>
+      <a href="#" id="nav-logout"></a>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-topbar">
+      <div>
+        <div class="admin-breadcrumb">Administration</div>
+        <h1 class="admin-title">Catégories</h1>
+      </div>
+      <div class="admin-topbar-actions">
+        <button class="btn btn-primary" id="btn-new-category"></button>
+      </div>
+    </div>
+
+    <p class="card-sub" style="margin-bottom:20px">Les catégories organisent le catalogue : elles apparaissent dans le menu, la grille d'accueil et les filtres de la boutique. L'ordre d'affichage détermine leur position.</p>
+
+    <div class="cat-grid" id="cat-grid">
+      <div style="grid-column:1/-1;text-align:center;color:var(--ink-light);padding:40px 0">Chargement…</div>
+    </div>
+  </main>
+</div>
+
+<!-- Formulaire d'ajout/édition -->
+<div class="modal-overlay" id="cat-modal">
+  <div class="modal-box modal-lg">
+    <h3 id="cat-modal-title">Nouvelle catégorie</h3>
+    <div class="field">
+      <label>Nom affiché</label>
+      <input type="text" id="cat-label" placeholder="Ex. Filles">
+    </div>
+    <div class="field">
+      <label>Sous-titre (affiché sous le nom sur l'accueil)</label>
+      <input type="text" id="cat-tagline" placeholder="Ex. Robes, jupes & plus">
+    </div>
+    <div class="field">
+      <label>Pictogramme</label>
+      <div class="picto-preview-row">
+        <div class="preview" id="cat-preview"></div>
+        <select id="cat-icon"></select>
+        <select id="cat-palette"></select>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Ordre d'affichage</label>
+        <input type="number" id="cat-order" min="1" step="1">
+      </div>
+      <div class="field" style="display:flex;align-items:flex-end;padding-bottom:11px">
+        <label class="field-checkbox"><input type="checkbox" id="cat-visible" checked> Visible sur la boutique</label>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" id="cat-modal-cancel">Annuler</button>
+      <button class="btn btn-primary" id="cat-modal-save">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<script src="/js/icons.js"></script>
+<script src="/js/products.js"></script>
+<script src="/admin/admin.js"></script>
+<script>
+(async function () {
+  const authed = await requireAuthOrRedirect();
+  if (!authed) return;
+
+  document.getElementById('nav-products').innerHTML = uiIcon('bag') + ' Produits';
+  document.getElementById('nav-categories').innerHTML = uiIcon('sliders') + ' Catégories';
+  document.getElementById('nav-view-shop').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> Voir la boutique`;
+  document.getElementById('nav-logout').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Déconnexion`;
+  document.getElementById('nav-logout').addEventListener('click', (e) => { e.preventDefault(); logoutAdmin(); });
+  document.getElementById('btn-new-category').innerHTML = uiIcon('plus') + ' Ajouter une catégorie';
+
+  const iconSelect = document.getElementById('cat-icon');
+  Object.keys(PRODUCT_ICON).forEach((key) => {
+    const opt = document.createElement('option');
+    opt.value = key;
+    opt.textContent = key;
+    iconSelect.appendChild(opt);
+  });
+  const paletteSelect = document.getElementById('cat-palette');
+  Object.keys(PALETTE).forEach((key) => {
+    const opt = document.createElement('option');
+    opt.value = key;
+    opt.textContent = key;
+    paletteSelect.appendChild(opt);
+  });
+
+  function updatePreview() {
+    const pal = PALETTE[paletteSelect.value] || PALETTE.corail;
+    const preview = document.getElementById('cat-preview');
+    preview.style.background = pal.bg;
+    preview.innerHTML = productIcon(iconSelect.value, pal.icon, '#fff');
+  }
+  iconSelect.addEventListener('change', updatePreview);
+  paletteSelect.addEventListener('change', updatePreview);
+
+  let list = [];
+  let editingId = null;
+
+  async function load() {
+    try {
+      const { categories } = await api('/api/admin/categories');
+      list = categories;
+      render();
+    } catch (err) {
+      toast(err.message, 'error');
+    }
+  }
+
+  function render() {
+    const grid = document.getElementById('cat-grid');
+    const cardsHtml = list
+      .map((c) => {
+        const pal = PALETTE[c.palette] || PALETTE.corail;
+        return `
+        <div class="cat-card">
+          ${c.visible === false ? '<span class="hidden-badge">Masquée</span>' : ''}
+          <div class="circle" style="background:${pal.bg}">${productIcon(c.icon, pal.icon, '#fff')}</div>
+          <strong>${c.label}</strong>
+          <span class="tagline">${c.tagline || ''}</span>
+          <span class="count">${c.productCount} produit${c.productCount > 1 ? 's' : ''}</span>
+          <div class="cat-actions">
+            <button class="btn btn-outline btn-sm" data-edit="${c.id}">Modifier</button>
+            <button class="btn btn-danger btn-sm" data-delete="${c.id}">Supprimer</button>
+          </div>
+        </div>`;
+      })
+      .join('');
+
+    grid.innerHTML =
+      cardsHtml +
+      `<button type="button" class="cat-add-card" id="cat-add-inline">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Ajouter une catégorie
+      </button>`;
+
+    grid.querySelectorAll('[data-edit]').forEach((btn) => {
+      btn.addEventListener('click', () => openModal(list.find((c) => c.id === btn.dataset.edit)));
+    });
+    grid.querySelectorAll('[data-delete]').forEach((btn) => {
+      btn.addEventListener('click', () => deleteCategory(btn.dataset.delete));
+    });
+    document.getElementById('cat-add-inline').addEventListener('click', () => openModal(null));
+  }
+
+  function openModal(category) {
+    editingId = category ? category.id : null;
+    document.getElementById('cat-modal-title').textContent = category ? 'Modifier la catégorie' : 'Nouvelle catégorie';
+    document.getElementById('cat-label').value = category ? category.label : '';
+    document.getElementById('cat-tagline').value = category ? category.tagline : '';
+    iconSelect.value = category ? category.icon : 'tshirt';
+    paletteSelect.value = category ? category.palette : 'corail';
+    document.getElementById('cat-order').value = category ? category.order : list.length + 1;
+    document.getElementById('cat-visible').checked = category ? category.visible !== false : true;
+    updatePreview();
+    document.getElementById('cat-modal').classList.add('show');
+    document.getElementById('cat-label').focus();
+  }
+
+  function closeModal() {
+    document.getElementById('cat-modal').classList.remove('show');
+  }
+
+  document.getElementById('cat-modal-cancel').addEventListener('click', closeModal);
+  document.getElementById('cat-modal').addEventListener('click', (e) => {
+    if (e.target.id === 'cat-modal') closeModal();
+  });
+
+  document.getElementById('cat-modal-save').addEventListener('click', async () => {
+    const label = document.getElementById('cat-label').value.trim();
+    if (!label) {
+      toast('Le nom de la catégorie est obligatoire.', 'error');
+      return;
+    }
+    const payload = {
+      label,
+      tagline: document.getElementById('cat-tagline').value.trim(),
+      icon: iconSelect.value,
+      palette: paletteSelect.value,
+      order: parseInt(document.getElementById('cat-order').value, 10) || list.length + 1,
+      visible: document.getElementById('cat-visible').checked,
+    };
+    try {
+      if (editingId) {
+        await api('/api/admin/categories/' + editingId, { method: 'PUT', body: JSON.stringify(payload) });
+        toast('Catégorie mise à jour.');
+      } else {
+        await api('/api/admin/categories', { method: 'POST', body: JSON.stringify(payload) });
+        toast('Catégorie créée.');
+      }
+      closeModal();
+      await load();
+    } catch (err) {
+      toast(err.message, 'error');
+    }
+  });
+
+  async function deleteCategory(id) {
+    const cat = list.find((c) => c.id === id);
+    const ok = await confirmModal('Supprimer cette catégorie ?', `« ${cat ? cat.label : ''} » sera supprimée${cat && cat.productCount ? ` (${cat.productCount} produit(s) resteront affectés à cette catégorie mais elle n'apparaîtra plus dans le menu)` : ''}.`);
+    if (!ok) return;
+    try {
+      await api('/api/admin/categories/' + id + '?force=1', { method: 'DELETE' });
+      toast('Catégorie supprimée.');
+      await load();
+    } catch (err) {
+      toast(err.message, 'error');
+    }
+  }
+
+  document.getElementById('btn-new-category').addEventListener('click', () => openModal(null));
+
+  await load();
+})();
+</script>
+</body>
+</html>

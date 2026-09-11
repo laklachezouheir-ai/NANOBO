@@ -72,13 +72,9 @@
       <aside class="filters-panel">
         <button class="mobile-menu-close" style="margin-bottom:12px;" id="close-filters" aria-label="Fermer les filtres"></button>
 
-        <div class="filter-group">
+        <div class="filter-group" id="category-filter-group">
           <h4>Catégorie</h4>
-          <label class="filter-option"><input type="checkbox" value="filles" class="cat-filter"> Filles <span class="count">(4)</span></label>
-          <label class="filter-option"><input type="checkbox" value="garcons" class="cat-filter"> Garçons <span class="count">(6)</span></label>
-          <label class="filter-option"><input type="checkbox" value="bebe" class="cat-filter"> Bébé <span class="count">(4)</span></label>
-          <label class="filter-option"><input type="checkbox" value="accessoires" class="cat-filter"> Accessoires <span class="count">(5)</span></label>
-          <label class="filter-option"><input type="checkbox" value="chaussures" class="cat-filter"> Chaussures <span class="count">(2)</span></label>
+          <div id="category-filters"></div>
         </div>
 
         <div class="filter-group">
@@ -231,9 +227,6 @@
     sort: params.get('sort') || 'popular',
   };
 
-  if (state.cats.length) {
-    document.querySelectorAll('.cat-filter').forEach((cb) => { if (state.cats.includes(cb.value)) cb.checked = true; });
-  }
   if (state.saleOnly) document.getElementById('sale-filter').checked = true;
   document.getElementById('sort-select').value = state.sort;
 
@@ -282,12 +275,21 @@
     updateBanner();
   }
 
-  document.querySelectorAll('.cat-filter').forEach((cb) => {
-    cb.addEventListener('change', () => {
-      state.cats = Array.from(document.querySelectorAll('.cat-filter:checked')).map((c) => c.value);
-      applyFilters();
+  function renderCategoryFilters() {
+    const container = document.getElementById('category-filters');
+    container.innerHTML = CATEGORIES.map((c) => {
+      const count = PRODUCTS.filter((p) => p.category === c.id).length;
+      const checked = state.cats.includes(c.id) ? 'checked' : '';
+      return `<label class="filter-option"><input type="checkbox" value="${c.id}" class="cat-filter" ${checked}> ${c.label} <span class="count">(${count})</span></label>`;
+    }).join('') || '<p class="hint">Aucune catégorie pour le moment.</p>';
+
+    document.querySelectorAll('.cat-filter').forEach((cb) => {
+      cb.addEventListener('change', () => {
+        state.cats = Array.from(document.querySelectorAll('.cat-filter:checked')).map((c) => c.value);
+        applyFilters();
+      });
     });
-  });
+  }
 
   document.querySelectorAll('.size-chip').forEach((chip) => {
     chip.addEventListener('click', () => {
@@ -332,7 +334,8 @@
   });
 
   (async () => {
-    await loadProducts();
+    await Promise.all([loadProducts(), loadCategories()]);
+    renderCategoryFilters();
     applyFilters();
   })();
 </script>

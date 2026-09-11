@@ -270,7 +270,7 @@
   }
 
   (async () => {
-    await loadProducts();
+    await Promise.all([loadProducts(), loadCategories()]);
     renderCart();
   })();
 </script>

@@ -185,7 +185,7 @@
   document.querySelectorAll('.accordion-trigger span').forEach((el) => (el.innerHTML = uiIcon('plus')));
 
   (async () => {
-    await loadProducts();
+    await Promise.all([loadProducts(), loadCategories()]);
 
     const params = new URLSearchParams(location.search);
     const pr = getProductById(params.get('id')) || PRODUCTS[0];
