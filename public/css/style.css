@@ -884,11 +884,12 @@ section {
   color: var(--coral);
 }
 
+/* Le bouton "Ajouter au panier" reste dans le flux normal (jamais en
+   position absolue) : il ne peut donc jamais recouvrir le prix ou le
+   titre, quel que soit l'appareil (desktop, mobile, écran tactile). */
 .quick-add {
-  position: absolute;
-  left: 10px;
-  right: 10px;
-  bottom: -50px;
+  width: 100%;
+  margin-top: 12px;
   border: none;
   background: var(--ink);
   color: var(--white);
@@ -900,12 +901,7 @@ section {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  transition: bottom 0.25s ease, background 0.2s;
-  z-index: 2;
-}
-
-.product-card:hover .quick-add {
-  bottom: 10px;
+  transition: background 0.2s;
 }
 
 .quick-add:hover {
@@ -914,6 +910,8 @@ section {
 
 .product-info {
   padding: 16px 16px 18px;
+  display: flex;
+  flex-direction: column;
 }
 
 .product-category {
@@ -979,9 +977,6 @@ section {
 @media (max-width: 720px) {
   .product-grid {
     grid-template-columns: repeat(2, 1fr);
-  }
-  .quick-add {
-    bottom: 10px;
   }
 }
 

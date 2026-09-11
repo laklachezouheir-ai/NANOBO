@@ -121,8 +121,8 @@ function renderProductCard(pr) {
       <a href="produit.html?id=${pr.id}" class="product-title">${pr.name}</a>
       <div class="product-rating">${starRow(pr.rating)} <span>(${pr.reviews})</span></div>
       <div class="product-price"><span class="price-now">${formatPrice(pr.price)}</span>${oldPriceHtml}</div>
+      <button class="quick-add" onclick="quickAddToCart('${pr.id}')">${uiIcon("cart")} Ajouter au panier</button>
     </div>
-    <button class="quick-add" onclick="quickAddToCart('${pr.id}')">${uiIcon("cart")} Ajouter au panier</button>
   </article>`;
 }
 
