@@ -367,8 +367,11 @@
 
     document.getElementById('category-grid').innerHTML = CATEGORIES.map((c) => {
       const pal = PALETTE[c.palette] || PALETTE.corail;
+      const circleContent = c.image && c.image.url
+        ? `<img src="${c.image.url}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:inherit">`
+        : productIcon(c.icon, pal.icon, '#fff');
       return `<a href="boutique.html?cat=${c.id}" class="category-card reveal">
-        <span class="circle" style="background:${pal.bg}">${productIcon(c.icon, pal.icon, '#fff')}</span>
+        <span class="circle" style="background:${pal.bg}">${circleContent}</span>
         <strong>${c.label}</strong><span>${c.tagline || ''}</span>
       </a>`;
     }).join('') || '<p style="color:var(--ink-light);grid-column:1/-1;text-align:center">Aucune catégorie pour le moment.</p>';
