@@ -69,6 +69,23 @@ Le site est 100% statique : il peut être déployé tel quel sur GitHub
 Pages, Netlify, Vercel, Render (site statique) ou tout hébergeur
 proposant des fichiers HTML.
 
+### Déploiement sur Render
+
+Le dépôt contient un fichier `render.yaml` (Blueprint Render) prêt à l'emploi,
+qui configure un **site statique** (aucun serveur, aucun build requis).
+
+1. Sur [render.com](https://render.com), clique sur **New +** → **Blueprint**.
+2. Connecte ce dépôt GitHub (`laklachezouheir-ai/NANOBO`) et sélectionne la
+   branche à déployer (`main`).
+3. Render détecte `render.yaml` et propose de créer le service statique
+   `nanobo` (build : aucun, dossier publié : la racine du dépôt).
+4. Clique sur **Apply** / **Create Static Site**. Render déploie le site et
+   fournit une URL publique du type `https://nanobo-xxxx.onrender.com`.
+
+Si tu préfères créer le service manuellement (sans Blueprint) : **New +** →
+**Static Site**, connecte le dépôt, laisse *Build Command* vide et renseigne
+`.` comme *Publish Directory*.
+
 ## Personnalisation rapide
 
 - **Catalogue produit** : éditez le tableau `PRODUCTS` dans `js/products.js`

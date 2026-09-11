@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: nanobo
+    env: static
+    buildCommand: ""
+    staticPublishPath: .
+    pullRequestPreviewsEnabled: false
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: public, max-age=0, must-revalidate
