@@ -9,6 +9,8 @@ const adminAuth = require('./lib/adminAuth');
 const products = require('./lib/productsStore');
 const categories = require('./lib/categoriesStore');
 const siteSettings = require('./lib/siteSettingsStore');
+const orders = require('./lib/ordersStore');
+const mailer = require('./lib/mailer');
 const r2 = require('./lib/r2');
 
 const app = express();
@@ -79,6 +81,88 @@ app.get('/api/site-settings', (_req, res) => {
   res.json({ settings: siteSettings.get() });
 });
 
+/* ---------- Commandes (créées depuis le tunnel de commande public) ---------- */
+
+const SHIPPING_THRESHOLD = 49;
+const SHIPPING_COST = 3.9;
+
+app.post('/api/orders', async (req, res) => {
+  const { customer, shipping, payment, cart } = req.body || {};
+
+  if (!customer?.email || !customer?.firstName || !customer?.lastName) {
+    return res.status(400).json({ error: 'Informations client incomplètes.' });
+  }
+  if (!shipping?.address || !shipping?.city || !shipping?.postalCode || !shipping?.country) {
+    return res.status(400).json({ error: 'Adresse de livraison incomplète.' });
+  }
+  if (!Array.isArray(cart) || cart.length === 0) {
+    return res.status(400).json({ error: 'Le panier est vide.' });
+  }
+
+  // Les prix et noms sont toujours recalculés côté serveur à partir du
+  // catalogue réel : on ne fait jamais confiance aux montants envoyés par
+  // le navigateur.
+  const items = [];
+  for (const line of cart) {
+    const p = products.getById(line.id);
+    if (!p || p.status !== 'published') continue;
+    const qty = Math.max(1, Math.min(99, parseInt(line.qty, 10) || 1));
+    items.push({
+      productId: p.id,
+      name: p.name,
+      image: p.images && p.images[0] ? p.images[0].url : null,
+      icon: p.icon,
+      palette: p.palette,
+      size: line.size || null,
+      color: line.color || null,
+      qty,
+      price: p.price,
+    });
+  }
+
+  if (!items.length) {
+    return res.status(400).json({ error: 'Aucun article valide dans le panier.' });
+  }
+
+  const subtotal = items.reduce((sum, it) => sum + it.price * it.qty, 0);
+  const shippingCost = subtotal >= SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
+  const discount = 0;
+  const total = subtotal + shippingCost - discount;
+
+  const order = orders.create({
+    customer: {
+      firstName: String(customer.firstName).trim(),
+      lastName: String(customer.lastName).trim(),
+      email: String(customer.email).trim(),
+      phone: String(customer.phone || '').trim(),
+    },
+    shipping: {
+      address: String(shipping.address).trim(),
+      city: String(shipping.city).trim(),
+      postalCode: String(shipping.postalCode).trim(),
+      country: String(shipping.country).trim(),
+      instructions: String(shipping.instructions || '').trim(),
+    },
+    payment: { method: (payment && payment.method) || 'card' },
+    items,
+    subtotal,
+    shippingCost,
+    discount,
+    total,
+  });
+
+  // Envoi de l'e-mail de confirmation en best-effort : un échec d'envoi ne
+  // doit jamais faire échouer la commande elle-même.
+  if (mailer.isConfigured()) {
+    mailer
+      .sendOrderConfirmation(order)
+      .then(() => orders.markEmailSent(order.id, true))
+      .catch((err) => console.error('Échec envoi e-mail de confirmation:', err.message));
+  }
+
+  res.status(201).json({ order: { id: order.id, orderNumber: order.orderNumber, total: order.total } });
+});
+
 /* ============================================================
    Authentification admin
    ============================================================ */
@@ -120,7 +204,10 @@ app.get('/api/admin/meta', (_req, res) => {
     categories: categories.getAllSorted(),
     badges: products.BADGES,
     statuses: products.STATUSES,
+    orderStatuses: orders.STATUSES,
+    orderStatusLabels: orders.STATUS_LABELS,
     imageStorageConfigured: r2.isConfigured(),
+    mailConfigured: mailer.isConfigured(),
   });
 });
 
@@ -167,6 +254,47 @@ app.delete('/api/admin/categories/:id', (req, res) => {
   const ok = categories.remove(req.params.id);
   if (!ok) return res.status(404).json({ error: 'Catégorie introuvable.' });
   res.json({ ok: true });
+});
+
+/* ---------- Commandes (gestion admin) ---------- */
+
+app.get('/api/admin/orders', (_req, res) => {
+  res.json({ orders: orders.getAll() });
+});
+
+app.get('/api/admin/orders/:id', (req, res) => {
+  const o = orders.getById(req.params.id);
+  if (!o) return res.status(404).json({ error: 'Commande introuvable.' });
+  res.json({ order: o });
+});
+
+app.put('/api/admin/orders/:id/status', (req, res) => {
+  try {
+    const o = orders.updateStatus(req.params.id, req.body?.status);
+    if (!o) return res.status(404).json({ error: 'Commande introuvable.' });
+    res.json({ order: o });
+  } catch (err) {
+    res.status(err.code === 'VALIDATION_ERROR' ? 400 : 500).json({ error: err.message });
+  }
+});
+
+app.post('/api/admin/orders/:id/resend-email', async (req, res) => {
+  const o = orders.getById(req.params.id);
+  if (!o) return res.status(404).json({ error: 'Commande introuvable.' });
+  if (!mailer.isConfigured()) {
+    return res.status(503).json({
+      code: 'MAIL_NOT_CONFIGURED',
+      error: "L'envoi d'e-mails (Resend) n'est pas configuré sur ce serveur. Ajoutez RESEND_API_KEY dans les variables d'environnement.",
+    });
+  }
+  try {
+    await mailer.sendOrderConfirmation(o);
+    orders.markEmailSent(o.id, true);
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('Échec renvoi e-mail de confirmation:', err);
+    res.status(500).json({ error: err.message });
+  }
 });
 
 /* ---------- Personnalisation de l'accueil (hero, bannière, Instagram) ---------- */
@@ -302,6 +430,12 @@ app.get('/admin/categories', (_req, res) => {
 app.get('/admin/accueil', (_req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'admin', 'accueil.html'));
 });
+app.get('/admin/commandes', (_req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'admin', 'commandes.html'));
+});
+app.get('/admin/commandes/:id', (_req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'admin', 'commande.html'));
+});
 
 app.get('/api/health', (_req, res) => {
   const { source: adminPasswordSource } = config.getAdminPassword();
@@ -333,6 +467,11 @@ app.listen(PORT, () => {
   if (!r2.isConfigured()) {
     console.log(
       '⚠️  Cloudflare R2 non configuré : l’upload de photos produit sera indisponible tant que R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET_NAME et R2_PUBLIC_URL ne sont pas définis.'
+    );
+  }
+  if (!mailer.isConfigured()) {
+    console.log(
+      '⚠️  Resend non configuré : les e-mails de confirmation de commande ne seront pas envoyés tant que RESEND_API_KEY n’est pas définie.'
     );
   }
 });

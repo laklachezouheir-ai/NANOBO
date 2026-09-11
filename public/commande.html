@@ -76,37 +76,37 @@
           <div class="form-card reveal">
             <h3>Informations de contact</h3>
             <div class="form-grid">
-              <div class="form-field"><label>Prénom</label><input type="text" required placeholder="Camille"></div>
-              <div class="form-field"><label>Nom</label><input type="text" required placeholder="Dupont"></div>
-              <div class="form-field full"><label>E-mail</label><input type="email" required placeholder="camille.dupont@email.com"></div>
-              <div class="form-field full"><label>Téléphone</label><input type="tel" required placeholder="06 12 34 56 78"></div>
+              <div class="form-field"><label>Prénom</label><input type="text" id="co-first-name" required placeholder="Camille"></div>
+              <div class="form-field"><label>Nom</label><input type="text" id="co-last-name" required placeholder="Dupont"></div>
+              <div class="form-field full"><label>E-mail</label><input type="email" id="co-email" required placeholder="camille.dupont@email.com"></div>
+              <div class="form-field full"><label>Téléphone</label><input type="tel" id="co-phone" required placeholder="06 12 34 56 78"></div>
             </div>
           </div>
 
           <div class="form-card reveal">
             <h3>Adresse de livraison</h3>
             <div class="form-grid">
-              <div class="form-field full"><label>Adresse</label><input type="text" required placeholder="12 rue des Petits Pas"></div>
-              <div class="form-field"><label>Ville</label><input type="text" required placeholder="Paris"></div>
-              <div class="form-field"><label>Code postal</label><input type="text" required placeholder="75011"></div>
+              <div class="form-field full"><label>Adresse</label><input type="text" id="co-address" required placeholder="12 rue des Petits Pas"></div>
+              <div class="form-field"><label>Ville</label><input type="text" id="co-city" required placeholder="Paris"></div>
+              <div class="form-field"><label>Code postal</label><input type="text" id="co-postal-code" required placeholder="75011"></div>
               <div class="form-field full"><label>Pays</label>
-                <select required>
+                <select id="co-country" required>
                   <option>France</option>
                   <option>Belgique</option>
                   <option>Suisse</option>
                   <option>Canada</option>
                 </select>
               </div>
-              <div class="form-field full"><label>Instructions de livraison (optionnel)</label><textarea rows="2" placeholder="Code d'entrée, étage..."></textarea></div>
+              <div class="form-field full"><label>Instructions de livraison (optionnel)</label><textarea id="co-instructions" rows="2" placeholder="Code d'entrée, étage..."></textarea></div>
             </div>
           </div>
 
           <div class="form-card reveal">
             <h3>Mode de paiement</h3>
             <div class="payment-options">
-              <label class="payment-option selected"><input type="radio" name="payment" checked><span class="pay-icon"></span> Carte bancaire</label>
-              <label class="payment-option"><input type="radio" name="payment"><span class="pay-icon"></span> PayPal</label>
-              <label class="payment-option"><input type="radio" name="payment"><span class="pay-icon"></span> Paiement à la livraison</label>
+              <label class="payment-option selected"><input type="radio" name="payment" value="card" checked><span class="pay-icon"></span> Carte bancaire</label>
+              <label class="payment-option"><input type="radio" name="payment" value="paypal"><span class="pay-icon"></span> PayPal</label>
+              <label class="payment-option"><input type="radio" name="payment" value="cod"><span class="pay-icon"></span> Paiement à la livraison</label>
             </div>
             <p style="font-size:0.78rem;color:var(--ink-light);margin-top:14px;margin-bottom:0">
               Ceci est une boutique de démonstration : aucun paiement réel n'est effectué.
@@ -132,9 +132,9 @@
     <div class="confirm-box" id="confirm-box" style="display:none">
       <div class="confirm-icon"></div>
       <h2>Merci pour votre commande !</h2>
-      <p>Un e-mail de confirmation (fictif) vient de vous être envoyé. Votre colis sera préparé avec soin par notre équipe.</p>
+      <p>Votre commande a bien été enregistrée. Si un e-mail de confirmation est configuré, vous devriez le recevoir sous peu.</p>
       <div class="confirm-order-num" id="order-number">Commande #NB-000000</div>
-      <p style="font-size:0.85rem">Ceci est une démonstration : aucune commande réelle n'a été passée ni aucun paiement prélevé.</p>
+      <p style="font-size:0.85rem">Boutique de démonstration : aucun paiement réel n'a été prélevé.</p>
       <a href="boutique.html" class="btn btn-primary">Continuer mes achats</a>
     </div>
   </div>
@@ -267,15 +267,53 @@
     }
   })();
 
-  document.getElementById('checkout-form').addEventListener('submit', (e) => {
+  document.getElementById('checkout-form').addEventListener('submit', async (e) => {
     e.preventDefault();
-    if (!getCart().length) return;
-    const orderNum = 'NB-' + Math.floor(100000 + Math.random() * 899999);
-    document.getElementById('order-number').textContent = 'Commande #' + orderNum;
-    document.getElementById('checkout-wrap').style.display = 'none';
-    document.getElementById('confirm-box').style.display = 'block';
-    saveCart([]);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    const cart = getCart();
+    if (!cart.length) return;
+
+    const submitBtn = document.querySelector('#checkout-form button[type=submit]');
+    const originalLabel = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Validation en cours…';
+
+    const payload = {
+      customer: {
+        firstName: document.getElementById('co-first-name').value.trim(),
+        lastName: document.getElementById('co-last-name').value.trim(),
+        email: document.getElementById('co-email').value.trim(),
+        phone: document.getElementById('co-phone').value.trim(),
+      },
+      shipping: {
+        address: document.getElementById('co-address').value.trim(),
+        city: document.getElementById('co-city').value.trim(),
+        postalCode: document.getElementById('co-postal-code').value.trim(),
+        country: document.getElementById('co-country').value,
+        instructions: document.getElementById('co-instructions').value.trim(),
+      },
+      payment: { method: document.querySelector('input[name=payment]:checked')?.value || 'card' },
+      cart: cart.map((l) => ({ id: l.id, size: l.size, color: l.color, qty: l.qty })),
+    };
+
+    try {
+      const res = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Une erreur est survenue.');
+
+      document.getElementById('order-number').textContent = 'Commande #' + data.order.orderNumber;
+      document.getElementById('checkout-wrap').style.display = 'none';
+      document.getElementById('confirm-box').style.display = 'block';
+      saveCart([]);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (err) {
+      alert('Impossible de finaliser la commande : ' + err.message + '\nVeuillez réessayer.');
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalLabel;
+    }
   });
 </script>
 </body>

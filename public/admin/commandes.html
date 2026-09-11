@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Commandes — Administration NANOBO</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%23ff6b7a'/%3E%3Ctext x='50' y='68' font-size='55' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='700'%3EN%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/admin/admin.css">
+<style>
+  .status-select-inline { border: 2px solid var(--line); border-radius: 999px; padding: 5px 10px; font-size: 0.76rem; font-weight: 700; font-family: inherit; background: var(--white); }
+  .mail-dot { display: inline-flex; align-items: center; gap: 5px; font-size: 0.76rem; color: var(--ink-light); }
+  .mail-dot svg { width: 14px; height: 14px; }
+  .mail-dot.sent { color: var(--mint-dark); }
+</style>
+</head>
+<body>
+
+<div class="admin-shell">
+  <aside class="admin-sidebar">
+    <div class="admin-logo">Nano<span>bo</span></div>
+    <div class="admin-logo-sub">Administration</div>
+    <nav class="admin-nav">
+      <a href="/admin" id="nav-products"></a>
+      <a href="/admin/commandes" class="active" id="nav-orders"></a>
+      <a href="/admin/categories" id="nav-categories"></a>
+      <a href="/admin/accueil" id="nav-home"></a>
+    </nav>
+    <div class="admin-sidebar-footer">
+      <a href="/" target="_blank" id="nav-view-shop"></a>
+      <a href="#" id="nav-logout"></a>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-topbar">
+      <div>
+        <div class="admin-breadcrumb">Administration</div>
+        <h1 class="admin-title">Commandes</h1>
+      </div>
+    </div>
+
+    <div id="mail-banner"></div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card"><span>Total commandes</span><strong id="kpi-total">—</strong></div>
+      <div class="kpi-card"><span>Chiffre d'affaires</span><strong id="kpi-revenue">—</strong></div>
+      <div class="kpi-card"><span>Nouvelles</span><strong id="kpi-new">—</strong></div>
+      <div class="kpi-card"><span>À expédier</span><strong id="kpi-topack">—</strong></div>
+    </div>
+
+    <div class="card">
+      <div class="table-toolbar">
+        <input type="search" id="search-input" placeholder="Rechercher par n° commande, nom, e-mail…">
+        <select id="filter-status">
+          <option value="">Tous les statuts</option>
+        </select>
+      </div>
+
+      <div style="overflow-x:auto">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>N° commande</th>
+              <th>Date</th>
+              <th>Client</th>
+              <th>Articles</th>
+              <th>Total</th>
+              <th>E-mail</th>
+              <th>Statut</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="orders-tbody">
+            <tr class="empty-row"><td colspan="8">Chargement…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="/js/icons.js"></script>
+<script src="/js/products.js"></script>
+<script src="/admin/admin.js"></script>
+<script>
+(async function () {
+  const authed = await requireAuthOrRedirect();
+  if (!authed) return;
+
+  document.getElementById('nav-products').innerHTML = uiIcon('bag') + ' Produits';
+  document.getElementById('nav-orders').innerHTML = uiIcon('gift') + ' Commandes';
+  document.getElementById('nav-categories').innerHTML = uiIcon('sliders') + ' Catégories';
+  document.getElementById('nav-home').innerHTML = uiIcon('home') + ' Accueil';
+  document.getElementById('nav-view-shop').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> Voir la boutique`;
+  document.getElementById('nav-logout').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Déconnexion`;
+  document.getElementById('nav-logout').addEventListener('click', (e) => { e.preventDefault(); logoutAdmin(); });
+
+  let meta = { orderStatuses: [], orderStatusLabels: {}, mailConfigured: true };
+  try { meta = await api('/api/admin/meta'); } catch {}
+
+  const statusFilter = document.getElementById('filter-status');
+  meta.orderStatuses.forEach((s) => {
+    const opt = document.createElement('option');
+    opt.value = s;
+    opt.textContent = meta.orderStatusLabels[s] || s;
+    statusFilter.appendChild(opt);
+  });
+
+  if (!meta.mailConfigured) {
+    document.getElementById('mail-banner').innerHTML = `
+      <div class="banner banner-warning">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <div><strong>E-mails de confirmation désactivés.</strong> Configure RESEND_API_KEY dans les variables d'environnement pour envoyer automatiquement un e-mail au client après chaque commande.</div>
+      </div>`;
+  }
+
+  const STATUS_COLORS = { nouvelle: 'chip-orange', en_preparation: 'chip-orange', expediee: 'chip-green', livree: 'chip-green', annulee: 'chip-red' };
+
+  let allOrders = [];
+
+  async function loadOrders() {
+    try {
+      const { orders } = await api('/api/admin/orders');
+      allOrders = orders;
+      renderKpis();
+      renderTable();
+    } catch (err) {
+      toast(err.message, 'error');
+    }
+  }
+
+  function renderKpis() {
+    document.getElementById('kpi-total').textContent = allOrders.length;
+    document.getElementById('kpi-revenue').textContent = formatPriceAdmin(allOrders.reduce((s, o) => s + o.total, 0));
+    document.getElementById('kpi-new').textContent = allOrders.filter((o) => o.status === 'nouvelle').length;
+    document.getElementById('kpi-topack').textContent = allOrders.filter((o) => ['nouvelle', 'en_preparation'].includes(o.status)).length;
+  }
+
+  function renderTable() {
+    const q = document.getElementById('search-input').value.trim().toLowerCase();
+    const statusVal = statusFilter.value;
+
+    const filtered = allOrders.filter((o) => {
+      if (statusVal && o.status !== statusVal) return false;
+      if (q) {
+        const hay = `${o.orderNumber} ${o.customer.firstName} ${o.customer.lastName} ${o.customer.email}`.toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      return true;
+    });
+
+    const tbody = document.getElementById('orders-tbody');
+    if (!filtered.length) {
+      tbody.innerHTML = `<tr class="empty-row"><td colspan="8">${allOrders.length ? 'Aucune commande ne correspond à ces filtres.' : 'Aucune commande pour le moment.'}</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = filtered
+      .map((o) => {
+        const itemCount = o.items.reduce((s, it) => s + it.qty, 0);
+        const date = new Date(o.createdAt).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        const statusOptions = meta.orderStatuses.map((s) => `<option value="${s}" ${s === o.status ? 'selected' : ''}>${meta.orderStatusLabels[s] || s}</option>`).join('');
+        return `
+        <tr>
+          <td><strong>${o.orderNumber}</strong></td>
+          <td>${date}</td>
+          <td>${o.customer.firstName} ${o.customer.lastName}<br><span style="color:var(--ink-light);font-size:0.78rem">${o.customer.email}</span></td>
+          <td>${itemCount} article${itemCount > 1 ? 's' : ''}</td>
+          <td><strong>${formatPriceAdmin(o.total)}</strong></td>
+          <td><span class="mail-dot ${o.emailSent ? 'sent' : ''}">${o.emailSent ? uiIcon('checkCircle') : uiIcon('mail')} ${o.emailSent ? 'Envoyé' : 'Non envoyé'}</span></td>
+          <td>
+            <select class="status-select-inline ${STATUS_COLORS[o.status] || ''}" data-status-for="${o.id}">${statusOptions}</select>
+          </td>
+          <td>
+            <a class="icon-btn-sm" href="/admin/commandes/${o.id}" title="Voir le détail">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg>
+            </a>
+          </td>
+        </tr>`;
+      })
+      .join('');
+
+    tbody.querySelectorAll('[data-status-for]').forEach((sel) => {
+      sel.addEventListener('change', async () => {
+        const id = sel.dataset.statusFor;
+        try {
+          await api(`/api/admin/orders/${id}/status`, { method: 'PUT', body: JSON.stringify({ status: sel.value }) });
+          toast('Statut mis à jour.');
+          await loadOrders();
+        } catch (err) {
+          toast(err.message, 'error');
+        }
+      });
+    });
+  }
+
+  document.getElementById('search-input').addEventListener('input', debounce(renderTable, 200));
+  statusFilter.addEventListener('change', renderTable);
+
+  await loadOrders();
+})();
+</script>
+</body>
+</html>

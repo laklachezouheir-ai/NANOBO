@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Détail commande — Administration NANOBO</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%23ff6b7a'/%3E%3Ctext x='50' y='68' font-size='55' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='700'%3EN%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/admin/admin.css">
+<style>
+  .order-item-row { display: flex; gap: 14px; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .order-item-row:last-child { border-bottom: none; }
+  .order-item-thumb { width: 56px; height: 56px; border-radius: 12px; background: var(--coral-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; }
+  .order-item-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .order-item-thumb svg { width: 26px; height: 26px; color: var(--coral); }
+  .order-item-info { flex: 1; min-width: 0; }
+  .order-item-info strong { display: block; font-size: 0.92rem; }
+  .order-item-info span { font-size: 0.8rem; color: var(--ink-light); }
+  .order-item-price { text-align: right; font-weight: 700; white-space: nowrap; }
+  .totals-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 0.88rem; color: var(--ink-soft); }
+  .totals-row.grand { font-size: 1.05rem; font-weight: 800; color: var(--ink); border-top: 2px solid var(--line); margin-top: 8px; padding-top: 12px; }
+  .info-line { font-size: 0.88rem; line-height: 1.7; color: var(--ink-soft); }
+  .info-line strong { color: var(--ink); }
+  .mail-status-box { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 12px; background: #fbfaf8; margin-top: 12px; }
+  .mail-status-box svg { width: 20px; height: 20px; flex-shrink: 0; }
+  .mail-status-box.sent { color: var(--mint-dark); }
+  .mail-status-box.pending { color: var(--ink-light); }
+</style>
+</head>
+<body>
+
+<div class="admin-shell">
+  <aside class="admin-sidebar">
+    <div class="admin-logo">Nano<span>bo</span></div>
+    <div class="admin-logo-sub">Administration</div>
+    <nav class="admin-nav">
+      <a href="/admin" id="nav-products"></a>
+      <a href="/admin/commandes" class="active" id="nav-orders"></a>
+      <a href="/admin/categories" id="nav-categories"></a>
+      <a href="/admin/accueil" id="nav-home"></a>
+    </nav>
+    <div class="admin-sidebar-footer">
+      <a href="/" target="_blank" id="nav-view-shop"></a>
+      <a href="#" id="nav-logout"></a>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-topbar">
+      <div>
+        <div class="admin-breadcrumb"><a href="/admin/commandes">Commandes</a> / <span id="breadcrumb-current">…</span></div>
+        <h1 class="admin-title" id="page-heading">…</h1>
+      </div>
+      <div class="admin-topbar-actions">
+        <a href="/admin/commandes" class="btn btn-ghost">← Retour</a>
+        <select id="f-status" class="btn btn-outline" style="font-weight:700"></select>
+      </div>
+    </div>
+
+    <div id="page-body" style="display:none">
+      <div class="form-layout">
+        <div class="main-col">
+          <div class="card">
+            <h3>Articles commandés</h3>
+            <p class="card-sub">Récapitulatif des produits de cette commande.</p>
+            <div id="items-list"></div>
+
+            <div style="margin-top:16px">
+              <div class="totals-row"><span>Sous-total</span><span id="sum-subtotal">—</span></div>
+              <div class="totals-row"><span>Livraison</span><span id="sum-shipping">—</span></div>
+              <div class="totals-row grand"><span>Total</span><span id="sum-total">—</span></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Confirmation par e-mail</h3>
+            <p class="card-sub">Statut de l'envoi de l'e-mail de confirmation au client.</p>
+            <div id="mail-status-box"></div>
+            <div id="mail-config-banner"></div>
+            <button class="btn btn-outline" id="btn-resend" style="margin-top:14px">Renvoyer l'e-mail de confirmation</button>
+          </div>
+        </div>
+
+        <div class="sidebar-col">
+          <div class="card">
+            <h3>Client</h3>
+            <div class="info-line" id="customer-info"></div>
+          </div>
+
+          <div class="card">
+            <h3>Adresse de livraison</h3>
+            <div class="info-line" id="shipping-info"></div>
+          </div>
+
+          <div class="card">
+            <h3>Paiement</h3>
+            <div class="info-line" id="payment-info"></div>
+          </div>
+
+          <div class="card">
+            <h3>Commande</h3>
+            <div class="info-line" id="meta-info"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="loading-row" class="card" style="text-align:center;color:var(--ink-light)">Chargement…</div>
+  </main>
+</div>
+
+<script src="/js/icons.js"></script>
+<script src="/js/products.js"></script>
+<script src="/admin/admin.js"></script>
+<script>
+(async function () {
+  const authed = await requireAuthOrRedirect();
+  if (!authed) return;
+
+  document.getElementById('nav-products').innerHTML = uiIcon('bag') + ' Produits';
+  document.getElementById('nav-orders').innerHTML = uiIcon('gift') + ' Commandes';
+  document.getElementById('nav-categories').innerHTML = uiIcon('sliders') + ' Catégories';
+  document.getElementById('nav-home').innerHTML = uiIcon('home') + ' Accueil';
+  document.getElementById('nav-view-shop').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> Voir la boutique`;
+  document.getElementById('nav-logout').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Déconnexion`;
+  document.getElementById('nav-logout').addEventListener('click', (e) => { e.preventDefault(); logoutAdmin(); });
+
+  const orderId = location.pathname.split('/').filter(Boolean).pop();
+
+  let meta = { orderStatuses: [], orderStatusLabels: {}, mailConfigured: true };
+  try { meta = await api('/api/admin/meta'); } catch {}
+
+  let order = null;
+
+  async function load() {
+    try {
+      const data = await api(`/api/admin/orders/${orderId}`);
+      order = data.order;
+    } catch (err) {
+      document.getElementById('loading-row').textContent = "Commande introuvable.";
+      return;
+    }
+    render();
+  }
+
+  function render() {
+    document.getElementById('loading-row').style.display = 'none';
+    document.getElementById('page-body').style.display = 'block';
+    document.getElementById('breadcrumb-current').textContent = order.orderNumber;
+    document.getElementById('page-heading').textContent = 'Commande ' + order.orderNumber;
+
+    const statusSelect = document.getElementById('f-status');
+    statusSelect.innerHTML = meta.orderStatuses.map((s) => `<option value="${s}" ${s === order.status ? 'selected' : ''}>${meta.orderStatusLabels[s] || s}</option>`).join('');
+    statusSelect.onchange = async () => {
+      try {
+        await api(`/api/admin/orders/${order.id}/status`, { method: 'PUT', body: JSON.stringify({ status: statusSelect.value }) });
+        toast('Statut mis à jour.');
+        await load();
+      } catch (err) {
+        toast(err.message, 'error');
+      }
+    };
+
+    document.getElementById('items-list').innerHTML = order.items
+      .map((it) => {
+        const thumb = it.image
+          ? `<img src="${it.image}" alt="">`
+          : (it.icon ? uiIcon(it.icon) : uiIcon('bag'));
+        const variant = [it.color, it.size].filter(Boolean).join(' · ');
+        return `
+        <div class="order-item-row">
+          <div class="order-item-thumb">${thumb}</div>
+          <div class="order-item-info">
+            <strong>${it.name}</strong>
+            <span>${variant ? variant + ' · ' : ''}Qté ${it.qty}</span>
+          </div>
+          <div class="order-item-price">${formatPriceAdmin(it.price * it.qty)}</div>
+        </div>`;
+      })
+      .join('');
+
+    document.getElementById('sum-subtotal').textContent = formatPriceAdmin(order.subtotal);
+    document.getElementById('sum-shipping').textContent = order.shippingCost > 0 ? formatPriceAdmin(order.shippingCost) : 'Offerte';
+    document.getElementById('sum-total').textContent = formatPriceAdmin(order.total);
+
+    document.getElementById('customer-info').innerHTML = `
+      <strong>${order.customer.firstName} ${order.customer.lastName}</strong><br>
+      ${order.customer.email}${order.customer.phone ? '<br>' + order.customer.phone : ''}`;
+
+    document.getElementById('shipping-info').innerHTML = `
+      ${order.customer.firstName} ${order.customer.lastName}<br>
+      ${order.shipping.address}<br>
+      ${order.shipping.postalCode} ${order.shipping.city}, ${order.shipping.country}
+      ${order.shipping.instructions ? '<br><em>' + order.shipping.instructions + '</em>' : ''}`;
+
+    const paymentLabels = { card: 'Carte bancaire', paypal: 'PayPal', cod: 'Paiement à la livraison' };
+    document.getElementById('payment-info').innerHTML = `<strong>${paymentLabels[order.payment.method] || order.payment.method}</strong>`;
+
+    const date = new Date(order.createdAt).toLocaleString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    document.getElementById('meta-info').innerHTML = `
+      <strong>N° commande</strong> ${order.orderNumber}<br>
+      <strong>Passée le</strong> ${date}<br>
+      <strong>ID interne</strong> ${order.id}`;
+
+    const mailBox = document.getElementById('mail-status-box');
+    if (order.emailSent) {
+      mailBox.className = 'mail-status-box sent';
+      mailBox.innerHTML = uiIcon('checkCircle') + ' <span>E-mail de confirmation envoyé au client.</span>';
+    } else {
+      mailBox.className = 'mail-status-box pending';
+      mailBox.innerHTML = uiIcon('mail') + ' <span>E-mail de confirmation non envoyé.</span>';
+    }
+
+    const configBanner = document.getElementById('mail-config-banner');
+    const resendBtn = document.getElementById('btn-resend');
+    if (!meta.mailConfigured) {
+      configBanner.innerHTML = `
+        <div class="banner banner-warning" style="margin-top:12px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <div>Resend n'est pas configuré (RESEND_API_KEY manquante). L'envoi d'e-mail est désactivé.</div>
+        </div>`;
+      resendBtn.disabled = true;
+    } else {
+      configBanner.innerHTML = '';
+      resendBtn.disabled = false;
+    }
+
+    resendBtn.onclick = async () => {
+      resendBtn.disabled = true;
+      const original = resendBtn.textContent;
+      resendBtn.textContent = 'Envoi en cours…';
+      try {
+        await api(`/api/admin/orders/${order.id}/resend-email`, { method: 'POST' });
+        toast('E-mail de confirmation envoyé.');
+        await load();
+      } catch (err) {
+        toast(err.message, 'error');
+      } finally {
+        resendBtn.textContent = original;
+        resendBtn.disabled = meta.mailConfigured ? false : true;
+      }
+    };
+  }
+
+  await load();
+})();
+</script>
+</body>
+</html>
