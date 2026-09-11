@@ -143,7 +143,7 @@ app.post('/api/orders', async (req, res) => {
       country: String(shipping.country).trim(),
       instructions: String(shipping.instructions || '').trim(),
     },
-    payment: { method: (payment && payment.method) || 'card' },
+    payment: { method: (payment && payment.method) || 'cod' },
     items,
     subtotal,
     shippingCost,

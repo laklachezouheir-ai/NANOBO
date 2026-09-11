@@ -13,7 +13,7 @@
 </head>
 <body>
 
-<div class="announce-bar">🎉 Livraison gratuite dès 49€ &nbsp;·&nbsp; <strong>Nouvelle collection Printemps</strong> disponible &nbsp;·&nbsp; Retours gratuits sous 30 jours</div>
+<div class="announce-bar">🎉 Livraison gratuite dès 49 MAD &nbsp;·&nbsp; <strong>Nouvelle collection Printemps</strong> disponible &nbsp;·&nbsp; Retours gratuits sous 30 jours</div>
 
 <header class="site-header">
   <div class="container header-inner">
@@ -104,12 +104,10 @@
           <div class="form-card reveal">
             <h3>Mode de paiement</h3>
             <div class="payment-options">
-              <label class="payment-option selected"><input type="radio" name="payment" value="card" checked><span class="pay-icon"></span> Carte bancaire</label>
-              <label class="payment-option"><input type="radio" name="payment" value="paypal"><span class="pay-icon"></span> PayPal</label>
-              <label class="payment-option"><input type="radio" name="payment" value="cod"><span class="pay-icon"></span> Paiement à la livraison</label>
+              <label class="payment-option selected"><input type="radio" name="payment" value="cod" checked><span class="pay-icon"></span> Paiement à la livraison</label>
             </div>
             <p style="font-size:0.78rem;color:var(--ink-light);margin-top:14px;margin-bottom:0">
-              Ceci est une boutique de démonstration : aucun paiement réel n'est effectué.
+              Vous payez en espèces directement au livreur, à la réception de votre commande.
             </p>
           </div>
         </div>
@@ -117,12 +115,12 @@
         <aside class="summary-card reveal">
           <h3>Votre commande</h3>
           <div class="order-summary-list" id="order-summary-list"></div>
-          <div class="summary-row"><span>Sous-total</span><span id="co-subtotal">0,00 €</span></div>
+          <div class="summary-row"><span>Sous-total</span><span id="co-subtotal">0,00 MAD</span></div>
           <div class="summary-row"><span>Livraison</span><span id="co-shipping">Offerte</span></div>
-          <div class="summary-row total"><span>Total</span><span id="co-total">0,00 €</span></div>
+          <div class="summary-row total"><span>Total</span><span id="co-total">0,00 MAD</span></div>
           <button type="submit" class="btn btn-primary btn-block" style="margin-top:6px">Confirmer la commande</button>
           <div class="trust-badges">
-            <div><span class="trust-icon"></span> Paiement 100% sécurisé (démo)</div>
+            <div><span class="trust-icon"></span> Paiement en espèces à la livraison</div>
             <div><span class="trust-icon"></span> Expédition sous 24h</div>
           </div>
         </aside>
@@ -134,7 +132,7 @@
       <h2>Merci pour votre commande !</h2>
       <p>Votre commande a bien été enregistrée. Si un e-mail de confirmation est configuré, vous devriez le recevoir sous peu.</p>
       <div class="confirm-order-num" id="order-number">Commande #NB-000000</div>
-      <p style="font-size:0.85rem">Boutique de démonstration : aucun paiement réel n'a été prélevé.</p>
+      <p style="font-size:0.85rem">Vous réglerez en espèces au livreur, à la réception de votre commande.</p>
       <a href="boutique.html" class="btn btn-primary">Continuer mes achats</a>
     </div>
   </div>
@@ -186,7 +184,7 @@
     <div class="footer-bottom">
       <span>© 2026 NANOBO. Tous droits réservés. Boutique de démonstration.</span>
       <div class="payment-icons">
-        <span>VISA</span><span>MASTERCARD</span><span>PAYPAL</span><span>APPLE PAY</span>
+        <span>PAIEMENT À LA LIVRAISON</span>
       </div>
     </div>
   </div>
@@ -215,7 +213,7 @@
   document.querySelectorAll('.footer-contact li span').forEach((el, i) => (el.innerHTML = uiIcon(footerIcons[i])));
 
   document.querySelectorAll('.payment-option .pay-icon').forEach((el, i) => {
-    const icons = ['creditCard', 'wallet', 'cash'];
+    const icons = ['cash'];
     el.innerHTML = uiIcon(icons[i]);
   });
   document.querySelectorAll('.trust-badges .trust-icon').forEach((el, i) => {
@@ -291,7 +289,7 @@
         country: document.getElementById('co-country').value,
         instructions: document.getElementById('co-instructions').value.trim(),
       },
-      payment: { method: document.querySelector('input[name=payment]:checked')?.value || 'card' },
+      payment: { method: document.querySelector('input[name=payment]:checked')?.value || 'cod' },
       cart: cart.map((l) => ({ id: l.id, size: l.size, color: l.color, qty: l.qty })),
     };
 

@@ -73,7 +73,7 @@ function getProductById(id) {
 }
 
 function formatPrice(n) {
-  return Number(n || 0).toFixed(2).replace(".", ",") + " €";
+  return Number(n || 0).toFixed(2).replace(".", ",") + " MAD";
 }
 
 function badgeMarkup(badge) {

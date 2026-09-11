@@ -148,7 +148,7 @@ function formatBytes(n) {
 }
 
 function formatPriceAdmin(n) {
-  return Number(n || 0).toFixed(2).replace('.', ',') + ' €';
+  return Number(n || 0).toFixed(2).replace('.', ',') + ' MAD';
 }
 
 function debounce(fn, delay) {
