@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Administration — NANOBO</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%23ff6b7a'/%3E%3Ctext x='50' y='68' font-size='55' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='700'%3EN%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+
+<!-- ===================== LOGIN ===================== -->
+<div class="login-wrap" id="login-view">
+  <div class="login-card">
+    <div class="admin-logo">Nano<span>bo</span></div>
+    <p class="sub">Espace d'administration — gestion du catalogue produit</p>
+    <div class="login-error" id="login-error"></div>
+    <form id="login-form">
+      <input type="password" id="login-password" placeholder="Mot de passe administrateur" required autofocus>
+      <button type="submit" class="btn btn-primary btn-block">Se connecter</button>
+    </form>
+    <p class="hint" style="margin-top:16px">Le mot de passe est affiché dans les journaux du serveur au premier démarrage, ou défini via la variable d'environnement <code>ADMIN_PASSWORD</code>.</p>
+  </div>
+</div>
+
+<!-- ===================== DASHBOARD ===================== -->
+<div class="admin-shell" id="dashboard-view" style="display:none">
+  <aside class="admin-sidebar">
+    <div class="admin-logo">Nano<span>bo</span></div>
+    <div class="admin-logo-sub">Administration</div>
+    <nav class="admin-nav">
+      <a href="/admin" class="active" id="nav-products"></a>
+    </nav>
+    <div class="admin-sidebar-footer">
+      <a href="/" target="_blank" id="nav-view-shop"></a>
+      <a href="#" id="nav-logout"></a>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-topbar">
+      <div>
+        <div class="admin-breadcrumb">Administration</div>
+        <h1 class="admin-title">Produits</h1>
+      </div>
+      <div class="admin-topbar-actions">
+        <a href="/admin/produits/nouveau" class="btn btn-primary" id="btn-new-product"></a>
+      </div>
+    </div>
+
+    <div id="cloudinary-banner"></div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card"><span>Total produits</span><strong id="kpi-total">—</strong></div>
+      <div class="kpi-card"><span>Publiés</span><strong id="kpi-published">—</strong></div>
+      <div class="kpi-card"><span>Brouillons</span><strong id="kpi-draft">—</strong></div>
+      <div class="kpi-card"><span>Rupture de stock</span><strong id="kpi-outofstock">—</strong></div>
+    </div>
+
+    <div class="card">
+      <div class="table-toolbar">
+        <input type="search" id="search-input" placeholder="Rechercher un produit, une référence…">
+        <select id="filter-category">
+          <option value="">Toutes les catégories</option>
+        </select>
+        <select id="filter-status">
+          <option value="">Tous les statuts</option>
+          <option value="published">Publié</option>
+          <option value="draft">Brouillon</option>
+        </select>
+      </div>
+
+      <div style="overflow-x:auto">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Produit</th>
+              <th>Catégorie</th>
+              <th>Prix</th>
+              <th>Stock</th>
+              <th>Statut</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="products-tbody">
+            <tr class="empty-row"><td colspan="7">Chargement…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="/js/icons.js"></script>
+<script src="/js/products.js"></script>
+<script src="/admin/admin.js"></script>
+<script>
+  const loginView = document.getElementById('login-view');
+  const dashView = document.getElementById('dashboard-view');
+
+  document.getElementById('login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const pwd = document.getElementById('login-password').value;
+    const errEl = document.getElementById('login-error');
+    errEl.classList.remove('show');
+    try {
+      await api('/api/admin/login', { method: 'POST', body: JSON.stringify({ password: pwd }) });
+      init();
+    } catch (err) {
+      errEl.textContent = err.message || 'Mot de passe incorrect.';
+      errEl.classList.add('show');
+    }
+  });
+
+  async function init() {
+    let authed = false;
+    try {
+      const s = await api('/api/admin/session');
+      authed = s.authenticated;
+    } catch {}
+    if (!authed) {
+      loginView.style.display = 'flex';
+      dashView.style.display = 'none';
+      return;
+    }
+    loginView.style.display = 'none';
+    dashView.style.display = 'grid';
+    setupDashboard();
+  }
+
+  let allProducts = [];
+  let metaInfo = { categories: [], cloudinaryConfigured: true };
+
+  async function setupDashboard() {
+    document.getElementById('nav-products').innerHTML = uiIcon('bag') + ' Produits';
+    document.getElementById('nav-view-shop').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> Voir la boutique`;
+    document.getElementById('nav-logout').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Déconnexion`;
+    document.getElementById('nav-logout').addEventListener('click', (e) => { e.preventDefault(); logoutAdmin(); });
+    document.getElementById('btn-new-product').innerHTML = uiIcon('plus') + ' Ajouter un produit';
+
+    try {
+      metaInfo = await api('/api/admin/meta');
+    } catch {}
+
+    const catSelect = document.getElementById('filter-category');
+    metaInfo.categories.forEach((c) => {
+      const opt = document.createElement('option');
+      opt.value = c;
+      opt.textContent = CATEGORY_LABELS[c] || c;
+      catSelect.appendChild(opt);
+    });
+
+    if (!metaInfo.cloudinaryConfigured) {
+      document.getElementById('cloudinary-banner').innerHTML = `
+        <div class="banner banner-warning">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <div><strong>Upload de photos désactivé.</strong> Cloudinary n'est pas configuré sur ce serveur (variables CLOUDINARY_CLOUD_NAME / CLOUDINARY_API_KEY / CLOUDINARY_API_SECRET manquantes). Les produits utiliseront un pictogramme de secours tant que ce n'est pas configuré.</div>
+        </div>`;
+    }
+
+    await loadProducts();
+
+    document.getElementById('search-input').addEventListener('input', debounce(renderTable, 200));
+    document.getElementById('filter-category').addEventListener('change', renderTable);
+    document.getElementById('filter-status').addEventListener('change', renderTable);
+  }
+
+  async function loadProducts() {
+    try {
+      const { products: list } = await api('/api/admin/products');
+      allProducts = list;
+      renderKpis();
+      renderTable();
+    } catch (err) {
+      toast(err.message, 'error');
+    }
+  }
+
+  function renderKpis() {
+    document.getElementById('kpi-total').textContent = allProducts.length;
+    document.getElementById('kpi-published').textContent = allProducts.filter((p) => p.status === 'published').length;
+    document.getElementById('kpi-draft').textContent = allProducts.filter((p) => p.status === 'draft').length;
+    document.getElementById('kpi-outofstock').textContent = allProducts.filter((p) => p.stock <= 0).length;
+  }
+
+  function renderTable() {
+    const q = document.getElementById('search-input').value.trim().toLowerCase();
+    const cat = document.getElementById('filter-category').value;
+    const status = document.getElementById('filter-status').value;
+
+    const filtered = allProducts.filter((p) => {
+      if (cat && p.category !== cat) return false;
+      if (status && p.status !== status) return false;
+      if (q && !(p.name.toLowerCase().includes(q) || (p.sku || '').toLowerCase().includes(q))) return false;
+      return true;
+    });
+
+    const tbody = document.getElementById('products-tbody');
+    if (!filtered.length) {
+      tbody.innerHTML = `<tr class="empty-row"><td colspan="7">Aucun produit ne correspond à ces filtres.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = filtered
+      .map((p) => {
+        const pal = (typeof PALETTE !== 'undefined' && PALETTE[p.palette]) || { bg: '#ffe1e6', icon: '#ff6b7a' };
+        const thumb = p.images && p.images[0]
+          ? `<img src="${p.images[0].url}" alt="">`
+          : (typeof productIcon === 'function' ? productIcon(p.icon, pal.icon, '#fff') : '');
+        const stockChip =
+          p.stock <= 0
+            ? '<span class="chip chip-red">Rupture</span>'
+            : p.stock <= 10
+            ? `<span class="chip chip-orange">${p.stock} restants</span>`
+            : `<span class="chip chip-green">${p.stock} en stock</span>`;
+        const statusChip =
+          p.status === 'published'
+            ? '<span class="chip chip-green">Publié</span>'
+            : '<span class="chip chip-gray">Brouillon</span>';
+        const priceHtml = p.oldPrice
+          ? `${formatPriceAdmin(p.price)} <span style="color:var(--ink-light);text-decoration:line-through;font-size:0.78rem">${formatPriceAdmin(p.oldPrice)}</span>`
+          : formatPriceAdmin(p.price);
+
+        return `
+        <tr>
+          <td><div class="pt-thumb" style="background:${pal.bg}">${thumb}</div></td>
+          <td>
+            <div class="pt-name-cell">
+              <div><strong>${p.name}</strong><br><span>${p.sku || ''}</span></div>
+            </div>
+          </td>
+          <td>${CATEGORY_LABELS[p.category] || p.category}</td>
+          <td>${priceHtml}</td>
+          <td>${stockChip}</td>
+          <td>${statusChip}</td>
+          <td>
+            <div class="row-actions">
+              <a class="icon-btn-sm" href="/admin/produits/${p.id}" title="Modifier">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5"/><path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4Z"/></svg>
+              </a>
+              <button class="icon-btn-sm danger" title="Supprimer" data-delete="${p.id}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2m2 0-1 14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1L5 6"/></svg>
+              </button>
+            </div>
+          </td>
+        </tr>`;
+      })
+      .join('');
+
+    tbody.querySelectorAll('[data-delete]').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const id = btn.dataset.delete;
+        const p = allProducts.find((x) => x.id === id);
+        const ok = await confirmModal('Supprimer ce produit ?', `« ${p ? p.name : ''} » sera définitivement supprimé, ainsi que ses photos.`);
+        if (!ok) return;
+        try {
+          await api(`/api/admin/products/${id}`, { method: 'DELETE' });
+          toast('Produit supprimé.');
+          await loadProducts();
+        } catch (err) {
+          toast(err.message, 'error');
+        }
+      });
+    });
+  }
+
+  init();
+</script>
+</body>
+</html>

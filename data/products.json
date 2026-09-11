@@ -1,0 +1,855 @@
+[
+  {
+    "id": "p01",
+    "slug": "robe-arc-en-ciel-volantee",
+    "status": "published",
+    "name": "Robe Arc-en-ciel Volantée",
+    "category": "filles",
+    "ageGroup": "4-8 ans",
+    "badge": "promo",
+    "price": 34.9,
+    "oldPrice": 44.9,
+    "sku": "NANOBO-P01",
+    "stock": 25,
+    "sizes": [
+      "2-3a",
+      "4-5a",
+      "6-7a",
+      "8-9a"
+    ],
+    "colors": [
+      "Corail",
+      "Jaune"
+    ],
+    "shortDescription": "Une robe légère et virevoltante en coton doux, parfaite pour danser toute la journée. Volants colorés et finitions soignées.",
+    "description": "Une robe légère et virevoltante en coton doux, parfaite pour danser toute la journée. Volants colorés et finitions soignées.",
+    "details": [
+      "100% coton biologique",
+      "Lavage machine 30°C",
+      "Fermeture zip dos",
+      "Fabriquée avec des teintures certifiées OEKO-TEX"
+    ],
+    "images": [],
+    "icon": "dress",
+    "palette": "corail",
+    "seo": {
+      "metaTitle": "Robe Arc-en-ciel Volantée — NANOBO",
+      "metaDescription": "Une robe légère et virevoltante en coton doux, parfaite pour danser toute la journée. Volants colorés et finitions soignées."
+    },
+    "rating": 4.8,
+    "reviews": 32,
+    "tags": [
+      "nouveaute"
+    ],
+    "createdAt": "2026-09-11T13:59:38.775Z",
+    "updatedAt": "2026-09-11T14:15:51.542Z"
+  },
+  {
+    "id": "p02",
+    "slug": "t-shirt-dino-souriant",
+    "status": "published",
+    "name": "T-shirt Dino Souriant",
+    "category": "garcons",
+    "ageGroup": "2-8 ans",
+    "badge": "bestseller",
+    "price": 16.9,
+    "oldPrice": null,
+    "sku": "NANOBO-P02",
+    "stock": 25,
+    "sizes": [
+      "2-3a",
+      "4-5a",
+      "6-7a",
+      "8-9a",
+      "10-11a"
+    ],
+    "colors": [
+      "Menthe",
+      "Ciel"
+    ],
+    "shortDescription": "T-shirt en jersey ultra-doux avec impression dinosaure rigolote. Coupe confortable pour un maximum de liberté de mouvement.",
+    "description": "T-shirt en jersey ultra-doux avec impression dinosaure rigolote. Coupe confortable pour un maximum de liberté de mouvement.",
+    "details": [
+      "100% coton peigné",
+      "Col rond renforcé",
+      "Impression résistante au lavage"
+    ],
+    "images": [],
+    "icon": "tshirt",
+    "palette": "menthe",
+    "seo": {
+      "metaTitle": "T-shirt Dino Souriant — NANOBO",
+      "metaDescription": "T-shirt en jersey ultra-doux avec impression dinosaure rigolote. Coupe confortable pour un maximum de liberté de mouvement."
+    },
+    "rating": 4.9,
+    "reviews": 58,
+    "tags": [
+      "bestseller"
+    ],
+    "createdAt": "2026-09-11T13:59:38.775Z",
+    "updatedAt": "2026-09-11T13:59:38.775Z"
+  },
+  {
+    "id": "p03",
+    "slug": "hoodie-nuage-cosy",
+    "status": "published",
+    "name": "Hoodie Nuage Cosy",
+    "category": "garcons",
+    "ageGroup": "4-10 ans",
+    "badge": "new",
+    "price": 29.9,
+    "oldPrice": null,
+    "sku": "NANOBO-P03",
+    "stock": 25,
+    "sizes": [
+      "4-5a",
+      "6-7a",
+      "8-9a",
+      "10-11a"
+    ],
+    "colors": [
+      "Ciel",
+      "Marine"
+    ],
+    "shortDescription": "Sweat à capuche molletonné, doublure douillette et poche kangourou. L'indispensable pour les journées fraîches.",
+    "description": "Sweat à capuche molletonné, doublure douillette et poche kangourou. L'indispensable pour les journées fraîches.",
+    "details": [
+      "80% coton, 20% polyester",
+      "Capuche doublée",
+      "Poche kangourou"
+    ],
+    "images": [],
+    "icon": "hoodie",
+    "palette": "ciel",
+    "seo": {
+      "metaTitle": "Hoodie Nuage Cosy — NANOBO",
+      "metaDescription": "Sweat à capuche molletonné, doublure douillette et poche kangourou. L'indispensable pour les journées fraîches."
+    },
+    "rating": 4.7,
+    "reviews": 21,
+    "tags": [
+      "nouveaute"
+    ],
+    "createdAt": "2026-09-11T13:59:38.775Z",
+    "updatedAt": "2026-09-11T13:59:38.775Z"
+  },
+  {
+    "id": "p04",
+    "slug": "short-raye-ete",
+    "status": "published",
+    "name": "Short Rayé Été",
+    "category": "garcons",
+    "ageGroup": "2-8 ans",
+    "badge": "",
+    "price": 14.9,
+    "oldPrice": null,
+    "sku": "NANOBO-P04",
+    "stock": 25,
+    "sizes": [
+      "2-3a",
+      "4-5a",
+      "6-7a"
+    ],
+    "colors": [
+      "Jaune",
+      "Corail"
+    ],
+    "shortDescription": "Short léger à rayures, taille élastiquée pour un confort optimal en toute saison.",
+    "description": "Short léger à rayures, taille élastiquée pour un confort optimal en toute saison.",
+    "details": [
+      "100% coton",
+      "Taille élastique ajustable",
+      "Poches latérales"
+    ],
+    "images": [],
+    "icon": "shorts",
+    "palette": "jaune",
+    "seo": {
+      "metaTitle": "Short Rayé Été — NANOBO",
+      "metaDescription": "Short léger à rayures, taille élastiquée pour un confort optimal en toute saison."
+    },
+    "rating": 4.5,
+    "reviews": 14,
+    "tags": [],
+    "createdAt": "2026-09-11T13:59:38.775Z",
+    "updatedAt": "2026-09-11T13:59:38.775Z"
+  },
+  {
+    "id": "p05",
+    "slug": "combishort-bebe-etoiles",
+    "status": "published",
+    "name": "Combishort Bébé Étoiles",
+    "category": "bebe",
+    "ageGroup": "0-24 mois",
+    "badge": "bestseller",
+    "price": 19.9,
+    "oldPrice": null,
+    "sku": "NANOBO-P05",
+    "stock": 25,
+    "sizes": [
+      "0-3m",
+      "3-6m",
+      "6-12m",
+      "12-24m"
+    ],
+    "colors": [
+      "Ciel",
+      "Jaune"
+    ],
+    "shortDescription": "Combishort tout doux avec pressions faciles pour un change express. Motif étoiles brodé.",
+    "description": "Combishort tout doux avec pressions faciles pour un change express. Motif étoiles brodé.",
+    "details": [
+      "100% coton bio",
+      "Pressions pratiques entrejambe",
+      "Certifié OEKO-TEX"
+    ],
+    "images": [],
+    "icon": "romper",
+    "palette": "peche",
+    "seo": {
+      "metaTitle": "Combishort Bébé Étoiles — NANOBO",
+      "metaDescription": "Combishort tout doux avec pressions faciles pour un change express. Motif étoiles brodé."
+    },
+    "rating": 4.9,
+    "reviews": 47,
+    "tags": [
+      "bestseller"
+    ],
+    "createdAt": "2026-09-11T13:59:38.775Z",
+    "updatedAt": "2026-09-11T13:59:38.775Z"
+  },
+  {
+    "id": "p06",
+    "slug": "pyjama-etoiles-filantes",
+    "status": "published",
+    "name": "Pyjama Étoiles Filantes",
+    "category": "bebe",
+    "ageGroup": "0-24 mois",
+    "badge": "promo",
+    "price": 22.9,
+    "oldPrice": 27.9,
+    "sku": "NANOBO-P06",
+    "stock": 25,
+    "sizes": [
+      "0-3m",
+      "3-6m",
+      "6-12m"
+    ],
+    "colors": [
+      "Violet",
+      "Ciel"
+    ],
+    "shortDescription": "Pyjama une pièce ultra confortable pour des nuits douces. Coutures plates anti-irritation.",
+    "description": "Pyjama une pièce ultra confortable pour des nuits douces. Coutures plates anti-irritation.",
+    "details": [
+      "Coton bio brossé",
+      "Coutures plates",
+      "Fermeture zip sans coince-peau"
+    ],
+    "images": [],
+    "icon": "pajama",
+    "palette": "violet",
+    "seo": {
+      "metaTitle": "Pyjama Étoiles Filantes — NANOBO",
+      "metaDescription": "Pyjama une pièce ultra confortable pour des nuits douces. Coutures plates anti-irritation."
+    },
+    "rating": 4.6,
+    "reviews": 19,
+    "tags": [
+      "promo"
+    ],
+    "createdAt": "2026-09-11T13:59:38.775Z",
+    "updatedAt": "2026-09-11T13:59:38.775Z"
+  },
+  {
+    "id": "p07",
+    "slug": "jupe-plissee-pastel",
+    "status": "published",
+    "name": "Jupe Plissée Pastel",
+    "category": "filles",
+    "ageGroup": "4-10 ans",
+    "badge": "new",
+    "price": 24.9,
+    "oldPrice": null,
+    "sku": "NANOBO-P07",
+    "stock": 25,
+    "sizes": [
+      "4-5a",
+      "6-7a",
+      "8-9a",
+      "10-11a"
+    ],
+    "colors": [
+      "Rose",
+      "Menthe"
+    ],
+    "shortDescription": "Jupe plissée virevoltante, taille élastique confortable. Idéale à assortir avec nos tops de la collection.",
+    "description": "Jupe plissée virevoltante, taille élastique confortable. Idéale à assortir avec nos tops de la collection.",
+    "details": [
+      "Polyester recyclé",
+      "Doublure intégrée",
+      "Taille élastique"
+    ],
+    "images": [],
+    "icon": "skirt",
+    "palette": "corail",
+    "seo": {
+      "metaTitle": "Jupe Plissée Pastel — NANOBO",
+      "metaDescription": "Jupe plissée virevoltante, taille élastique confortable. Idéale à assortir avec nos tops de la collection."
+    },
+    "rating": 4.7,
+    "reviews": 12,
+    "tags": [
+      "nouveaute"
+    ],
+    "createdAt": "2026-09-11T13:59:38.775Z",
+    "updatedAt": "2026-09-11T13:59:38.775Z"
+  },
+  {
+    "id": "p08",
+    "slug": "polo-rayures-marine",
+    "status": "published",
+    "name": "Polo Rayures Marine",
+    "category": "garcons",
+    "ageGroup": "4-10 ans",
+    "badge": "",
+    "price": 18.9,
+    "oldPrice": null,
+    "sku": "NANOBO-P08",
+    "stock": 25,
+    "sizes": [
+      "4-5a",
+      "6-7a",
+      "8-9a"
+    ],
+    "colors": [
+      "Marine",
+      "Blanc"
+    ],
+    "shortDescription": "Polo piqué classique et intemporel, parfait pour un look chic-décontracté.",
+    "description": "Polo piqué classique et intemporel, parfait pour un look chic-décontracté.",
+    "details": [
+      "100% coton piqué",
+      "Boutons nacrés",
+      "Col côtelé"
+    ],
+    "images": [],
+    "icon": "poloshirt",
+    "palette": "ciel",
+    "seo": {
+      "metaTitle": "Polo Rayures Marine — NANOBO",
+      "metaDescription": "Polo piqué classique et intemporel, parfait pour un look chic-décontracté."
+    },
+    "rating": 4.4,
+    "reviews": 9,
+    "tags": [],
+    "createdAt": "2026-09-11T13:59:38.775Z",
+    "updatedAt": "2026-09-11T13:59:38.775Z"
+  },
+  {
+    "id": "p09",
+    "slug": "jean-doudou-slim",
+    "status": "published",
+    "name": "Jean Doudou Slim",
+    "category": "garcons",
+    "ageGroup": "2-10 ans",
+    "badge": "",
+    "price": 32.9,
+    "oldPrice": null,
+    "sku": "NANOBO-P09",
+    "stock": 25,
+    "sizes": [
+      "2-3a",
+      "4-5a",
+      "6-7a",
+      "8-9a",
+      "10-11a"
+    ],
+    "colors": [
+      "Marine"
+    ],
+    "shortDescription": "Jean stretch confort avec taille ajustable, coupe slim et résistance à toute épreuve pour les journées bien remplies.",
+    "description": "Jean stretch confort avec taille ajustable, coupe slim et résistance à toute épreuve pour les journées bien remplies.",
+    "details": [
+      "98% coton, 2% élasthanne",
+      "Taille ajustable bouton intérieur",
+      "Poches fonctionnelles"
+    ],
+    "images": [],
+    "icon": "jeans",
+    "palette": "jaune",
+    "seo": {
+      "metaTitle": "Jean Doudou Slim — NANOBO",
+      "metaDescription": "Jean stretch confort avec taille ajustable, coupe slim et résistance à toute épreuve pour les journées bien remplies."
+    },
+    "rating": 4.6,
+    "reviews": 26,
+    "tags": [
+      "bestseller"
+    ],
+    "createdAt": "2026-09-11T13:59:38.775Z",
+    "updatedAt": "2026-09-11T13:59:38.775Z"
+  },
+  {
+    "id": "p10",
+    "slug": "maillot-de-bain-corail",
+    "status": "published",
+    "name": "Maillot de Bain Corail",
+    "category": "filles",
+    "ageGroup": "2-10 ans",
+    "badge": "new",
+    "price": 21.9,
+    "oldPrice": null,
+    "sku": "NANOBO-P10",
+    "stock": 25,
+    "sizes": [
+      "2-3a",
+      "4-5a",
+      "6-7a",
+      "8-9a"
+    ],
+    "colors": [
+      "Corail",
+      "Jaune"
+    ],
+    "shortDescription": "Maillot une pièce anti-UV (UPF 50+) pour des journées à la plage en toute sérénité.",
+    "description": "Maillot une pièce anti-UV (UPF 50+) pour des journées à la plage en toute sérénité.",
+    "details": [
+      "Protection UPF 50+",
+      "Sèche rapidement",
+      "Résistant au chlore"
+    ],
+    "images": [],
+    "icon": "swimsuit",
+    "palette": "corail",
+    "seo": {
+      "metaTitle": "Maillot de Bain Corail — NANOBO",
+      "metaDescription": "Maillot une pièce anti-UV (UPF 50+) pour des journées à la plage en toute sérénité."
+    },
+    "rating": 4.8,
+    "reviews": 15,
+    "tags": [
+      "nouveaute"
+    ],
+    "createdAt": "2026-09-11T13:59:38.775Z",
+    "updatedAt": "2026-09-11T13:59:38.775Z"
+  },
+  {
+    "id": "p11",
+    "slug": "sneakers-etoile-blanche",
+    "status": "published",
+    "name": "Sneakers Étoile Blanche",
+    "category": "chaussures",
+    "ageGroup": "3-10 ans",
+    "badge": "promo",
+    "price": 39.9,
+    "oldPrice": 49.9,
+    "sku": "NANOBO-P11",
+    "stock": 25,
+    "sizes": [
+      "24",
+      "26",
+      "28",
+      "30",
+      "32",
+      "34"
+    ],
+    "colors": [
+      "Blanc",
+      "Corail"
+    ],
+    "shortDescription": "Baskets légères à scratch auto-agrippant, semelle souple qui accompagne chaque pas.",
+    "description": "Baskets légères à scratch auto-agrippant, semelle souple qui accompagne chaque pas.",
+    "details": [
+      "Tige textile respirante",
+      "Semelle antidérapante",
+      "Fermeture scratch facile"
+    ],
+    "images": [],
+    "icon": "sneaker",
+    "palette": "menthe",
+    "seo": {
+      "metaTitle": "Sneakers Étoile Blanche — NANOBO",
+      "metaDescription": "Baskets légères à scratch auto-agrippant, semelle souple qui accompagne chaque pas."
+    },
+    "rating": 4.9,
+    "reviews": 63,
+    "tags": [
+      "promo",
+      "bestseller"
+    ],
+    "createdAt": "2026-09-11T13:59:38.775Z",
+    "updatedAt": "2026-09-11T13:59:38.775Z"
+  },
+  {
+    "id": "p12",
+    "slug": "sandales-ete-douces",
+    "status": "published",
+    "name": "Sandales Été Douces",
+    "category": "chaussures",
+    "ageGroup": "2-8 ans",
+    "badge": "",
+    "price": 26.9,
+    "oldPrice": null,
+    "sku": "NANOBO-P12",
+    "stock": 25,
+    "sizes": [
+      "22",
+      "24",
+      "26",
+      "28",
+      "30"
+    ],
+    "colors": [
+      "Rose",
+      "Ciel"
+    ],
+    "shortDescription": "Sandales confortables à double bride réglable, parfaites pour l'été.",
+    "description": "Sandales confortables à double bride réglable, parfaites pour l'été.",
+    "details": [
+      "Semelle amortissante",
+      "Brides ajustables",
+      "Matière lavable"
+    ],
+    "images": [],
+    "icon": "sandal",
+    "palette": "peche",
+    "seo": {
+      "metaTitle": "Sandales Été Douces — NANOBO",
+      "metaDescription": "Sandales confortables à double bride réglable, parfaites pour l'été."
+    },
+    "rating": 4.5,
+    "reviews": 18,
+    "tags": [],
+    "createdAt": "2026-09-11T13:59:38.775Z",
+    "updatedAt": "2026-09-11T13:59:38.775Z"
+  },
+  {
+    "id": "p13",
+    "slug": "casquette-aventure",
+    "status": "published",
+    "name": "Casquette Aventure",
+    "category": "accessoires",
+    "ageGroup": "3-12 ans",
+    "badge": "",
+    "price": 12.9,
+    "oldPrice": null,
+    "sku": "NANOBO-P13",
+    "stock": 25,
+    "sizes": [
+      "Unique"
+    ],
+    "colors": [
+      "Menthe",
+      "Jaune"
+    ],
+    "shortDescription": "Casquette ajustable en toile respirante, indispensable pour les journées ensoleillées.",
+    "description": "Casquette ajustable en toile respirante, indispensable pour les journées ensoleillées.",
+    "details": [
+      "Toile coton respirante",
+      "Sangle ajustable",
+      "Protection solaire"
+    ],
+    "images": [],
+    "icon": "cap",
+    "palette": "jaune",
+    "seo": {
+      "metaTitle": "Casquette Aventure — NANOBO",
+      "metaDescription": "Casquette ajustable en toile respirante, indispensable pour les journées ensoleillées."
+    },
+    "rating": 4.6,
+    "reviews": 22,
+    "tags": [
+      "nouveaute"
+    ],
+    "createdAt": "2026-09-11T13:59:38.775Z",
+    "updatedAt": "2026-09-11T13:59:38.775Z"
+  },
+  {
+    "id": "p14",
+    "slug": "bonnet-pompon-douceur",
+    "status": "published",
+    "name": "Bonnet Pompon Douceur",
+    "category": "accessoires",
+    "ageGroup": "0-6 ans",
+    "badge": "bestseller",
+    "price": 11.9,
+    "oldPrice": null,
+    "sku": "NANOBO-P14",
+    "stock": 25,
+    "sizes": [
+      "Unique"
+    ],
+    "colors": [
+      "Violet",
+      "Rose"
+    ],
+    "shortDescription": "Bonnet tricoté extra doux avec pompon, pour affronter l'hiver avec style.",
+    "description": "Bonnet tricoté extra doux avec pompon, pour affronter l'hiver avec style.",
+    "details": [
+      "Tricot acrylique doux",
+      "Doublure polaire",
+      "Pompon amovible"
+    ],
+    "images": [],
+    "icon": "beanie",
+    "palette": "violet",
+    "seo": {
+      "metaTitle": "Bonnet Pompon Douceur — NANOBO",
+      "metaDescription": "Bonnet tricoté extra doux avec pompon, pour affronter l'hiver avec style."
+    },
+    "rating": 4.8,
+    "reviews": 29,
+    "tags": [
+      "bestseller"
+    ],
+    "createdAt": "2026-09-11T13:59:38.775Z",
+    "updatedAt": "2026-09-11T13:59:38.775Z"
+  },
+  {
+    "id": "p15",
+    "slug": "sac-a-dos-copain-renard",
+    "status": "published",
+    "name": "Sac à Dos Copain Renard",
+    "category": "accessoires",
+    "ageGroup": "3-10 ans",
+    "badge": "new",
+    "price": 27.9,
+    "oldPrice": null,
+    "sku": "NANOBO-P15",
+    "stock": 25,
+    "sizes": [
+      "Unique"
+    ],
+    "colors": [
+      "Corail",
+      "Marine"
+    ],
+    "shortDescription": "Sac à dos ludique au look renard malicieux, compartiment principal spacieux et bretelles rembourrées.",
+    "description": "Sac à dos ludique au look renard malicieux, compartiment principal spacieux et bretelles rembourrées.",
+    "details": [
+      "Toile résistante déperlante",
+      "Bretelles rembourrées ajustables",
+      "Poche avant zippée"
+    ],
+    "images": [],
+    "icon": "backpack",
+    "palette": "corail",
+    "seo": {
+      "metaTitle": "Sac à Dos Copain Renard — NANOBO",
+      "metaDescription": "Sac à dos ludique au look renard malicieux, compartiment principal spacieux et bretelles rembourrées."
+    },
+    "rating": 4.9,
+    "reviews": 41,
+    "tags": [
+      "nouveaute"
+    ],
+    "createdAt": "2026-09-11T13:59:38.775Z",
+    "updatedAt": "2026-09-11T13:59:38.775Z"
+  },
+  {
+    "id": "p16",
+    "slug": "noeud-cheveux-duo",
+    "status": "published",
+    "name": "Noeud Cheveux Duo",
+    "category": "accessoires",
+    "ageGroup": "1-10 ans",
+    "badge": "",
+    "price": 8.9,
+    "oldPrice": null,
+    "sku": "NANOBO-P16",
+    "stock": 25,
+    "sizes": [
+      "Unique"
+    ],
+    "colors": [
+      "Rose",
+      "Menthe"
+    ],
+    "shortDescription": "Duo de noeuds pour cheveux en tissu doux, pour twister toutes les coiffures.",
+    "description": "Duo de noeuds pour cheveux en tissu doux, pour twister toutes les coiffures.",
+    "details": [
+      "Barrette clic-clac",
+      "Tissu doux non abrasif",
+      "Lot de 2"
+    ],
+    "images": [],
+    "icon": "bow",
+    "palette": "peche",
+    "seo": {
+      "metaTitle": "Noeud Cheveux Duo — NANOBO",
+      "metaDescription": "Duo de noeuds pour cheveux en tissu doux, pour twister toutes les coiffures."
+    },
+    "rating": 4.7,
+    "reviews": 11,
+    "tags": [],
+    "createdAt": "2026-09-11T13:59:38.775Z",
+    "updatedAt": "2026-09-11T13:59:38.775Z"
+  },
+  {
+    "id": "p17",
+    "slug": "chaussettes-motifs-fruits",
+    "status": "published",
+    "name": "Chaussettes Motifs Fruits",
+    "category": "accessoires",
+    "ageGroup": "1-10 ans",
+    "badge": "",
+    "price": 9.9,
+    "oldPrice": null,
+    "sku": "NANOBO-P17",
+    "stock": 25,
+    "sizes": [
+      "Unique"
+    ],
+    "colors": [
+      "Jaune",
+      "Corail"
+    ],
+    "shortDescription": "Lot de 3 paires de chaussettes en coton doux, motifs fruits gourmands.",
+    "description": "Lot de 3 paires de chaussettes en coton doux, motifs fruits gourmands.",
+    "details": [
+      "Coton peigné respirant",
+      "Lot de 3 paires",
+      "Bord côtelé anti-glisse"
+    ],
+    "images": [],
+    "icon": "socks",
+    "palette": "jaune",
+    "seo": {
+      "metaTitle": "Chaussettes Motifs Fruits — NANOBO",
+      "metaDescription": "Lot de 3 paires de chaussettes en coton doux, motifs fruits gourmands."
+    },
+    "rating": 4.6,
+    "reviews": 16,
+    "tags": [],
+    "createdAt": "2026-09-11T13:59:38.775Z",
+    "updatedAt": "2026-09-11T13:59:38.775Z"
+  },
+  {
+    "id": "p18",
+    "slug": "veste-doudoune-legere",
+    "status": "published",
+    "name": "Veste Doudoune Légère",
+    "category": "garcons",
+    "ageGroup": "4-10 ans",
+    "badge": "promo",
+    "price": 44.9,
+    "oldPrice": 54.9,
+    "sku": "NANOBO-P18",
+    "stock": 25,
+    "sizes": [
+      "4-5a",
+      "6-7a",
+      "8-9a",
+      "10-11a"
+    ],
+    "colors": [
+      "Ciel",
+      "Marine"
+    ],
+    "shortDescription": "Doudoune légère et chaude, déperlante, capuche amovible pour toutes les sorties.",
+    "description": "Doudoune légère et chaude, déperlante, capuche amovible pour toutes les sorties.",
+    "details": [
+      "Rembourrage thermique léger",
+      "Déperlant",
+      "Capuche amovible"
+    ],
+    "images": [],
+    "icon": "jacket",
+    "palette": "ciel",
+    "seo": {
+      "metaTitle": "Veste Doudoune Légère — NANOBO",
+      "metaDescription": "Doudoune légère et chaude, déperlante, capuche amovible pour toutes les sorties."
+    },
+    "rating": 4.7,
+    "reviews": 24,
+    "tags": [
+      "promo"
+    ],
+    "createdAt": "2026-09-11T13:59:38.775Z",
+    "updatedAt": "2026-09-11T13:59:38.775Z"
+  },
+  {
+    "id": "p19",
+    "slug": "bavoir-petit-gourmand",
+    "status": "published",
+    "name": "Bavoir Petit Gourmand",
+    "category": "bebe",
+    "ageGroup": "0-18 mois",
+    "badge": "",
+    "price": 7.9,
+    "oldPrice": null,
+    "sku": "NANOBO-P19",
+    "stock": 25,
+    "sizes": [
+      "Unique"
+    ],
+    "colors": [
+      "Menthe",
+      "Jaune"
+    ],
+    "shortDescription": "Bavoir imperméable à poche récupératrice, pratique pour les repas sans souci.",
+    "description": "Bavoir imperméable à poche récupératrice, pratique pour les repas sans souci.",
+    "details": [
+      "Face imperméable PEVA",
+      "Poche récupératrice",
+      "Fermeture pression"
+    ],
+    "images": [],
+    "icon": "bib",
+    "palette": "menthe",
+    "seo": {
+      "metaTitle": "Bavoir Petit Gourmand — NANOBO",
+      "metaDescription": "Bavoir imperméable à poche récupératrice, pratique pour les repas sans souci."
+    },
+    "rating": 4.5,
+    "reviews": 8,
+    "tags": [],
+    "createdAt": "2026-09-11T13:59:38.775Z",
+    "updatedAt": "2026-09-11T13:59:38.775Z"
+  },
+  {
+    "id": "p20",
+    "slug": "robe-fleurie-printemps",
+    "status": "published",
+    "name": "Robe Fleurie Printemps",
+    "category": "filles",
+    "ageGroup": "2-8 ans",
+    "badge": "bestseller",
+    "price": 29.9,
+    "oldPrice": null,
+    "sku": "NANOBO-P20",
+    "stock": 25,
+    "sizes": [
+      "2-3a",
+      "4-5a",
+      "6-7a",
+      "8-9a"
+    ],
+    "colors": [
+      "Corail",
+      "Menthe"
+    ],
+    "shortDescription": "Robe légère en voile fleuri, doublure douce, parfaite pour le printemps et l'été.",
+    "description": "Robe légère en voile fleuri, doublure douce, parfaite pour le printemps et l'été.",
+    "details": [
+      "Voile de coton fleuri",
+      "Doublure intérieure coton",
+      "Fermeture boutons dos"
+    ],
+    "images": [],
+    "icon": "dress",
+    "palette": "menthe",
+    "seo": {
+      "metaTitle": "Robe Fleurie Printemps — NANOBO",
+      "metaDescription": "Robe légère en voile fleuri, doublure douce, parfaite pour le printemps et l'été."
+    },
+    "rating": 4.8,
+    "reviews": 37,
+    "tags": [
+      "bestseller"
+    ],
+    "createdAt": "2026-09-11T13:59:38.775Z",
+    "updatedAt": "2026-09-11T13:59:38.775Z"
+  }
+]

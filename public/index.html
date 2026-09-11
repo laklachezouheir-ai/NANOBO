@@ -332,10 +332,13 @@
     .map(([bg, ic, key]) => `<a href="#" class="insta-tile reveal" style="background:${bg}">${productIcon(key, ic, '#fff')}</a>`)
     .join('');
 
-  // Best-sellers & nouveautés
-  renderProductGrid(PRODUCTS.filter((p) => p.tags.includes('bestseller')).slice(0, 4), '#bestsellers-grid');
-  renderProductGrid(PRODUCTS.filter((p) => p.tags.includes('nouveaute')).slice(0, 4), '#new-grid');
-  initReveal();
+  // Best-sellers & nouveautés (chargés depuis le catalogue géré en admin)
+  (async () => {
+    await loadProducts();
+    renderProductGrid(PRODUCTS.filter((p) => p.tags.includes('bestseller')).slice(0, 4), '#bestsellers-grid');
+    renderProductGrid(PRODUCTS.filter((p) => p.tags.includes('nouveaute')).slice(0, 4), '#new-grid');
+    initReveal();
+  })();
 </script>
 </body>
 </html>

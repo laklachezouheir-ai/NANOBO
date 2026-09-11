@@ -331,7 +331,10 @@
     applyFilters();
   });
 
-  applyFilters();
+  (async () => {
+    await loadProducts();
+    applyFilters();
+  })();
 </script>
 </body>
 </html>

@@ -1,0 +1,610 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title id="page-title">Produit — Administration NANOBO</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%23ff6b7a'/%3E%3Ctext x='50' y='68' font-size='55' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='700'%3EN%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+
+<div class="admin-shell">
+  <aside class="admin-sidebar">
+    <div class="admin-logo">Nano<span>bo</span></div>
+    <div class="admin-logo-sub">Administration</div>
+    <nav class="admin-nav">
+      <a href="/admin" id="nav-products"></a>
+    </nav>
+    <div class="admin-sidebar-footer">
+      <a href="/" target="_blank" id="nav-view-shop"></a>
+      <a href="#" id="nav-logout"></a>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-topbar">
+      <div>
+        <div class="admin-breadcrumb"><a href="/admin">Produits</a> / <span id="breadcrumb-current">…</span></div>
+        <h1 class="admin-title" id="page-heading">…</h1>
+      </div>
+      <div class="admin-topbar-actions">
+        <a href="/admin" class="btn btn-ghost">← Retour</a>
+        <a href="#" target="_blank" class="btn btn-outline" id="btn-view-live" style="display:none">Voir sur la boutique ↗</a>
+        <button class="btn btn-primary" id="btn-save-top">Enregistrer</button>
+      </div>
+    </div>
+
+    <div id="cloudinary-banner"></div>
+
+    <form id="product-form" class="form-layout" onsubmit="return false">
+      <!-- ============ COLONNE PRINCIPALE ============ -->
+      <div class="main-col">
+
+        <div class="card">
+          <h3>Titre &amp; description</h3>
+          <p class="card-sub">Les informations principales affichées sur la fiche produit.</p>
+
+          <div class="field">
+            <label>Titre du produit</label>
+            <input type="text" id="f-name" placeholder="Ex. Robe Arc-en-ciel Volantée" required>
+          </div>
+
+          <div class="field">
+            <label>URL / slug</label>
+            <div class="slug-preview">
+              <span id="slug-domain">/produit/</span>
+              <input type="text" id="f-slug" placeholder="robe-arc-en-ciel-volantee">
+            </div>
+            <p class="hint">Générée automatiquement depuis le titre. Modifiable manuellement.</p>
+          </div>
+
+          <div class="field">
+            <label>Description courte <span class="counter" id="short-desc-counter">0 caractère</span></label>
+            <textarea id="f-short-description" rows="2" placeholder="Résumé affiché dans les grilles de produits (1-2 phrases)."></textarea>
+          </div>
+
+          <div class="field">
+            <label>Description détaillée</label>
+            <textarea id="f-description" rows="5" placeholder="Description complète affichée dans l'onglet « Description » de la fiche produit."></textarea>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Photos du produit</h3>
+          <p class="card-sub">Formats JPG/PNG/WebP, 8 Mo max. Chaque image est automatiquement optimisée (compression et format modernes) à la livraison.</p>
+
+          <div id="upload-disabled-note"></div>
+
+          <div class="dropzone" id="dropzone">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><polyline points="7 8 12 3 17 8"/><path d="M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg>
+            <div><strong>Glissez-déposez vos photos ici</strong><br>ou cliquez pour parcourir vos fichiers</div>
+          </div>
+          <input type="file" id="file-input" accept="image/*" multiple hidden>
+
+          <div class="image-grid" id="image-grid"></div>
+
+          <div class="field" style="margin-top:20px">
+            <label>Image de secours (utilisée tant qu'aucune photo n'est ajoutée)</label>
+            <div class="fallback-picto">
+              <div class="preview" id="fallback-preview"></div>
+              <div class="controls">
+                <select id="f-icon"></select>
+                <select id="f-palette"></select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Détails du produit</h3>
+          <p class="card-sub">Composition, entretien, caractéristiques — affichés en liste sur la fiche produit.</p>
+          <div id="details-list"></div>
+          <button type="button" class="btn btn-outline btn-sm" id="btn-add-detail">+ Ajouter une ligne</button>
+        </div>
+
+        <div class="card">
+          <h3>Variantes</h3>
+          <p class="card-sub">Tailles et couleurs disponibles à l'achat.</p>
+
+          <div class="field">
+            <label>Tailles disponibles</label>
+            <div id="sizes-input"></div>
+          </div>
+
+          <div class="field">
+            <label>Couleurs disponibles</label>
+            <div id="colors-input"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Référencement (SEO)</h3>
+          <p class="card-sub">Optimisez l'affichage de ce produit dans les résultats de recherche.</p>
+
+          <div class="field">
+            <label>Meta titre <span class="counter" id="meta-title-counter">0 / 60</span></label>
+            <input type="text" id="f-meta-title" placeholder="Par défaut : titre du produit — NANOBO">
+          </div>
+          <div class="field">
+            <label>Meta description <span class="counter" id="meta-desc-counter">0 / 160</span></label>
+            <textarea id="f-meta-description" rows="3" placeholder="Par défaut : description courte du produit."></textarea>
+          </div>
+
+          <div class="field">
+            <label>Aperçu dans Google</label>
+            <div class="serp-preview">
+              <div class="serp-title" id="serp-title">Titre du produit — NANOBO</div>
+              <div class="serp-url" id="serp-url">nanobo.fr › produit › ...</div>
+              <div class="serp-desc" id="serp-desc">Description du produit…</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ============ COLONNE LATÉRALE ============ -->
+      <div class="sidebar-col">
+        <div class="card sticky-save">
+          <h3>Statut</h3>
+          <div class="status-select-wrap">
+            <select id="f-status">
+              <option value="draft">Brouillon</option>
+              <option value="published">Publié</option>
+            </select>
+          </div>
+          <p class="updated-note" id="updated-note"></p>
+          <div style="margin-top:14px">
+            <button type="button" class="btn btn-primary btn-block" id="btn-save-side">Enregistrer</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Prix</h3>
+          <div class="field">
+            <label>Prix</label>
+            <input type="number" id="f-price" step="0.01" min="0" required placeholder="29.90">
+          </div>
+          <div class="field">
+            <label>Prix barré (promo)</label>
+            <input type="number" id="f-old-price" step="0.01" min="0" placeholder="Optionnel">
+          </div>
+          <div class="field">
+            <label>Badge affiché</label>
+            <select id="f-badge">
+              <option value="">Aucun</option>
+              <option value="new">Nouveau</option>
+              <option value="promo">Promo</option>
+              <option value="bestseller">Best-seller</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Inventaire</h3>
+          <div class="field">
+            <label>SKU / référence</label>
+            <input type="text" id="f-sku" placeholder="NANOBO-P01">
+          </div>
+          <div class="field">
+            <label>Quantité en stock</label>
+            <input type="number" id="f-stock" min="0" step="1" placeholder="0">
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Organisation</h3>
+          <div class="field">
+            <label>Catégorie</label>
+            <select id="f-category"></select>
+          </div>
+          <div class="field">
+            <label>Tranche d'âge</label>
+            <input type="text" id="f-age-group" placeholder="Ex. 4-8 ans">
+          </div>
+          <div class="field">
+            <label>Tags internes</label>
+            <div id="tags-input"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Avis clients</h3>
+          <div class="field-row">
+            <div class="field">
+              <label>Note moyenne</label>
+              <input type="number" id="f-rating" min="0" max="5" step="0.1" placeholder="4.8">
+            </div>
+            <div class="field">
+              <label>Nombre d'avis</label>
+              <input type="number" id="f-reviews" min="0" step="1" placeholder="0">
+            </div>
+          </div>
+        </div>
+
+        <div class="card" id="danger-card" style="display:none">
+          <h3 style="color:var(--red)">Zone de danger</h3>
+          <button type="button" class="btn btn-danger btn-block" id="btn-delete">Supprimer ce produit</button>
+        </div>
+      </div>
+    </form>
+  </main>
+</div>
+
+<script src="/js/icons.js"></script>
+<script src="/js/products.js"></script>
+<script src="/admin/admin.js"></script>
+<script>
+(async function () {
+  const authed = await requireAuthOrRedirect();
+  if (!authed) return;
+
+  document.getElementById('nav-products').innerHTML = uiIcon('bag') + ' Produits';
+  document.getElementById('nav-view-shop').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> Voir la boutique`;
+  document.getElementById('nav-logout').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Déconnexion`;
+  document.getElementById('nav-logout').addEventListener('click', (e) => { e.preventDefault(); logoutAdmin(); });
+
+  const parts = location.pathname.split('/').filter(Boolean); // ['admin','produits',':id']
+  const idParam = parts[2];
+  const isNew = idParam === 'nouveau';
+  let currentId = isNew ? null : idParam;
+  let currentImages = [];
+  let slugTouchedManually = false;
+
+  let meta = { categories: [], badges: [], cloudinaryConfigured: true };
+  try {
+    meta = await api('/api/admin/meta');
+  } catch (err) {
+    toast(err.message, 'error');
+  }
+
+  // Catégories
+  const catSelect = document.getElementById('f-category');
+  meta.categories.forEach((c) => {
+    const opt = document.createElement('option');
+    opt.value = c;
+    opt.textContent = CATEGORY_LABELS[c] || c;
+    catSelect.appendChild(opt);
+  });
+
+  // Icônes de secours (toutes les icônes produit disponibles)
+  const iconSelect = document.getElementById('f-icon');
+  Object.keys(PRODUCT_ICON).forEach((key) => {
+    const opt = document.createElement('option');
+    opt.value = key;
+    opt.textContent = key;
+    iconSelect.appendChild(opt);
+  });
+  const paletteSelect = document.getElementById('f-palette');
+  Object.keys(PALETTE).forEach((key) => {
+    const opt = document.createElement('option');
+    opt.value = key;
+    opt.textContent = key;
+    paletteSelect.appendChild(opt);
+  });
+
+  function updateFallbackPreview() {
+    const pal = PALETTE[paletteSelect.value] || PALETTE.corail;
+    document.getElementById('fallback-preview').style.background = pal.bg;
+    document.getElementById('fallback-preview').innerHTML = productIcon(iconSelect.value, pal.icon, '#fff');
+  }
+  iconSelect.addEventListener('change', updateFallbackPreview);
+  paletteSelect.addEventListener('change', updateFallbackPreview);
+
+  if (!meta.cloudinaryConfigured) {
+    document.getElementById('cloudinary-banner').innerHTML = `
+      <div class="banner banner-warning">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <div><strong>Upload de photos désactivé.</strong> Configurez CLOUDINARY_CLOUD_NAME / CLOUDINARY_API_KEY / CLOUDINARY_API_SECRET sur le serveur pour activer l'ajout de vraies photos. En attendant, l'image de secours ci-dessous sera utilisée.</div>
+      </div>`;
+    document.getElementById('dropzone').style.display = 'none';
+  }
+
+  // Détails produit (liste dynamique)
+  const detailsList = createDynList(document.getElementById('details-list'), document.getElementById('btn-add-detail'), {
+    placeholder: 'Ex. 100% coton biologique',
+    initial: [],
+  });
+
+  // Tailles / couleurs / tags
+  const sizesInput = createTagInput(document.getElementById('sizes-input'), {
+    placeholder: 'Ajouter une taille…',
+    suggestions: ['2-3a', '4-5a', '6-7a', '8-9a', '10-11a'],
+  });
+  const colorsInput = createTagInput(document.getElementById('colors-input'), {
+    placeholder: 'Ajouter une couleur…',
+    colorMap: typeof COLOR_SWATCHES !== 'undefined' ? COLOR_SWATCHES : {},
+    suggestions: typeof COLOR_SWATCHES !== 'undefined' ? Object.keys(COLOR_SWATCHES) : [],
+  });
+  const tagsInput = createTagInput(document.getElementById('tags-input'), {
+    placeholder: 'Ajouter un tag…',
+    suggestions: ['nouveaute', 'bestseller', 'promo'],
+  });
+
+  // Slug auto-généré depuis le titre
+  const nameInput = document.getElementById('f-name');
+  const slugInput = document.getElementById('f-slug');
+  nameInput.addEventListener('input', () => {
+    if (!slugTouchedManually) slugInput.value = slugifyClient(nameInput.value);
+    updateHeading();
+    updateSerpPreview();
+  });
+  slugInput.addEventListener('input', () => {
+    slugTouchedManually = true;
+    updateSerpPreview();
+  });
+
+  function updateHeading() {
+    const name = nameInput.value.trim();
+    document.getElementById('page-heading').textContent = name || (isNew ? 'Nouveau produit' : 'Modifier le produit');
+    document.getElementById('breadcrumb-current').textContent = name || (isNew ? 'Nouveau produit' : 'Modifier');
+    document.title = (name || 'Produit') + ' — Administration NANOBO';
+  }
+
+  // Compteurs de caractères + aperçu Google
+  const shortDescEl = document.getElementById('f-short-description');
+  const metaTitleEl = document.getElementById('f-meta-title');
+  const metaDescEl = document.getElementById('f-meta-description');
+
+  function updateCounters() {
+    document.getElementById('short-desc-counter').textContent = shortDescEl.value.length + ' caractère' + (shortDescEl.value.length > 1 ? 's' : '');
+    document.getElementById('meta-title-counter').textContent = metaTitleEl.value.length + ' / 60';
+    document.getElementById('meta-desc-counter').textContent = metaDescEl.value.length + ' / 160';
+  }
+
+  function updateSerpPreview() {
+    const title = metaTitleEl.value.trim() || (nameInput.value.trim() ? nameInput.value.trim() + ' — NANOBO' : 'Titre du produit — NANOBO');
+    const desc = metaDescEl.value.trim() || shortDescEl.value.trim() || 'Description du produit…';
+    document.getElementById('serp-title').textContent = title;
+    document.getElementById('serp-url').textContent = 'nanobo.fr › produit › ' + (slugInput.value || 'slug-du-produit');
+    document.getElementById('serp-desc').textContent = desc;
+  }
+
+  [shortDescEl, metaTitleEl, metaDescEl].forEach((el) => el.addEventListener('input', () => { updateCounters(); updateSerpPreview(); }));
+
+  // ---------- Upload photos ----------
+  const dropzone = document.getElementById('dropzone');
+  const fileInput = document.getElementById('file-input');
+  dropzone.addEventListener('click', () => fileInput.click());
+  ['dragenter', 'dragover'].forEach((evt) => dropzone.addEventListener(evt, (e) => { e.preventDefault(); dropzone.classList.add('dragover'); }));
+  ['dragleave', 'drop'].forEach((evt) => dropzone.addEventListener(evt, (e) => { e.preventDefault(); dropzone.classList.remove('dragover'); }));
+  dropzone.addEventListener('drop', (e) => handleFiles(e.dataTransfer.files));
+  fileInput.addEventListener('change', () => { handleFiles(fileInput.files); fileInput.value = ''; });
+
+  async function handleFiles(fileList) {
+    if (!meta.cloudinaryConfigured) {
+      toast("Configurez Cloudinary pour activer l'upload de photos.", 'error');
+      return;
+    }
+    for (const file of Array.from(fileList)) {
+      await uploadOneFile(file);
+    }
+  }
+
+  function renderImageGrid() {
+    const grid = document.getElementById('image-grid');
+    grid.innerHTML = currentImages
+      .map(
+        (img, idx) => `
+        <div class="image-card ${idx === 0 ? 'is-main' : ''}" data-idx="${idx}">
+          ${idx === 0 ? '<span class="badge-main">Principale</span>' : ''}
+          <img src="${img.url}" alt="">
+          <div class="image-actions">
+            ${idx !== 0 ? `<button type="button" data-make-main="${idx}" title="Définir comme image principale">${starIcon()}</button>` : ''}
+            <button type="button" data-remove="${idx}" title="Supprimer">${closeIcon()}</button>
+          </div>
+          <div class="image-meta">${formatBytes(img.originalBytes)} → ${formatBytes(img.bytes)} (${(img.format || '').toUpperCase()})</div>
+        </div>`
+      )
+      .join('');
+
+    grid.querySelectorAll('[data-make-main]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const idx = Number(btn.dataset.makeMain);
+        const [moved] = currentImages.splice(idx, 1);
+        currentImages.unshift(moved);
+        renderImageGrid();
+      });
+    });
+    grid.querySelectorAll('[data-remove]').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const idx = Number(btn.dataset.remove);
+        const [removed] = currentImages.splice(idx, 1);
+        renderImageGrid();
+        if (removed && removed.publicId) {
+          try { await api('/api/admin/images/delete', { method: 'POST', body: JSON.stringify({ publicId: removed.publicId }) }); } catch {}
+        }
+      });
+    });
+  }
+
+  function starIcon() {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l2.9 6.4 6.9.7-5.2 4.7 1.5 6.8L12 17.8 5.9 21.1l1.5-6.8-5.2-4.7 6.9-.7z"/></svg>';
+  }
+  function closeIcon() {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>';
+  }
+
+  async function uploadOneFile(file) {
+    const grid = document.getElementById('image-grid');
+    const placeholder = document.createElement('div');
+    placeholder.className = 'image-card uploading';
+    placeholder.innerHTML = '<div class="spinner"></div>';
+    grid.appendChild(placeholder);
+
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+      formData.append('productId', currentId || 'nouveau-' + Date.now());
+      const { image } = await apiUpload('/api/admin/upload', formData);
+      currentImages.push(image);
+      renderImageGrid();
+      toast('Photo ajoutée et optimisée (' + formatBytes(image.originalBytes) + ' → ' + formatBytes(image.bytes) + ').');
+    } catch (err) {
+      toast(err.message, 'error');
+      placeholder.remove();
+    }
+  }
+
+  // ---------- Chargement du produit existant ----------
+  if (!isNew) {
+    try {
+      const { product } = await api('/api/admin/products/' + idParam);
+      fillForm(product);
+      document.getElementById('danger-card').style.display = 'block';
+      if (product.status === 'published') {
+        const link = document.getElementById('btn-view-live');
+        link.href = '/produit.html?id=' + product.id;
+        link.style.display = 'inline-flex';
+      }
+    } catch (err) {
+      toast(err.message, 'error');
+      setTimeout(() => (location.href = '/admin'), 1200);
+      return;
+    }
+  } else {
+    document.getElementById('f-status').value = 'draft';
+    document.getElementById('f-stock').value = 0;
+    document.getElementById('f-rating').value = 5;
+    document.getElementById('f-reviews').value = 0;
+    updateFallbackPreview();
+  }
+
+  updateHeading();
+  updateCounters();
+  updateSerpPreview();
+
+  function fillForm(p) {
+    currentId = p.id;
+    nameInput.value = p.name || '';
+    slugInput.value = p.slug || '';
+    slugTouchedManually = true;
+    shortDescEl.value = p.shortDescription || '';
+    document.getElementById('f-description').value = p.description || '';
+    document.getElementById('f-status').value = p.status || 'draft';
+    document.getElementById('f-price').value = p.price ?? '';
+    document.getElementById('f-old-price').value = p.oldPrice ?? '';
+    document.getElementById('f-badge').value = p.badge || '';
+    document.getElementById('f-sku').value = p.sku || '';
+    document.getElementById('f-stock').value = p.stock ?? 0;
+    document.getElementById('f-category').value = p.category || meta.categories[0];
+    document.getElementById('f-age-group').value = p.ageGroup || '';
+    document.getElementById('f-rating').value = p.rating ?? 5;
+    document.getElementById('f-reviews').value = p.reviews ?? 0;
+    metaTitleEl.value = (p.seo && p.seo.metaTitle) || '';
+    metaDescEl.value = (p.seo && p.seo.metaDescription) || '';
+    iconSelect.value = p.icon || 'tshirt';
+    paletteSelect.value = p.palette || 'corail';
+    updateFallbackPreview();
+
+    document.getElementById('details-list').innerHTML = '';
+    (p.details && p.details.length ? p.details : ['']).forEach((v) => {
+      const row = document.createElement('div');
+      row.className = 'dyn-list-row';
+      row.innerHTML = `<input type="text" value="${escapeHtml(v)}"><button type="button">${uiIconAdmin('trash')}</button>`;
+      row.querySelector('button').addEventListener('click', () => row.remove());
+      document.getElementById('details-list').appendChild(row);
+    });
+
+    sizesInput.setValues(p.sizes || []);
+    colorsInput.setValues(p.colors || []);
+    tagsInput.setValues(p.tags || []);
+
+    currentImages = Array.isArray(p.images) ? [...p.images] : [];
+    renderImageGrid();
+
+    document.getElementById('updated-note').textContent = p.updatedAt
+      ? 'Dernière modification : ' + new Date(p.updatedAt).toLocaleString('fr-FR')
+      : '';
+
+    document.getElementById('f-status').className = p.status === 'published' ? 'is-published' : 'is-draft';
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  document.getElementById('f-status').addEventListener('change', (e) => {
+    e.target.className = e.target.value === 'published' ? 'is-published' : 'is-draft';
+  });
+
+  // ---------- Enregistrement ----------
+  function collectPayload() {
+    return {
+      name: nameInput.value.trim(),
+      slug: slugInput.value.trim(),
+      status: document.getElementById('f-status').value,
+      shortDescription: shortDescEl.value.trim(),
+      description: document.getElementById('f-description').value.trim(),
+      price: parseFloat(document.getElementById('f-price').value) || 0,
+      oldPrice: document.getElementById('f-old-price').value ? parseFloat(document.getElementById('f-old-price').value) : null,
+      badge: document.getElementById('f-badge').value,
+      sku: document.getElementById('f-sku').value.trim(),
+      stock: parseInt(document.getElementById('f-stock').value, 10) || 0,
+      category: document.getElementById('f-category').value,
+      ageGroup: document.getElementById('f-age-group').value.trim(),
+      rating: parseFloat(document.getElementById('f-rating').value) || 0,
+      reviews: parseInt(document.getElementById('f-reviews').value, 10) || 0,
+      details: Array.from(document.querySelectorAll('#details-list input')).map((i) => i.value.trim()).filter(Boolean),
+      sizes: sizesInput.getValues(),
+      colors: colorsInput.getValues(),
+      tags: tagsInput.getValues(),
+      images: currentImages,
+      icon: iconSelect.value,
+      palette: paletteSelect.value,
+      seo: { metaTitle: metaTitleEl.value.trim(), metaDescription: metaDescEl.value.trim() },
+    };
+  }
+
+  async function save() {
+    if (!nameInput.value.trim()) {
+      toast('Le titre du produit est obligatoire.', 'error');
+      nameInput.focus();
+      return;
+    }
+    const payload = collectPayload();
+    const saveButtons = [document.getElementById('btn-save-top'), document.getElementById('btn-save-side')];
+    saveButtons.forEach((b) => (b.disabled = true));
+    try {
+      let product;
+      if (isNew && !currentId) {
+        ({ product } = await api('/api/admin/products', { method: 'POST', body: JSON.stringify(payload) }));
+        toast('Produit créé.');
+        history.replaceState(null, '', '/admin/produits/' + product.id);
+        currentId = product.id;
+        document.getElementById('danger-card').style.display = 'block';
+      } else {
+        ({ product } = await api('/api/admin/products/' + currentId, { method: 'PUT', body: JSON.stringify(payload) }));
+        toast('Produit enregistré.');
+      }
+      fillForm(product);
+      updateHeading();
+    } catch (err) {
+      toast(err.message, 'error');
+    } finally {
+      saveButtons.forEach((b) => (b.disabled = false));
+    }
+  }
+
+  document.getElementById('btn-save-top').addEventListener('click', save);
+  document.getElementById('btn-save-side').addEventListener('click', save);
+
+  document.getElementById('btn-delete').addEventListener('click', async () => {
+    const ok = await confirmModal('Supprimer ce produit ?', 'Cette action est définitive et supprimera aussi ses photos.');
+    if (!ok || !currentId) return;
+    try {
+      await api('/api/admin/products/' + currentId, { method: 'DELETE' });
+      toast('Produit supprimé.');
+      setTimeout(() => (location.href = '/admin'), 700);
+    } catch (err) {
+      toast(err.message, 'error');
+    }
+  });
+})();
+</script>
+</body>
+</html>

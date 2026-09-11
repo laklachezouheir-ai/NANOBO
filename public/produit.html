@@ -184,131 +184,154 @@
   document.querySelectorAll('.footer-contact li span').forEach((el, i) => (el.innerHTML = uiIcon(footerIcons[i])));
   document.querySelectorAll('.accordion-trigger span').forEach((el) => (el.innerHTML = uiIcon('plus')));
 
-  const params = new URLSearchParams(location.search);
-  const pr = getProductById(params.get('id')) || PRODUCTS[0];
-  const pal = PALETTE[pr.palette] || PALETTE.corail;
+  (async () => {
+    await loadProducts();
 
-  document.getElementById('page-title').textContent = pr.name + ' — NANOBO';
-  document.getElementById('crumb-cat-link').textContent = CATEGORY_LABELS[pr.category];
-  document.getElementById('crumb-cat-link').href = 'boutique.html?cat=' + pr.category;
-  document.getElementById('crumb-name').textContent = pr.name;
+    const params = new URLSearchParams(location.search);
+    const pr = getProductById(params.get('id')) || PRODUCTS[0];
+    if (!pr) {
+      document.getElementById('product-detail').innerHTML = `<div class="empty-state" style="grid-column:1/-1"><h3>Aucun produit disponible</h3><p>Le catalogue est vide pour le moment.</p></div>`;
+      return;
+    }
+    const pal = PALETTE[pr.palette] || PALETTE.corail;
+    const hasPhotos = pr.images && pr.images.length > 0;
 
-  const oldPriceHtml = pr.oldPrice ? `<span class="price-old">${formatPrice(pr.oldPrice)}</span><span class="badge badge-promo">-${Math.round((1 - pr.price / pr.oldPrice) * 100)}%</span>` : '';
+    document.getElementById('page-title').textContent = (pr.seo && pr.seo.metaTitle) || pr.name + ' — NANOBO';
+    const metaDescTag = document.createElement('meta');
+    metaDescTag.name = 'description';
+    metaDescTag.content = (pr.seo && pr.seo.metaDescription) || pr.shortDescription || '';
+    document.head.appendChild(metaDescTag);
+    document.getElementById('crumb-cat-link').textContent = CATEGORY_LABELS[pr.category];
+    document.getElementById('crumb-cat-link').href = 'boutique.html?cat=' + pr.category;
+    document.getElementById('crumb-name').textContent = pr.name;
 
-  document.getElementById('product-detail').innerHTML = `
-    <div class="gallery">
-      <div class="gallery-main" id="gallery-main" style="background:${pal.bg}">${productIcon(pr.icon, pal.icon, '#fff')}</div>
-      <div class="gallery-thumbs" id="gallery-thumbs">
-        <button class="active" data-bg="${pal.bg}">${productIcon(pr.icon, pal.icon, '#fff')}</button>
-        <button data-bg="#fff3d6">${productIcon(pr.icon, '#f2b705', '#fff')}</button>
-        <button data-bg="#e2f1fb">${productIcon(pr.icon, '#4ea8de', '#fff')}</button>
-        <button data-bg="#efe9fe">${productIcon(pr.icon, '#a78bfa', '#fff')}</button>
-      </div>
-    </div>
-    <div class="pd-info">
-      <div class="pd-category"><a href="boutique.html?cat=${pr.category}">${CATEGORY_LABELS[pr.category]}</a></div>
-      <h1 class="pd-title">${pr.name}</h1>
-      <div class="pd-rating">${starRow(pr.rating)} <span>${pr.rating} / 5 · ${pr.reviews} avis</span></div>
-      <div class="pd-price">
-        <span class="price-now">${formatPrice(pr.price)}</span>
-        ${oldPriceHtml}
-      </div>
-      <p class="pd-desc">${pr.desc}</p>
+    const oldPriceHtml = pr.oldPrice ? `<span class="price-old">${formatPrice(pr.oldPrice)}</span><span class="badge badge-promo">-${Math.round((1 - pr.price / pr.oldPrice) * 100)}%</span>` : '';
 
-      <div class="pd-option">
-        <h4>Couleur <span class="selected-val" id="selected-color">${pr.colors[0]}</span></h4>
-        <div class="color-options" id="pd-colors"></div>
-      </div>
+    // Galerie : vraies photos si disponibles, sinon variantes du pictogramme de secours.
+    const gallerySlides = hasPhotos
+      ? pr.images.map((img) => ({ bg: '#f2efe9', html: `<img src="${img.url}" alt="${pr.name}" style="width:100%;height:100%;object-fit:cover;border-radius:inherit">` }))
+      : [
+          { bg: pal.bg, html: productIcon(pr.icon, pal.icon, '#fff') },
+          { bg: '#fff3d6', html: productIcon(pr.icon, '#f2b705', '#fff') },
+          { bg: '#e2f1fb', html: productIcon(pr.icon, '#4ea8de', '#fff') },
+          { bg: '#efe9fe', html: productIcon(pr.icon, '#a78bfa', '#fff') },
+        ];
 
-      <div class="pd-option">
-        <h4>Taille <span class="selected-val" id="selected-size">${pr.sizes[0]}</span></h4>
-        <div class="size-options" id="pd-sizes"></div>
-      </div>
-
-      <div class="pd-option">
-        <h4>Quantité</h4>
-        <div class="qty-stepper">
-          <button type="button" aria-label="Diminuer">−</button>
-          <input type="text" id="pd-qty" value="1" inputmode="numeric">
-          <button type="button" aria-label="Augmenter">+</button>
+    document.getElementById('product-detail').innerHTML = `
+      <div class="gallery">
+        <div class="gallery-main" id="gallery-main" style="background:${gallerySlides[0].bg}">${gallerySlides[0].html}</div>
+        <div class="gallery-thumbs" id="gallery-thumbs">
+          ${gallerySlides.map((s, i) => `<button class="${i === 0 ? 'active' : ''}" data-idx="${i}">${s.html}</button>`).join('')}
         </div>
       </div>
+      <div class="pd-info">
+        <div class="pd-category"><a href="boutique.html?cat=${pr.category}">${CATEGORY_LABELS[pr.category]}</a></div>
+        <h1 class="pd-title">${pr.name}</h1>
+        <div class="pd-rating">${starRow(pr.rating)} <span>${pr.rating} / 5 · ${pr.reviews} avis</span></div>
+        <div class="pd-price">
+          <span class="price-now">${formatPrice(pr.price)}</span>
+          ${oldPriceHtml}
+        </div>
+        <p class="pd-desc">${pr.shortDescription || pr.description || ''}</p>
 
-      <div class="pd-actions">
-        <button class="btn btn-primary" id="add-to-cart-btn">${uiIcon('cart')} Ajouter au panier</button>
-        <a href="panier.html" class="btn btn-outline" id="buy-now-btn">Acheter maintenant</a>
+        <div class="pd-option">
+          <h4>Couleur <span class="selected-val" id="selected-color">${pr.colors[0] || ''}</span></h4>
+          <div class="color-options" id="pd-colors"></div>
+        </div>
+
+        <div class="pd-option">
+          <h4>Taille <span class="selected-val" id="selected-size">${pr.sizes[0] || ''}</span></h4>
+          <div class="size-options" id="pd-sizes"></div>
+        </div>
+
+        <div class="pd-option">
+          <h4>Quantité</h4>
+          <div class="qty-stepper">
+            <button type="button" aria-label="Diminuer">−</button>
+            <input type="text" id="pd-qty" value="1" inputmode="numeric">
+            <button type="button" aria-label="Augmenter">+</button>
+          </div>
+        </div>
+
+        <div class="pd-actions">
+          <button class="btn btn-primary" id="add-to-cart-btn" ${pr.inStock === false ? 'disabled' : ''}>${uiIcon('cart')} ${pr.inStock === false ? 'Rupture de stock' : 'Ajouter au panier'}</button>
+          <a href="panier.html" class="btn btn-outline" id="buy-now-btn">Acheter maintenant</a>
+        </div>
+
+        <div class="pd-meta">
+          <span><strong>Réf. produit :</strong> ${pr.sku || pr.id.toUpperCase()}</span>
+          <span><strong>Âge conseillé :</strong> ${pr.ageGroup || '—'}</span>
+          <span><strong>Disponibilité :</strong> ${pr.inStock === false ? 'Rupture de stock' : 'En stock, expédié sous 24h'}</span>
+        </div>
       </div>
+    `;
 
-      <div class="pd-meta">
-        <span><strong>Réf. produit :</strong> NANOBO-${pr.id.toUpperCase()}</span>
-        <span><strong>Âge conseillé :</strong> ${pr.ageGroup}</span>
-        <span><strong>Disponibilité :</strong> En stock, expédié sous 24h</span>
-      </div>
-    </div>
-  `;
+    // Miniatures galerie
+    document.getElementById('gallery-thumbs').addEventListener('click', (e) => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      document.querySelectorAll('#gallery-thumbs button').forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+      const slide = gallerySlides[Number(btn.dataset.idx)];
+      const main = document.getElementById('gallery-main');
+      main.style.background = slide.bg;
+      main.innerHTML = slide.html;
+    });
 
-  // Miniatures galerie
-  document.getElementById('gallery-thumbs').addEventListener('click', (e) => {
-    const btn = e.target.closest('button');
-    if (!btn) return;
-    document.querySelectorAll('#gallery-thumbs button').forEach((b) => b.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('gallery-main').style.background = btn.dataset.bg;
-  });
+    // Sélecteurs couleur / taille
+    document.getElementById('pd-colors').innerHTML = pr.colors
+      .map((c, i) => `<button type="button" class="color-chip ${i === 0 ? 'selected' : ''}" data-color="${c}" title="${c}" style="background:${COLOR_SWATCHES[c] || '#ccc'}"></button>`)
+      .join('');
+    document.getElementById('pd-colors').addEventListener('click', (e) => {
+      const chip = e.target.closest('.color-chip');
+      if (!chip) return;
+      document.querySelectorAll('#pd-colors .color-chip').forEach((c) => c.classList.remove('selected'));
+      chip.classList.add('selected');
+      document.getElementById('selected-color').textContent = chip.dataset.color;
+    });
 
-  // Sélecteurs couleur / taille
-  document.getElementById('pd-colors').innerHTML = pr.colors
-    .map((c, i) => `<button type="button" class="color-chip ${i === 0 ? 'selected' : ''}" data-color="${c}" title="${c}" style="background:${COLOR_SWATCHES[c] || '#ccc'}"></button>`)
-    .join('');
-  document.getElementById('pd-colors').addEventListener('click', (e) => {
-    const chip = e.target.closest('.color-chip');
-    if (!chip) return;
-    document.querySelectorAll('#pd-colors .color-chip').forEach((c) => c.classList.remove('selected'));
-    chip.classList.add('selected');
-    document.getElementById('selected-color').textContent = chip.dataset.color;
-  });
+    document.getElementById('pd-sizes').innerHTML = pr.sizes
+      .map((s, i) => `<button type="button" class="size-chip ${i === 0 ? 'selected' : ''}" data-size="${s}">${s}</button>`)
+      .join('');
+    document.getElementById('pd-sizes').addEventListener('click', (e) => {
+      const chip = e.target.closest('.size-chip');
+      if (!chip) return;
+      document.querySelectorAll('#pd-sizes .size-chip').forEach((c) => c.classList.remove('selected'));
+      chip.classList.add('selected');
+      document.getElementById('selected-size').textContent = chip.dataset.size;
+    });
 
-  document.getElementById('pd-sizes').innerHTML = pr.sizes
-    .map((s, i) => `<button type="button" class="size-chip ${i === 0 ? 'selected' : ''}" data-size="${s}">${s}</button>`)
-    .join('');
-  document.getElementById('pd-sizes').addEventListener('click', (e) => {
-    const chip = e.target.closest('.size-chip');
-    if (!chip) return;
-    document.querySelectorAll('#pd-sizes .size-chip').forEach((c) => c.classList.remove('selected'));
-    chip.classList.add('selected');
-    document.getElementById('selected-size').textContent = chip.dataset.size;
-  });
+    initQtySteppers();
 
-  initQtySteppers();
+    function currentSelection() {
+      const size = document.querySelector('#pd-sizes .size-chip.selected')?.dataset.size || pr.sizes[0];
+      const color = document.querySelector('#pd-colors .color-chip.selected')?.dataset.color || pr.colors[0];
+      const qty = parseInt(document.getElementById('pd-qty').value, 10) || 1;
+      return { size, color, qty };
+    }
 
-  function currentSelection() {
-    const size = document.querySelector('#pd-sizes .size-chip.selected')?.dataset.size || pr.sizes[0];
-    const color = document.querySelector('#pd-colors .color-chip.selected')?.dataset.color || pr.colors[0];
-    const qty = parseInt(document.getElementById('pd-qty').value, 10) || 1;
-    return { size, color, qty };
-  }
+    document.getElementById('add-to-cart-btn').addEventListener('click', () => {
+      const { size, color, qty } = currentSelection();
+      addToCart(pr.id, size, color, qty);
+      showToast(pr);
+    });
 
-  document.getElementById('add-to-cart-btn').addEventListener('click', () => {
-    const { size, color, qty } = currentSelection();
-    addToCart(pr.id, size, color, qty);
-    showToast(pr);
-  });
+    document.getElementById('buy-now-btn').addEventListener('click', () => {
+      const { size, color, qty } = currentSelection();
+      addToCart(pr.id, size, color, qty);
+    });
 
-  document.getElementById('buy-now-btn').addEventListener('click', () => {
-    const { size, color, qty } = currentSelection();
-    addToCart(pr.id, size, color, qty);
-  });
+    // Description / détails
+    document.getElementById('acc-desc').innerHTML = `<p>${pr.description || pr.shortDescription || ''}</p>`;
+    document.getElementById('acc-details').innerHTML = `<ul>${(pr.details || []).map((d) => `<li>${d}</li>`).join('')}</ul>`;
+    document.getElementById('acc-desc-body').style.maxHeight = document.getElementById('acc-desc-body').scrollHeight + 'px';
 
-  // Description / détails
-  document.getElementById('acc-desc').innerHTML = `<p>${pr.desc}</p>`;
-  document.getElementById('acc-details').innerHTML = `<ul>${pr.details.map((d) => `<li>${d}</li>`).join('')}</ul>`;
-  document.getElementById('acc-desc-body').style.maxHeight = document.getElementById('acc-desc-body').scrollHeight + 'px';
+    // Produits similaires
+    const related = PRODUCTS.filter((p) => p.category === pr.category && p.id !== pr.id).slice(0, 4);
+    renderProductGrid(related.length ? related : PRODUCTS.filter((p) => p.id !== pr.id).slice(0, 4), '#related-grid');
 
-  // Produits similaires
-  const related = PRODUCTS.filter((p) => p.category === pr.category && p.id !== pr.id).slice(0, 4);
-  renderProductGrid(related.length ? related : PRODUCTS.filter((p) => p.id !== pr.id).slice(0, 4), '#related-grid');
-
-  initReveal();
+    initReveal();
+  })();
 </script>
 </body>
 </html>

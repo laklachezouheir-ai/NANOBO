@@ -1,0 +1,21 @@
+{
+  "name": "nanobo",
+  "version": "1.0.0",
+  "description": "NANOBO - boutique e-commerce mode enfant, avec interface d'administration produits (titres, SEO, photos optimisées, descriptions, variantes).",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "cloudinary": "^2.5.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "multer": "^2.0.1"
+  }
+}

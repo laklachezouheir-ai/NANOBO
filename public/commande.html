@@ -244,9 +244,8 @@
 
     document.getElementById('order-summary-list').innerHTML = lines
       .map(({ line, pr }) => {
-        const pal = PALETTE[pr.palette] || PALETTE.corail;
         return `<div class="order-summary-item">
-          <div class="thumb" style="background:${pal.bg}">${productIcon(pr.icon, pal.icon, '#fff')}<span class="qty-badge">${line.qty}</span></div>
+          <div class="thumb" style="background:${productBg(pr)}">${productThumbHTML(pr)}<span class="qty-badge">${line.qty}</span></div>
           <div class="order-summary-item-info"><strong>${pr.name}</strong><span>${line.color || ''}${line.color && line.size ? ' · ' : ''}${line.size || ''}</span></div>
           <span class="price">${formatPrice(pr.price * line.qty)}</span>
         </div>`;
@@ -260,10 +259,13 @@
     return lines.length > 0;
   }
 
-  const hasItems = renderOrderSummary();
-  if (!hasItems) {
-    document.querySelector('#checkout-form button[type=submit]').disabled = true;
-  }
+  (async () => {
+    await loadProducts();
+    const hasItems = renderOrderSummary();
+    if (!hasItems) {
+      document.querySelector('#checkout-form button[type=submit]').disabled = true;
+    }
+  })();
 
   document.getElementById('checkout-form').addEventListener('submit', (e) => {
     e.preventDefault();

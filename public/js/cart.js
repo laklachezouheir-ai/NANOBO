@@ -127,10 +127,9 @@ function isWishlisted(id) {
 function showToast(product) {
   let toast = document.getElementById("cart-toast");
   if (!toast) return;
-  const pal = PALETTE[product.palette] || PALETTE.corail;
   toast.innerHTML = `
     <span class="toast-icon">${uiIcon("checkCircle")}</span>
-    <div class="thumb" style="background:${pal.bg}">${productIcon(product.icon, pal.icon, "#fff")}</div>
+    <div class="thumb" style="background:${productBg(product)}">${productThumbHTML(product)}</div>
     <div>
       <strong>Ajouté au panier</strong>
       <span>${product.name}</span>

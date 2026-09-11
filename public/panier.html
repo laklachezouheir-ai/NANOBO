@@ -172,12 +172,11 @@
 
     const rowsHtml = lines
       .map(({ line, pr }) => {
-        const pal = PALETTE[pr.palette] || PALETTE.corail;
         return `
         <tr class="cart-row">
           <td>
             <div class="cart-product">
-              <div class="thumb" style="background:${pal.bg}">${productIcon(pr.icon, pal.icon, '#fff')}</div>
+              <div class="thumb" style="background:${productBg(pr)}">${productThumbHTML(pr)}</div>
               <div class="cart-product-info">
                 <a href="produit.html?id=${pr.id}" class="product-title" style="display:inline-block">${pr.name}</a><br>
                 <span>${line.color || ''}${line.color && line.size ? ' · ' : ''}${line.size || ''}</span>
@@ -270,7 +269,10 @@
     initReveal();
   }
 
-  renderCart();
+  (async () => {
+    await loadProducts();
+    renderCart();
+  })();
 </script>
 </body>
 </html>
