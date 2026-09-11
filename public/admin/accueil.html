@@ -17,6 +17,20 @@
   .insta-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 12px; margin-bottom: 16px; }
   .insta-grid .image-card { aspect-ratio: 1/1; }
   .insta-grid .image-card img { height: 100%; }
+
+  .accueil-layout { display: grid; grid-template-columns: 1fr 400px; gap: 24px; align-items: flex-start; }
+  .accueil-form-col { min-width: 0; }
+  .accueil-preview-col { position: sticky; top: 20px; }
+  .preview-panel { background: var(--white); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); overflow: hidden; }
+  .preview-header { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 14px 16px; border-bottom: 1px solid var(--line); }
+  .preview-header strong { font-family: var(--font-heading); font-size: 0.95rem; }
+  .preview-frame-wrap { width: 100%; height: 70vh; min-height: 480px; max-height: 780px; overflow: hidden; background: #fff9f3; }
+  .preview-frame-wrap iframe { width: 100%; height: 100%; border: none; display: block; }
+  @media (max-width: 1200px) {
+    .accueil-layout { grid-template-columns: 1fr; }
+    .accueil-preview-col { position: static; }
+    .preview-frame-wrap { height: 60vh; }
+  }
 </style>
 </head>
 <body>
@@ -48,7 +62,10 @@
       </div>
     </div>
 
-    <p class="card-sub" style="margin-bottom:20px">Modifie les textes et les photos du hero, de la bannière promo et de la galerie Instagram de la page d'accueil. Laisse un champ vide pour garder le pictogramme / texte par défaut.</p>
+    <p class="card-sub" style="margin-bottom:20px">Modifie les textes et les photos du hero, de la bannière promo et de la galerie Instagram de la page d'accueil. Laisse un champ vide pour garder le pictogramme / texte par défaut. <strong>Regarde l'aperçu à droite</strong> pour voir exactement où chaque élément apparaît.</p>
+
+    <div class="accueil-layout">
+    <div class="accueil-form-col">
 
     <!-- ========== HERO ========== -->
     <div class="card">
@@ -185,6 +202,25 @@
     </div>
 
     <div id="images-banner"></div>
+
+    </div>
+    <!-- ========== APERÇU EN DIRECT ========== -->
+    <aside class="accueil-preview-col">
+      <div class="preview-panel">
+        <div class="preview-header">
+          <div>
+            <strong>Aperçu en direct</strong>
+            <span class="hint" style="display:block">Vue mobile de ta page d'accueil réelle</span>
+          </div>
+          <button type="button" class="btn btn-outline btn-sm" id="btn-refresh-preview">↻ Rafraîchir</button>
+        </div>
+        <div class="preview-frame-wrap">
+          <iframe id="preview-iframe" src="/index.html" title="Aperçu de l'accueil"></iframe>
+        </div>
+        <p class="hint" style="padding:10px 16px">Après avoir cliqué sur <strong>Enregistrer</strong>, clique sur <strong>Rafraîchir</strong> ci-dessus pour voir le résultat ici.</p>
+      </div>
+    </aside>
+    </div>
   </main>
 </div>
 
@@ -198,10 +234,16 @@
 
   document.getElementById('nav-products').innerHTML = uiIcon('bag') + ' Produits';
   document.getElementById('nav-categories').innerHTML = uiIcon('sliders') + ' Catégories';
-  document.getElementById('nav-home').innerHTML = uiIcon('sparkle') + ' Accueil';
+  document.getElementById('nav-home').innerHTML = uiIcon('home') + ' Accueil';
   document.getElementById('nav-view-shop').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> Voir la boutique`;
   document.getElementById('nav-logout').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Déconnexion`;
   document.getElementById('nav-logout').addEventListener('click', (e) => { e.preventDefault(); logoutAdmin(); });
+
+  function refreshPreview() {
+    const iframe = document.getElementById('preview-iframe');
+    iframe.src = '/index.html?preview=' + Date.now();
+  }
+  document.getElementById('btn-refresh-preview').addEventListener('click', refreshPreview);
 
   let meta = { imageStorageConfigured: true };
   try { meta = await api('/api/admin/meta'); } catch {}
@@ -394,6 +436,7 @@
     try {
       await api('/api/admin/site-settings', { method: 'PUT', body: JSON.stringify(payload) });
       toast('Accueil mis à jour.');
+      refreshPreview();
     } catch (err) {
       toast(err.message, 'error');
     } finally {
