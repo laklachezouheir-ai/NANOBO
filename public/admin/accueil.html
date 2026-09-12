@@ -140,12 +140,12 @@
       </div>
 
       <div class="field">
-        <label>Photos du hero (<span id="hero-count">0</span> / 5)</label>
+        <label>Photos du hero (<span id="hero-count">0</span> / 10)</label>
         <p class="hint" style="margin:-4px 0 10px">Une seule photo = affichage fixe. Plusieurs photos = elles défilent en fondu automatiquement, l'une après l'autre.</p>
         <div class="insta-grid" id="hero-grid"></div>
         <div class="dropzone" id="hero-dropzone">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><polyline points="7 8 12 3 17 8"/><path d="M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg>
-          <div><strong>Glisser des photos</strong><br>ou cliquer pour en ajouter (jusqu'à 5) — sinon le pictogramme par défaut est utilisé</div>
+          <div><strong>Glisser des photos</strong><br>ou cliquer pour en ajouter (jusqu'à 10) — sinon le pictogramme par défaut est utilisé</div>
         </div>
         <input type="file" id="hero-file-input" accept="image/*" multiple hidden>
       </div>
@@ -323,7 +323,7 @@
         }
       });
     });
-    document.getElementById('hero-dropzone').style.display = heroImages.length >= 5 ? 'none' : (meta.imageStorageConfigured ? 'block' : 'none');
+    document.getElementById('hero-dropzone').style.display = heroImages.length >= 10 ? 'none' : (meta.imageStorageConfigured ? 'block' : 'none');
   }
   renderHeroGrid();
 
@@ -370,8 +370,8 @@
   async function uploadHero(fileList) {
     if (!meta.imageStorageConfigured) return;
     for (const file of Array.from(fileList)) {
-      if (heroImages.length >= 5) {
-        toast('Maximum 5 photos pour le hero.', 'error');
+      if (heroImages.length >= 10) {
+        toast('Maximum 10 photos pour le hero.', 'error');
         break;
       }
       try {
