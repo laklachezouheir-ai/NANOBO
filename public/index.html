@@ -327,9 +327,21 @@
       ].map(([v, l]) => `<div><strong>${v}</strong><span>${l}</span></div>`).join('');
 
       const heroCard = document.getElementById('hero-visual-card');
-      if (h.image) {
+      const heroImages = (h.images && h.images.length) ? h.images : (h.image ? [h.image] : []);
+      if (heroImages.length) {
         heroCard.style.background = '#f2efe9';
-        heroCard.innerHTML = `<img src="${h.image.url}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:inherit">`;
+        heroCard.innerHTML = heroImages
+          .map((img, i) => `<img src="${img.url}" alt="" class="hero-slide ${i === 0 ? 'active' : ''}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:inherit;opacity:${i === 0 ? 1 : 0};transition:opacity 1s ease">`)
+          .join('');
+        if (heroImages.length > 1) {
+          const slides = heroCard.querySelectorAll('.hero-slide');
+          let current = 0;
+          setInterval(() => {
+            slides[current].style.opacity = 0;
+            current = (current + 1) % slides.length;
+            slides[current].style.opacity = 1;
+          }, 3500);
+        }
       } else {
         heroCard.innerHTML = productIcon('dress', '#ff6b7a', '#fff');
       }

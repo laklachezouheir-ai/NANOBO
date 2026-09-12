@@ -140,15 +140,14 @@
       </div>
 
       <div class="field">
-        <label>Photo du hero</label>
-        <div class="single-image-slot">
-          <div id="hero-image-wrap"></div>
-          <div class="dropzone" id="hero-dropzone">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><polyline points="7 8 12 3 17 8"/><path d="M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg>
-            <div><strong>Glisser une photo</strong><br>ou cliquer pour parcourir — sinon le pictogramme par défaut est utilisé</div>
-          </div>
-          <input type="file" id="hero-file-input" accept="image/*" hidden>
+        <label>Photos du hero (<span id="hero-count">0</span> / 5)</label>
+        <p class="hint" style="margin:-4px 0 10px">Une seule photo = affichage fixe. Plusieurs photos = elles défilent en fondu automatiquement, l'une après l'autre.</p>
+        <div class="insta-grid" id="hero-grid"></div>
+        <div class="dropzone" id="hero-dropzone">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><polyline points="7 8 12 3 17 8"/><path d="M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg>
+          <div><strong>Glisser des photos</strong><br>ou cliquer pour en ajouter (jusqu'à 5) — sinon le pictogramme par défaut est utilisé</div>
         </div>
+        <input type="file" id="hero-file-input" accept="image/*" multiple hidden>
       </div>
     </div>
 
@@ -259,7 +258,7 @@
     document.getElementById('insta-dropzone').style.display = 'none';
   }
 
-  let heroImage = null;
+  let heroImages = [];
   let instaImages = [];
 
   let s;
@@ -286,7 +285,7 @@
   document.getElementById('h-stat3-label').value = s.hero.stat3Label;
   document.getElementById('h-badge-top').value = s.hero.badgeTopText;
   document.getElementById('h-badge-bottom').value = s.hero.badgeBottomText;
-  heroImage = s.hero.image;
+  heroImages = s.hero.images && s.hero.images.length ? s.hero.images : (s.hero.image ? [s.hero.image] : []);
 
   document.getElementById('p-tag').value = s.promoBanner.tag;
   document.getElementById('p-heading').value = s.promoBanner.heading;
@@ -297,30 +296,36 @@
   document.getElementById('i-handle').value = s.instagram.handle;
   instaImages = s.instagram.images || [];
 
-  function renderHeroImage() {
-    const wrap = document.getElementById('hero-image-wrap');
-    if (!heroImage) {
-      wrap.innerHTML = '';
-      return;
-    }
-    wrap.innerHTML = `
-      <div class="image-card is-main">
-        <img src="${heroImage.url}" alt="">
-        <div class="image-actions">
-          <button type="button" id="hero-open" title="Ouvrir le lien de la photo">${uiIconAdmin('link')}</button>
-          <button type="button" id="hero-remove" title="Supprimer">${uiIconAdmin('trash')}</button>
-        </div>
-      </div>`;
-    document.getElementById('hero-open').addEventListener('click', () => window.open(heroImage.url, '_blank'));
-    document.getElementById('hero-remove').addEventListener('click', async () => {
-      if (heroImage && heroImage.key) {
-        try { await api('/api/admin/images/delete', { method: 'POST', body: JSON.stringify({ key: heroImage.key }) }); } catch {}
-      }
-      heroImage = null;
-      renderHeroImage();
+  function renderHeroGrid() {
+    document.getElementById('hero-count').textContent = heroImages.length;
+    document.getElementById('hero-grid').innerHTML = heroImages
+      .map(
+        (img, idx) => `
+        <div class="image-card">
+          <img src="${img.url}" alt="">
+          <div class="image-actions">
+            <button type="button" data-open="${idx}" title="Ouvrir le lien de la photo">${uiIconAdmin('link')}</button>
+            <button type="button" data-remove="${idx}" title="Supprimer">${uiIconAdmin('trash')}</button>
+          </div>
+        </div>`
+      )
+      .join('');
+    document.querySelectorAll('#hero-grid [data-open]').forEach((btn) => {
+      btn.addEventListener('click', () => window.open(heroImages[Number(btn.dataset.open)].url, '_blank'));
     });
+    document.querySelectorAll('#hero-grid [data-remove]').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const idx = Number(btn.dataset.remove);
+        const [removed] = heroImages.splice(idx, 1);
+        renderHeroGrid();
+        if (removed && removed.key) {
+          try { await api('/api/admin/images/delete', { method: 'POST', body: JSON.stringify({ key: removed.key }) }); } catch {}
+        }
+      });
+    });
+    document.getElementById('hero-dropzone').style.display = heroImages.length >= 5 ? 'none' : (meta.imageStorageConfigured ? 'block' : 'none');
   }
-  renderHeroImage();
+  renderHeroGrid();
 
   function renderInstaGrid() {
     document.getElementById('insta-count').textContent = instaImages.length;
@@ -359,24 +364,26 @@
   heroDropzone.addEventListener('click', () => heroFileInput.click());
   ['dragenter', 'dragover'].forEach((evt) => heroDropzone.addEventListener(evt, (e) => { e.preventDefault(); heroDropzone.classList.add('dragover'); }));
   ['dragleave', 'drop'].forEach((evt) => heroDropzone.addEventListener(evt, (e) => { e.preventDefault(); heroDropzone.classList.remove('dragover'); }));
-  heroDropzone.addEventListener('drop', (e) => uploadHero(e.dataTransfer.files[0]));
-  heroFileInput.addEventListener('change', () => { uploadHero(heroFileInput.files[0]); heroFileInput.value = ''; });
+  heroDropzone.addEventListener('drop', (e) => uploadHero(e.dataTransfer.files));
+  heroFileInput.addEventListener('change', () => { uploadHero(heroFileInput.files); heroFileInput.value = ''; });
 
-  async function uploadHero(file) {
-    if (!file || !meta.imageStorageConfigured) return;
-    try {
-      const formData = new FormData();
-      formData.append('image', file);
-      formData.append('productId', 'site-hero');
-      const { image } = await apiUpload('/api/admin/upload', formData);
-      if (heroImage && heroImage.key) {
-        try { await api('/api/admin/images/delete', { method: 'POST', body: JSON.stringify({ key: heroImage.key }) }); } catch {}
+  async function uploadHero(fileList) {
+    if (!meta.imageStorageConfigured) return;
+    for (const file of Array.from(fileList)) {
+      if (heroImages.length >= 5) {
+        toast('Maximum 5 photos pour le hero.', 'error');
+        break;
       }
-      heroImage = image;
-      renderHeroImage();
-      toast('Photo du hero mise à jour.');
-    } catch (err) {
-      toast(err.message, 'error');
+      try {
+        const formData = new FormData();
+        formData.append('image', file);
+        formData.append('productId', 'site-hero');
+        const { image } = await apiUpload('/api/admin/upload', formData);
+        heroImages.push(image);
+        renderHeroGrid();
+      } catch (err) {
+        toast(err.message, 'error');
+      }
     }
   }
 
@@ -429,7 +436,7 @@
         stat3Label: document.getElementById('h-stat3-label').value.trim(),
         badgeTopText: document.getElementById('h-badge-top').value.trim(),
         badgeBottomText: document.getElementById('h-badge-bottom').value.trim(),
-        image: heroImage,
+        images: heroImages,
       },
       promoBanner: {
         tag: document.getElementById('p-tag').value.trim(),
