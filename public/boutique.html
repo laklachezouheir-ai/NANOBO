@@ -88,7 +88,7 @@
         <div class="filter-group">
           <h4>Prix maximum</h4>
           <input type="range" min="5" max="60" value="60" class="price-range" id="price-range">
-          <div class="price-range-values"><span>5 MAD</span><span id="price-range-val">60 MAD</span></div>
+          <div class="price-range-values"><span id="price-range-min">5 MAD</span><span id="price-range-val">60 MAD</span></div>
         </div>
 
         <div class="filter-group">
@@ -111,11 +111,7 @@
           </select>
         </div>
         <div class="product-grid" id="shop-grid"></div>
-        <div class="pagination">
-          <span class="active">1</span>
-          <a href="#">2</a>
-          <a href="#">3</a>
-        </div>
+        <div class="pagination" id="pagination"></div>
       </div>
     </div>
   </div>
@@ -212,10 +208,29 @@
     saleOnly: params.get('sale') === '1',
     query: params.get('q') || '',
     sort: params.get('sort') || 'popular',
+    page: 1,
   };
 
   if (state.saleOnly) document.getElementById('sale-filter').checked = true;
   document.getElementById('sort-select').value = state.sort;
+
+  const PAGE_SIZE = 8;
+  let filteredList = [];
+
+  /* Le curseur "Prix maximum" était plafonné à 60 MAD en dur (un reste
+     d'avant le passage en dirhams) : tout produit plus cher était filtré
+     silencieusement, sans aucun message. On calcule maintenant sa borne
+     à partir du prix le plus élevé réellement en catalogue. */
+  function initPriceRange() {
+    const prices = PRODUCTS.map((p) => p.price).filter((n) => Number.isFinite(n));
+    const highest = prices.length ? Math.max(...prices) : 60;
+    const sliderMax = Math.max(60, Math.ceil(highest / 10) * 10);
+    const rangeInput = document.getElementById('price-range');
+    rangeInput.max = String(sliderMax);
+    rangeInput.value = String(sliderMax);
+    state.maxPrice = sliderMax;
+    document.getElementById('price-range-val').textContent = sliderMax + ' MAD';
+  }
 
   function updateBanner() {
     const title = document.getElementById('banner-title');
@@ -257,9 +272,39 @@
     if (state.sort === 'price-desc') list.sort((a, b) => b.price - a.price);
     if (state.sort === 'rating') list.sort((a, b) => b.rating - a.rating);
 
+    filteredList = list;
+    state.page = 1;
     document.getElementById('results-count').textContent = list.length + (list.length > 1 ? ' produits' : ' produit');
-    renderProductGrid(list, '#shop-grid');
+    renderCurrentPage();
     updateBanner();
+  }
+
+  function renderCurrentPage() {
+    const start = (state.page - 1) * PAGE_SIZE;
+    renderProductGrid(filteredList.slice(start, start + PAGE_SIZE), '#shop-grid');
+    renderPagination();
+  }
+
+  function renderPagination() {
+    const container = document.getElementById('pagination');
+    const totalPages = Math.ceil(filteredList.length / PAGE_SIZE);
+    if (totalPages <= 1) {
+      container.innerHTML = '';
+      return;
+    }
+    let html = '';
+    for (let i = 1; i <= totalPages; i++) {
+      html += i === state.page ? `<span class="active">${i}</span>` : `<a href="#" data-page="${i}">${i}</a>`;
+    }
+    container.innerHTML = html;
+    container.querySelectorAll('a[data-page]').forEach((a) => {
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        state.page = parseInt(a.dataset.page, 10);
+        renderCurrentPage();
+        document.querySelector('.shop-toolbar').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
   }
 
   function renderCategoryFilters() {
@@ -311,17 +356,19 @@
   });
 
   document.getElementById('reset-filters').addEventListener('click', () => {
-    state.cats = []; state.sizes = []; state.colors = []; state.maxPrice = 60; state.saleOnly = false; state.query = '';
+    const sliderMax = parseInt(document.getElementById('price-range').max, 10) || 60;
+    state.cats = []; state.sizes = []; state.colors = []; state.maxPrice = sliderMax; state.saleOnly = false; state.query = '';
     document.querySelectorAll('.cat-filter').forEach((c) => (c.checked = false));
     document.querySelectorAll('.size-chip.selected, .color-chip.selected').forEach((c) => c.classList.remove('selected'));
     document.getElementById('sale-filter').checked = false;
-    document.getElementById('price-range').value = 60;
-    document.getElementById('price-range-val').textContent = '60 MAD';
+    document.getElementById('price-range').value = sliderMax;
+    document.getElementById('price-range-val').textContent = sliderMax + ' MAD';
     applyFilters();
   });
 
   (async () => {
     await Promise.all([loadProducts(), loadCategories()]);
+    initPriceRange();
     renderCategoryFilters();
     applyFilters();
   })();
