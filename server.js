@@ -14,6 +14,7 @@ const mailer = require('./lib/mailer');
 const r2 = require('./lib/r2');
 const telegram = require('./lib/telegram');
 const insights = require('./lib/insights');
+const claudeVision = require('./lib/claudeVision');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -552,6 +553,16 @@ async function start() {
     if (!telegram.isConfigured()) {
       console.log(
         '⚠️  Bot Telegram non configuré : l’import rapide de produits depuis Telegram sera indisponible tant que TELEGRAM_BOT_TOKEN n’est pas définie.'
+      );
+    }
+    if (!insights.isConfigured()) {
+      console.log(
+        '⚠️  DeepSeek non configuré : le résumé des ventes (admin) sera indisponible tant que DEEPSEEK_API_KEY n’est pas définie.'
+      );
+    }
+    if (!claudeVision.isConfigured()) {
+      console.log(
+        '⚠️  Claude (ANTHROPIC_API_KEY) non configuré : les imports Telegram sans description/catégorie ne pourront pas être analysés depuis la photo (repli sur DeepSeek en texte seul, si configuré).'
       );
     }
   });

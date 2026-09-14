@@ -101,7 +101,8 @@ Nom: Robe rose à fleurs
 Genre: Fille
 Prix: 150
 Prix barré: 220
-Description: Robe légère pour l'été, taille 2-4 ans
+Description courte: Robe légère et fleurie pour l'été
+Description: Robe en tissu léger à motifs floraux, coupe évasée, taille 2-4 ans
 ```
 
 - `Genre` est comparé aux catégories existantes dans `/admin` (par
@@ -134,25 +135,29 @@ Configuration (voir aussi les variables d'environnement plus bas) :
 Sans `TELEGRAM_BOT_TOKEN`, cette fonctionnalité est simplement
 désactivée — le reste du site n'est pas affecté.
 
-### Assistant IA (DeepSeek)
+### Assistant IA (Claude + DeepSeek)
 
-Avec une clé [DeepSeek](https://platform.deepseek.com/) (`DEEPSEEK_API_KEY`),
-trois fonctionnalités s'activent automatiquement :
+Deux clés API optionnelles activent des fonctionnalités d'assistance :
 
-- **Description produit auto-générée** — quand un produit importé depuis
-  Telegram n'a pas de description, une courte description marketing est
-  rédigée automatiquement à partir de son nom.
-- **Détection de catégorie** — si le "Genre" n'est pas précisé (ou pas
-  reconnu) dans la légende Telegram, la catégorie la plus probable est
-  déduite du nom du produit, parmi les catégories réellement configurées
-  dans `/admin/categories`.
-- **Résumé des ventes** — un bouton "Générer un résumé" apparaît sur le
-  tableau de bord (`/admin`), qui analyse les commandes et donne des
-  observations en langage simple (ce qui se vend bien, ce qui stagne...).
+- **`ANTHROPIC_API_KEY`** ([console.anthropic.com](https://console.anthropic.com/)) —
+  Claude **regarde vraiment la photo** d'un produit importé depuis
+  Telegram pour rédiger une **description courte** et une **description
+  détaillée** qui correspondent réellement à ce qui est visible (couleur,
+  motif, coupe...), et proposer la bonne catégorie, parmi celles
+  réellement configurées dans `/admin/categories`.
+- **`DEEPSEEK_API_KEY`** ([platform.deepseek.com](https://platform.deepseek.com/)) —
+  génère le **résumé des ventes** pour l'admin (bouton "Générer une
+  analyse" sur le tableau de bord : statistiques détaillées + conseils
+  concrets pour améliorer les ventes). Sert aussi de **repli texte** pour
+  compléter un produit Telegram si Claude n'est pas configuré (ou a
+  échoué pour cette photo) — dans ce cas, sans analyse de l'image, juste
+  à partir du nom du produit.
 
-DeepSeek utilise un modèle texte uniquement : il ne peut pas "regarder"
-une photo, seulement s'appuyer sur le nom/texte fourni. Sans
-`DEEPSEEK_API_KEY`, ces trois fonctionnalités sont simplement désactivées.
+Dans tous les cas, **l'IA ne remplit que ce que la légende Telegram laisse
+vide** — un champ précisé explicitement (`Nom:`, `Genre:`, `Description
+courte:`, `Description:`...) n'est jamais écrasé. Sans aucune des deux
+clés, ces fonctionnalités sont simplement désactivées — le reste du site
+n'est pas affecté.
 
 ## Structure du projet
 
@@ -165,13 +170,14 @@ nanobo/
 │   ├── mailer.js               # Envoi de l'e-mail de confirmation de commande (Resend)
 │   ├── telegram.js            # Import de produits en brouillon depuis un bot Telegram
 │   ├── deepseek.js            # Appel générique à l'API DeepSeek (texte)
+│   ├── claudeVision.js        # Analyse de photo produit par Claude (vision)
 │   ├── insights.js            # Résumé des ventes pour l'admin (via DeepSeek)
 │   ├── r2.js                  # Upload, optimisation (sharp) & stockage des photos produit
 │   ├── persistence.js         # Rend permanentes les données via R2 (survit aux redéploiements)
 │   ├── config.js              # Mot de passe admin + identifiants Cloudflare R2 + Resend + Telegram + DeepSeek
 │   └── adminAuth.js           # Sessions et middleware d'authentification admin
 ├── data/
-│   ├── products.json          # Catalogue produit (données de démonstration en seed)
+│   ├── products.json          # Amorce vide ([]) — la vraie source de vérité est R2 une fois configuré
 │   └── orders.json            # Commandes enregistrées (généré à l'exécution, non versionné)
 ├── public/                    # Fichiers servis tels quels
 │   ├── index.html, boutique.html, produit.html, panier.html,
@@ -222,7 +228,8 @@ Puis ouvre `http://localhost:3000` (boutique) et `http://localhost:3000/admin`
 | `RESEND_FROM_EMAIL` | Adresse d'expédition des e-mails (ex. `NANOBO <commandes@ton-domaine.com>`). | Non (utilise l'adresse de test `onboarding@resend.dev` par défaut) |
 | `TELEGRAM_BOT_TOKEN` | Jeton du bot Telegram (obtenu via @BotFather), pour l'import rapide de produits. | Non — sans lui, cette fonctionnalité est simplement désactivée |
 | `TELEGRAM_ALLOWED_CHAT_ID` | Identifiant de chat Telegram autorisé à créer des produits (le bot te le révèle à ton premier message). | Non, mais fortement recommandé une fois le bot configuré (sinon il ne crée aucun produit, par sécurité) |
-| `DEEPSEEK_API_KEY` | Clé API [DeepSeek](https://platform.deepseek.com/), pour la description auto-générée, la détection de catégorie et le résumé des ventes. | Non — sans elle, ces fonctionnalités sont simplement désactivées |
+| `DEEPSEEK_API_KEY` | Clé API [DeepSeek](https://platform.deepseek.com/), pour le résumé des ventes et le repli texte (sans photo) des imports Telegram. | Non — sans elle, ces fonctionnalités sont simplement désactivées |
+| `ANTHROPIC_API_KEY` | Clé API [Anthropic](https://console.anthropic.com/) (Claude), pour l'analyse de la photo d'un produit Telegram (description courte/détaillée + catégorie basées sur ce qui est réellement visible). | Non — sans elle, seul le repli texte DeepSeek est utilisé (s'il est configuré) |
 | `PORT` | Port d'écoute du serveur. | Non (3000 par défaut) |
 
 Un compte [Cloudflare](https://dash.cloudflare.com/) gratuit suffit
@@ -272,29 +279,27 @@ l'administration a besoin d'un serveur).
    `R2_BUCKET_NAME`, `R2_PUBLIC_URL`, et si souhaité `RESEND_API_KEY` /
    `RESEND_FROM_EMAIL` pour l'envoi des e-mails de confirmation,
    `TELEGRAM_BOT_TOKEN` / `TELEGRAM_ALLOWED_CHAT_ID` pour l'import de
-   produits depuis Telegram, et `DEEPSEEK_API_KEY` pour la description
-   auto-générée, la détection de catégorie et le résumé des ventes).
+   produits depuis Telegram, `ANTHROPIC_API_KEY` pour l'analyse de photo
+   et `DEEPSEEK_API_KEY` pour le résumé des ventes).
 5. Clique sur **Apply** / **Create Web Service**. Render build et démarre
    l'app, puis fournit une URL publique du type
    `https://nanobo-xxxx.onrender.com`.
 
-**⚠️ Important — disque non persistant.** Comme pour tout service web
-Render sur un plan sans disque persistant, le système de fichiers est
-réinitialisé à chaque déploiement et à chaque redémarrage (y compris la
-mise en veille automatique du plan gratuit après inactivité). Cela signifie
-que **les produits ajoutés/modifiés depuis `/admin` seront perdus au
-prochain redémarrage** tant que `data/` n'est pas sur un disque persistant.
-Deux options :
+**Disque non persistant, mais données quand même permanentes.** Comme
+pour tout service web Render sur un plan sans disque persistant, le
+système de fichiers est réinitialisé à chaque déploiement et à chaque
+redémarrage (y compris la mise en veille automatique du plan gratuit
+après inactivité). Sans précaution particulière, cela effacerait tout ce
+qui est ajouté/modifié depuis `/admin` à chaque redémarrage.
 
-- Pour une utilisation sérieuse : ajoute un [Render Disk](https://render.com/docs/disks)
-  monté sur `./data` (nécessite un plan payant) — le catalogue édité
-  survivra alors aux redéploiements.
-- Pour tester/démontrer : c'est sans conséquence, le catalogue de
-  démonstration (`data/products.json`, committé dans le dépôt) est
-  toujours là au redémarrage.
-
-Les **photos produit**, elles, sont toujours persistantes puisqu'elles
-sont hébergées sur Cloudflare R2, pas sur le disque du serveur.
+C'est pour ça que produits, catégories, commandes et personnalisation de
+l'accueil sont **sauvegardés sur Cloudflare R2** à chaque écriture (voir
+`lib/persistence.js`) — la même solution de stockage déjà utilisée pour
+les photos. Au démarrage, le serveur recharge automatiquement la
+dernière version connue depuis R2 avant de lire le disque local. Tant que
+R2 est configuré (voir `R2_ACCOUNT_ID` et les variables associées
+ci-dessous), rien n'est perdu, même après plusieurs redéploiements
+consécutifs.
 
 ## Personnalisation rapide
 
