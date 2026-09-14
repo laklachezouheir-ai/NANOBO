@@ -13,7 +13,7 @@
 </head>
 <body>
 
-<div class="announce-bar">🎉 Livraison gratuite dès 49 MAD &nbsp;·&nbsp; <strong>Nouvelle collection Printemps</strong> disponible &nbsp;·&nbsp; Retours gratuits sous 30 jours</div>
+<div class="announce-bar">🎉 Livraison gratuite &nbsp;·&nbsp; <strong>Nouvelle collection Printemps</strong> disponible &nbsp;·&nbsp; Retours gratuits sous 30 jours</div>
 
 <header class="site-header">
   <div class="container header-inner">
@@ -131,8 +131,6 @@
   const footerIcons = ['mapPin', 'phone', 'mail', 'clock'];
   document.querySelectorAll('.footer-contact li span').forEach((el, i) => (el.innerHTML = uiIcon(footerIcons[i])));
 
-  const SHIPPING_THRESHOLD = 49;
-  const SHIPPING_COST = 3.9;
   let promoDiscount = 0;
 
   function renderCart() {
@@ -153,7 +151,7 @@
 
     const lines = cart.map((l) => ({ line: l, pr: getProductById(l.id) })).filter((x) => x.pr);
     const subtotal = lines.reduce((s, x) => s + x.pr.price * x.line.qty, 0);
-    const shipping = subtotal >= SHIPPING_THRESHOLD || subtotal === 0 ? 0 : SHIPPING_COST;
+    const shipping = 0; // Livraison gratuite sur toutes les commandes
     const discount = subtotal * promoDiscount;
     const total = Math.max(0, subtotal - discount) + shipping;
 
@@ -204,7 +202,7 @@
           <a href="commande.html" class="btn btn-primary btn-block">Passer la commande</a>
           <div class="trust-badges">
             <div>${uiIcon('shield')} Paiement 100% sécurisé</div>
-            <div>${uiIcon('truck')} Livraison gratuite dès ${SHIPPING_THRESHOLD} MAD</div>
+            <div>${uiIcon('truck')} Livraison gratuite</div>
             <div>${uiIcon('refresh')} Retours gratuits sous 30 jours</div>
           </div>
         </aside>

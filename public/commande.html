@@ -13,7 +13,7 @@
 </head>
 <body>
 
-<div class="announce-bar">🎉 Livraison gratuite dès 49 MAD &nbsp;·&nbsp; <strong>Nouvelle collection Printemps</strong> disponible &nbsp;·&nbsp; Retours gratuits sous 30 jours</div>
+<div class="announce-bar">🎉 Livraison gratuite &nbsp;·&nbsp; <strong>Nouvelle collection Printemps</strong> disponible &nbsp;·&nbsp; Retours gratuits sous 30 jours</div>
 
 <header class="site-header">
   <div class="container header-inner">
@@ -217,14 +217,11 @@
     });
   });
 
-  const SHIPPING_THRESHOLD = 49;
-  const SHIPPING_COST = 3.9;
-
   function renderOrderSummary() {
     const cart = getCart();
     const lines = cart.map((l) => ({ line: l, pr: getProductById(l.id) })).filter((x) => x.pr);
     const subtotal = lines.reduce((s, x) => s + x.pr.price * x.line.qty, 0);
-    const shipping = subtotal === 0 || subtotal >= SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
+    const shipping = 0; // Livraison gratuite sur toutes les commandes
     const total = subtotal + shipping;
 
     document.getElementById('order-summary-list').innerHTML = lines

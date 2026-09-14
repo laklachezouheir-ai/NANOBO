@@ -113,9 +113,6 @@ app.post('/api/telegram/webhook', async (req, res) => {
 
 /* ---------- Commandes (créées depuis le tunnel de commande public) ---------- */
 
-const SHIPPING_THRESHOLD = 49;
-const SHIPPING_COST = 3.9;
-
 app.post('/api/orders', async (req, res) => {
   const { customer, shipping, payment, cart } = req.body || {};
 
@@ -155,7 +152,7 @@ app.post('/api/orders', async (req, res) => {
   }
 
   const subtotal = items.reduce((sum, it) => sum + it.price * it.qty, 0);
-  const shippingCost = subtotal >= SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
+  const shippingCost = 0; // Livraison gratuite sur toutes les commandes
   const discount = 0;
   const total = subtotal + shippingCost - discount;
 
