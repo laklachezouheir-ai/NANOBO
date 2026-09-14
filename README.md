@@ -85,12 +85,25 @@ l'admin).
 ### Import rapide de produits depuis Telegram
 
 Pour accélérer l'ajout de produits repérés chez un fournisseur sur
-Telegram : transfère une photo (avec une légende, idéalement) à ton bot
-Telegram personnel — il télécharge la photo, l'optimise et l'envoie sur
-le même stockage que l'admin (Cloudflare R2), puis crée un **produit en
-brouillon** dans NANOBO. Il ne reste plus qu'à ouvrir la fiche dans
-`/admin`, compléter le prix, la catégorie et la description, puis
-publier.
+Telegram : transfère une ou plusieurs photos du même produit (en album
+si besoin) à ton bot Telegram personnel — il télécharge les photos, les
+optimise et les envoie sur le même stockage que l'admin (Cloudflare R2),
+puis crée un **produit en brouillon** dans NANOBO avec toutes les photos.
+Plusieurs photos envoyées ensemble (même album) créent un seul produit,
+pas un par photo.
+
+Pour préremplir directement le nom, le prix et la description, écris la
+légende de la photo (ou de la première photo de l'album) sous ce format :
+
+```
+Nom: Robe rose à fleurs
+Prix: 150
+Description: Robe légère pour l'été, taille 2-4 ans
+```
+
+Si la légende ne suit pas ce format (ou qu'il n'y en a pas), un
+brouillon est quand même créé, à compléter dans `/admin` : ouvre la
+fiche, complète le prix, la catégorie et la description, puis publie.
 
 Configuration (voir aussi les variables d'environnement plus bas) :
 
