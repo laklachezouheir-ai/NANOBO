@@ -12,6 +12,7 @@ const siteSettings = require('./lib/siteSettingsStore');
 const orders = require('./lib/ordersStore');
 const mailer = require('./lib/mailer');
 const r2 = require('./lib/r2');
+const telegram = require('./lib/telegram');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -79,6 +80,22 @@ app.get('/api/categories', (_req, res) => {
 
 app.get('/api/site-settings', (_req, res) => {
   res.json({ settings: siteSettings.get() });
+});
+
+/* ---------- Import rapide de produits depuis Telegram ---------- */
+
+// Appelé par Telegram (voir setWebhook) à chaque message reçu par le bot.
+// Sécurisé par un identifiant de chat autorisé (voir lib/telegram.js),
+// pas par une session admin classique : ce n'est pas un appel du navigateur.
+app.post('/api/telegram/webhook', async (req, res) => {
+  res.status(200).end(); // Telegram attend une réponse rapide, avant tout traitement
+  if (!telegram.isConfigured()) return;
+  const baseUrl = `${req.protocol}://${req.get('host')}`;
+  try {
+    await telegram.handleUpdate(req.body || {}, baseUrl);
+  } catch (err) {
+    console.error('Erreur traitement webhook Telegram:', err);
+  }
 });
 
 /* ---------- Commandes (créées depuis le tunnel de commande public) ---------- */
@@ -493,6 +510,11 @@ app.listen(PORT, () => {
   if (!mailer.isConfigured()) {
     console.log(
       '⚠️  Resend non configuré : les e-mails de confirmation de commande ne seront pas envoyés tant que RESEND_API_KEY n’est pas définie.'
+    );
+  }
+  if (!telegram.isConfigured()) {
+    console.log(
+      '⚠️  Bot Telegram non configuré : l’import rapide de produits depuis Telegram sera indisponible tant que TELEGRAM_BOT_TOKEN n’est pas définie.'
     );
   }
 });

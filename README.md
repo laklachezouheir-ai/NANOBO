@@ -82,6 +82,34 @@ normalement : elles sont enregistrées et gérables depuis `/admin`, seul
 l'envoi d'e-mail est désactivé (un bandeau d'avertissement l'indique dans
 l'admin).
 
+### Import rapide de produits depuis Telegram
+
+Pour accélérer l'ajout de produits repérés chez un fournisseur sur
+Telegram : transfère une photo (avec une légende, idéalement) à ton bot
+Telegram personnel — il télécharge la photo, l'optimise et l'envoie sur
+le même stockage que l'admin (Cloudflare R2), puis crée un **produit en
+brouillon** dans NANOBO. Il ne reste plus qu'à ouvrir la fiche dans
+`/admin`, compléter le prix, la catégorie et la description, puis
+publier.
+
+Configuration (voir aussi les variables d'environnement plus bas) :
+
+1. Sur Telegram, ouvre une conversation avec **@BotFather**, envoie
+   `/newbot` et suis les instructions — il te donne un jeton
+   (`TELEGRAM_BOT_TOKEN`).
+2. Renseigne `TELEGRAM_BOT_TOKEN` dans les variables d'environnement du
+   serveur, puis envoie n'importe quel message à ton bot sur Telegram :
+   il te répond avec ton identifiant de chat.
+3. Renseigne cet identifiant dans `TELEGRAM_ALLOWED_CHAT_ID` (ça
+   verrouille le bot pour qu'il ne réponde qu'à toi).
+4. Active le webhook en visitant une seule fois cette adresse dans un
+   navigateur (remplace `<TOKEN>` par ton jeton et `<URL_DU_SITE>` par
+   l'adresse de ton site) :
+   `https://api.telegram.org/bot<TOKEN>/setWebhook?url=<URL_DU_SITE>/api/telegram/webhook`
+
+Sans `TELEGRAM_BOT_TOKEN`, cette fonctionnalité est simplement
+désactivée — le reste du site n'est pas affecté.
+
 ## Structure du projet
 
 ```
@@ -91,8 +119,9 @@ nanobo/
 │   ├── productsStore.js       # CRUD produits (data/products.json)
 │   ├── ordersStore.js         # CRUD commandes (data/orders.json)
 │   ├── mailer.js               # Envoi de l'e-mail de confirmation de commande (Resend)
+│   ├── telegram.js            # Import de produits en brouillon depuis un bot Telegram
 │   ├── r2.js                  # Upload, optimisation (sharp) & stockage des photos produit
-│   ├── config.js              # Mot de passe admin + identifiants Cloudflare R2 + Resend
+│   ├── config.js              # Mot de passe admin + identifiants Cloudflare R2 + Resend + Telegram
 │   └── adminAuth.js           # Sessions et middleware d'authentification admin
 ├── data/
 │   ├── products.json          # Catalogue produit (données de démonstration en seed)
@@ -144,6 +173,8 @@ Puis ouvre `http://localhost:3000` (boutique) et `http://localhost:3000/admin`
 | `R2_PUBLIC_URL` | URL publique du bucket (sous-domaine `r2.dev` ou domaine personnalisé). | Idem |
 | `RESEND_API_KEY` | Clé API [Resend](https://resend.com/), pour l'envoi de l'e-mail de confirmation de commande. | Non — sans elle, les commandes sont enregistrées normalement mais aucun e-mail n'est envoyé |
 | `RESEND_FROM_EMAIL` | Adresse d'expédition des e-mails (ex. `NANOBO <commandes@ton-domaine.com>`). | Non (utilise l'adresse de test `onboarding@resend.dev` par défaut) |
+| `TELEGRAM_BOT_TOKEN` | Jeton du bot Telegram (obtenu via @BotFather), pour l'import rapide de produits. | Non — sans lui, cette fonctionnalité est simplement désactivée |
+| `TELEGRAM_ALLOWED_CHAT_ID` | Identifiant de chat Telegram autorisé à créer des produits (le bot te le révèle à ton premier message). | Non, mais fortement recommandé une fois le bot configuré (sinon il ne crée aucun produit, par sécurité) |
 | `PORT` | Port d'écoute du serveur. | Non (3000 par défaut) |
 
 Un compte [Cloudflare](https://dash.cloudflare.com/) gratuit suffit
@@ -191,7 +222,9 @@ l'administration a besoin d'un serveur).
 4. Renseigne les variables d'environnement demandées (`ADMIN_PASSWORD`,
    `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`,
    `R2_BUCKET_NAME`, `R2_PUBLIC_URL`, et si souhaité `RESEND_API_KEY` /
-   `RESEND_FROM_EMAIL` pour l'envoi des e-mails de confirmation).
+   `RESEND_FROM_EMAIL` pour l'envoi des e-mails de confirmation,
+   `TELEGRAM_BOT_TOKEN` / `TELEGRAM_ALLOWED_CHAT_ID` pour l'import de
+   produits depuis Telegram).
 5. Clique sur **Apply** / **Create Web Service**. Render build et démarre
    l'app, puis fournit une URL publique du type
    `https://nanobo-xxxx.onrender.com`.

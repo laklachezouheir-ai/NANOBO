@@ -22,3 +22,7 @@ services:
         sync: false
       - key: RESEND_FROM_EMAIL
         sync: false
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_ALLOWED_CHAT_ID
+        sync: false
