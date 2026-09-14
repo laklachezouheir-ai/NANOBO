@@ -146,7 +146,7 @@ app.post('/api/orders', async (req, res) => {
   const discount = 0;
   const total = subtotal + shippingCost - discount;
 
-  const order = orders.create({
+  const order = await orders.create({
     customer: {
       firstName: String(customer.firstName).trim(),
       lastName: String(customer.lastName).trim(),
@@ -240,18 +240,18 @@ app.get('/api/admin/categories', (_req, res) => {
   res.json({ categories: withCounts });
 });
 
-app.post('/api/admin/categories', (req, res) => {
+app.post('/api/admin/categories', async (req, res) => {
   try {
-    const category = categories.create(req.body || {});
+    const category = await categories.create(req.body || {});
     res.status(201).json({ category });
   } catch (err) {
     res.status(err.code === 'VALIDATION_ERROR' ? 400 : 500).json({ error: err.message });
   }
 });
 
-app.put('/api/admin/categories/:id', (req, res) => {
+app.put('/api/admin/categories/:id', async (req, res) => {
   try {
-    const category = categories.update(req.params.id, req.body || {});
+    const category = await categories.update(req.params.id, req.body || {});
     if (!category) return res.status(404).json({ error: 'Catégorie introuvable.' });
     res.json({ category });
   } catch (err) {
@@ -259,7 +259,7 @@ app.put('/api/admin/categories/:id', (req, res) => {
   }
 });
 
-app.delete('/api/admin/categories/:id', (req, res) => {
+app.delete('/api/admin/categories/:id', async (req, res) => {
   const inUse = products.getAll().filter((p) => p.category === req.params.id).length;
   if (inUse > 0 && req.query.force !== '1') {
     return res.status(409).json({
@@ -268,7 +268,7 @@ app.delete('/api/admin/categories/:id', (req, res) => {
       productCount: inUse,
     });
   }
-  const ok = categories.remove(req.params.id);
+  const ok = await categories.remove(req.params.id);
   if (!ok) return res.status(404).json({ error: 'Catégorie introuvable.' });
   res.json({ ok: true });
 });
@@ -285,9 +285,9 @@ app.get('/api/admin/orders/:id', (req, res) => {
   res.json({ order: o });
 });
 
-app.put('/api/admin/orders/:id/status', (req, res) => {
+app.put('/api/admin/orders/:id/status', async (req, res) => {
   try {
-    const o = orders.updateStatus(req.params.id, req.body?.status);
+    const o = await orders.updateStatus(req.params.id, req.body?.status);
     if (!o) return res.status(404).json({ error: 'Commande introuvable.' });
     res.json({ order: o });
   } catch (err) {
@@ -306,7 +306,7 @@ app.post('/api/admin/orders/:id/resend-email', async (req, res) => {
   }
   try {
     await mailer.sendOrderConfirmation(o);
-    orders.markEmailSent(o.id, true);
+    await orders.markEmailSent(o.id, true);
     res.json({ ok: true });
   } catch (err) {
     console.error('Échec renvoi e-mail de confirmation:', err);
@@ -320,8 +320,8 @@ app.get('/api/admin/site-settings', (_req, res) => {
   res.json({ settings: siteSettings.get() });
 });
 
-app.put('/api/admin/site-settings', (req, res) => {
-  const settings = siteSettings.update(req.body || {});
+app.put('/api/admin/site-settings', async (req, res) => {
+  const settings = await siteSettings.update(req.body || {});
   res.json({ settings });
 });
 
@@ -337,18 +337,18 @@ app.get('/api/admin/products/:id', (req, res) => {
   res.json({ product: p });
 });
 
-app.post('/api/admin/products', (req, res) => {
+app.post('/api/admin/products', async (req, res) => {
   try {
-    const product = products.create(req.body || {});
+    const product = await products.create(req.body || {});
     res.status(201).json({ product });
   } catch (err) {
     res.status(err.code === 'VALIDATION_ERROR' ? 400 : 500).json({ error: err.message });
   }
 });
 
-app.put('/api/admin/products/:id', (req, res) => {
+app.put('/api/admin/products/:id', async (req, res) => {
   try {
-    const product = products.update(req.params.id, req.body || {});
+    const product = await products.update(req.params.id, req.body || {});
     if (!product) return res.status(404).json({ error: 'Produit introuvable.' });
     res.json({ product });
   } catch (err) {
@@ -367,7 +367,7 @@ app.delete('/api/admin/products/:id', async (req, res) => {
     );
   }
 
-  products.remove(req.params.id);
+  await products.remove(req.params.id);
   res.json({ ok: true });
 });
 
@@ -485,36 +485,50 @@ app.get('/api/health', (_req, res) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`NANOBO est lancé sur http://localhost:${PORT}`);
+async function start() {
+  // Récupère la dernière version connue des données (produits, catégories,
+  // commandes, personnalisation de l'accueil) depuis Cloudflare R2 avant de
+  // démarrer : sans ça, chaque redéploiement de code repartirait des
+  // fichiers du dépôt git et effacerait tout ce qui a été ajouté depuis
+  // l'admin ou Telegram. Voir lib/persistence.js.
+  await Promise.all([products.init(), categories.init(), orders.init(), siteSettings.init()]);
 
-  const { password, generated } = config.getAdminPassword();
-  if (generated) {
-    console.log('');
-    console.log('========================================================');
-    console.log(' Mot de passe administrateur généré automatiquement :');
-    console.log(` ${password}`);
-    console.log(' Connectez-vous sur /admin pour gérer le catalogue produit.');
-    console.log(' (Définissez ADMIN_PASSWORD dans .env pour choisir le vôtre.)');
-    console.log('========================================================');
-    console.log('');
-  } else {
-    console.log("Interface d'administration disponible sur /admin.");
-  }
+  app.listen(PORT, () => {
+    console.log(`NANOBO est lancé sur http://localhost:${PORT}`);
 
-  if (!r2.isConfigured()) {
-    console.log(
-      '⚠️  Cloudflare R2 non configuré : l’upload de photos produit sera indisponible tant que R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET_NAME et R2_PUBLIC_URL ne sont pas définis.'
-    );
-  }
-  if (!mailer.isConfigured()) {
-    console.log(
-      '⚠️  Resend non configuré : les e-mails de confirmation de commande ne seront pas envoyés tant que RESEND_API_KEY n’est pas définie.'
-    );
-  }
-  if (!telegram.isConfigured()) {
-    console.log(
-      '⚠️  Bot Telegram non configuré : l’import rapide de produits depuis Telegram sera indisponible tant que TELEGRAM_BOT_TOKEN n’est pas définie.'
-    );
-  }
+    const { password, generated } = config.getAdminPassword();
+    if (generated) {
+      console.log('');
+      console.log('========================================================');
+      console.log(' Mot de passe administrateur généré automatiquement :');
+      console.log(` ${password}`);
+      console.log(' Connectez-vous sur /admin pour gérer le catalogue produit.');
+      console.log(' (Définissez ADMIN_PASSWORD dans .env pour choisir le vôtre.)');
+      console.log('========================================================');
+      console.log('');
+    } else {
+      console.log("Interface d'administration disponible sur /admin.");
+    }
+
+    if (!r2.isConfigured()) {
+      console.log(
+        '⚠️  Cloudflare R2 non configuré : l’upload de photos produit sera indisponible tant que R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET_NAME et R2_PUBLIC_URL ne sont pas définis. Les données (produits, commandes...) ne survivront pas non plus aux redéploiements tant que R2 n’est pas configuré.'
+      );
+    }
+    if (!mailer.isConfigured()) {
+      console.log(
+        '⚠️  Resend non configuré : les e-mails de confirmation de commande ne seront pas envoyés tant que RESEND_API_KEY n’est pas définie.'
+      );
+    }
+    if (!telegram.isConfigured()) {
+      console.log(
+        '⚠️  Bot Telegram non configuré : l’import rapide de produits depuis Telegram sera indisponible tant que TELEGRAM_BOT_TOKEN n’est pas définie.'
+      );
+    }
+  });
+}
+
+start().catch((err) => {
+  console.error('Erreur au démarrage du serveur:', err);
+  process.exit(1);
 });
