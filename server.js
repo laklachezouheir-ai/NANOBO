@@ -416,10 +416,14 @@ app.get('/media/*', async (req, res) => {
   if (!key || !r2.isConfigured()) return res.status(404).end();
   try {
     const object = await r2.getObject(key);
+    // Le type exact de object.Body (flux Node.js vs Blob/ReadableStream web)
+    // peut varier selon l'environnement d'exécution : on le convertit donc
+    // toujours en Buffer via l'API du SDK plutôt que de supposer .pipe(),
+    // pour un comportement fiable quel que soit le runtime (Render inclus).
+    const bytes = await object.Body.transformToByteArray();
     res.setHeader('Content-Type', object.ContentType || 'image/webp');
     res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
-    if (object.ContentLength) res.setHeader('Content-Length', object.ContentLength);
-    object.Body.pipe(res);
+    res.end(Buffer.from(bytes));
   } catch (err) {
     if (err.name === 'NoSuchKey') return res.status(404).end();
     console.error('Erreur lecture R2:', err);
