@@ -46,6 +46,44 @@ async function loadCategories() {
   return CATEGORIES;
 }
 
+/* Remplit dynamiquement les liens de catégories dans le menu (desktop,
+   mobile) et le pied de page, à partir de /api/categories : toute
+   catégorie ajoutée ou supprimée depuis /admin/categories apparaît ainsi
+   immédiatement partout sur le site, sans jamais toucher le HTML des
+   pages à la main. Appelée automatiquement au chargement de ce script. */
+async function renderNavCategories() {
+  if (!CATEGORIES.length) await loadCategories();
+
+  const params = new URLSearchParams(location.search);
+  const currentCat = params.get("cat");
+  const onBoutique = /boutique\.html$/.test(location.pathname);
+
+  const desktopNav = document.getElementById("main-nav");
+  if (desktopNav) {
+    const soldesLink = desktopNav.querySelector('a[href*="sale=1"]');
+    const html = CATEGORIES.map((c) => {
+      const active = onBoutique && currentCat === c.id ? ' class="active"' : "";
+      return `<a href="boutique.html?cat=${c.id}"${active}>${c.label}</a>`;
+    }).join("");
+    if (soldesLink) soldesLink.insertAdjacentHTML("beforebegin", html);
+  }
+
+  const mobileNav = document.getElementById("mobile-nav");
+  if (mobileNav) {
+    const accueilLink = mobileNav.querySelector('a[href="index.html"]');
+    const html = CATEGORIES.map((c) => `<a href="boutique.html?cat=${c.id}">${c.label}</a>`).join("");
+    if (accueilLink) accueilLink.insertAdjacentHTML("afterend", html);
+  }
+
+  const footerList = document.getElementById("footer-boutique-list");
+  if (footerList) {
+    const html = CATEGORIES.map((c) => `<li><a href="boutique.html?cat=${c.id}">${c.label}</a></li>`).join("");
+    footerList.insertAdjacentHTML("afterbegin", html);
+  }
+}
+
+renderNavCategories();
+
 /* Catalogue produit courant, peuplé par loadProducts(). Vide tant que
    l'appel API n'a pas abouti : chaque page doit `await loadProducts()`
    avant de faire appel aux fonctions de rendu ci-dessous. */

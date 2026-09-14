@@ -22,38 +22,5 @@
     "visible": true,
     "createdAt": "2026-09-11T00:00:00.000Z",
     "updatedAt": "2026-09-11T00:00:00.000Z"
-  },
-  {
-    "id": "bebe",
-    "label": "Bébé",
-    "tagline": "0 à 24 mois",
-    "icon": "romper",
-    "palette": "peche",
-    "order": 3,
-    "visible": true,
-    "createdAt": "2026-09-11T00:00:00.000Z",
-    "updatedAt": "2026-09-11T00:00:00.000Z"
-  },
-  {
-    "id": "accessoires",
-    "label": "Accessoires",
-    "tagline": "Petits plus stylés",
-    "icon": "bow",
-    "palette": "violet",
-    "order": 4,
-    "visible": true,
-    "createdAt": "2026-09-11T00:00:00.000Z",
-    "updatedAt": "2026-09-11T00:00:00.000Z"
-  },
-  {
-    "id": "chaussures",
-    "label": "Chaussures",
-    "tagline": "Confort & jeu",
-    "icon": "sneaker",
-    "palette": "menthe",
-    "order": 5,
-    "visible": true,
-    "createdAt": "2026-09-11T00:00:00.000Z",
-    "updatedAt": "2026-09-11T00:00:00.000Z"
   }
 ]

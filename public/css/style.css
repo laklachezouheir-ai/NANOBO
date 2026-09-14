@@ -750,7 +750,8 @@ section {
 /* ---------- 10. Category grid ---------- */
 .category-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(160px, 210px));
+  justify-content: center;
   gap: 24px;
 }
 
@@ -791,15 +792,10 @@ section {
   color: var(--ink-light);
 }
 
-@media (max-width: 900px) {
-  .category-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
 @media (max-width: 560px) {
   .category-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(130px, 160px));
+    gap: 16px;
   }
 }
 

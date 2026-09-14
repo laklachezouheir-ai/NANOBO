@@ -19,12 +19,8 @@
   <div class="container header-inner">
     <button class="nav-toggle" aria-label="Ouvrir le menu"></button>
     <a href="index.html" class="logo">Nano<span>bo</span></a>
-    <nav class="main-nav">
+    <nav class="main-nav" id="main-nav">
       <a href="index.html">Accueil</a>
-      <a href="boutique.html?cat=filles">Filles</a>
-      <a href="boutique.html?cat=garcons">Garçons</a>
-      <a href="boutique.html?cat=bebe">Bébé</a>
-      <a href="boutique.html?cat=accessoires">Accessoires</a>
       <a href="boutique.html?sale=1">Soldes<span class="nav-tag">-30%</span></a>
     </nav>
     <form class="search-bar" onsubmit="event.preventDefault(); location.href='boutique.html?q=' + encodeURIComponent(this.q.value);">
@@ -42,13 +38,8 @@
 <div class="mobile-menu">
   <div class="mobile-menu-panel">
     <button class="mobile-menu-close" aria-label="Fermer"></button>
-    <nav>
+    <nav id="mobile-nav">
       <a href="index.html">Accueil</a>
-      <a href="boutique.html?cat=filles">Filles</a>
-      <a href="boutique.html?cat=garcons">Garçons</a>
-      <a href="boutique.html?cat=bebe">Bébé</a>
-      <a href="boutique.html?cat=accessoires">Accessoires</a>
-      <a href="boutique.html?cat=chaussures">Chaussures</a>
       <a href="boutique.html?sale=1">Soldes</a>
       <a href="a-propos.html">À propos</a>
       <a href="contact.html">Contact</a>
@@ -153,11 +144,7 @@
       </div>
       <div class="footer-col">
         <h4>Boutique</h4>
-        <ul>
-          <li><a href="boutique.html?cat=filles">Filles</a></li>
-          <li><a href="boutique.html?cat=garcons">Garçons</a></li>
-          <li><a href="boutique.html?cat=bebe">Bébé</a></li>
-          <li><a href="boutique.html?cat=accessoires">Accessoires</a></li>
+        <ul id="footer-boutique-list">
           <li><a href="boutique.html?sale=1">Soldes</a></li>
         </ul>
       </div>
