@@ -89,14 +89,26 @@ app.get('/api/site-settings', (_req, res) => {
 // Sécurisé par un identifiant de chat autorisé (voir lib/telegram.js),
 // pas par une session admin classique : ce n'est pas un appel du navigateur.
 app.post('/api/telegram/webhook', async (req, res) => {
-  res.status(200).end(); // Telegram attend une réponse rapide, avant tout traitement
-  if (!telegram.isConfigured()) return;
+  // Important : on attend la fin complète du traitement (téléchargement de
+  // la photo, upload R2, sauvegarde du produit sur R2) AVANT de répondre à
+  // Telegram. Répondre 200 immédiatement puis continuer en arrière-plan
+  // semblait plus rapide, mais sur Render, si le conteneur est recyclé
+  // juste après (redéploiement, ou mise en veille du plan gratuit) avant
+  // que ce travail en arrière-plan soit terminé, la sauvegarde sur R2 est
+  // silencieusement perdue — le produit disparaît alors au démarrage
+  // suivant, sans aucune erreur visible. Le télécharg+upload prend
+  // généralement 1 à 5 secondes, largement dans la tolérance de Telegram.
+  if (!telegram.isConfigured()) {
+    res.status(200).end();
+    return;
+  }
   const baseUrl = `${req.protocol}://${req.get('host')}`;
   try {
     await telegram.handleUpdate(req.body || {}, baseUrl);
   } catch (err) {
     console.error('Erreur traitement webhook Telegram:', err);
   }
+  res.status(200).end();
 });
 
 /* ---------- Commandes (créées depuis le tunnel de commande public) ---------- */
