@@ -66,10 +66,31 @@
 
     <div class="card" id="insights-card" style="display:none">
       <div class="table-toolbar" style="justify-content:space-between">
-        <strong>📊 Résumé des ventes (IA)</strong>
-        <button class="btn btn-outline btn-sm" id="btn-generate-insight">Générer un résumé</button>
+        <strong>📊 Analyse des ventes (IA)</strong>
+        <button class="btn btn-outline btn-sm" id="btn-generate-insight">Générer une analyse</button>
       </div>
-      <p id="insight-text" style="margin-top:8px; color:var(--ink-soft); font-size:0.9rem; line-height:1.5"></p>
+      <div id="insight-empty" style="margin-top:8px; color:var(--ink-light); font-size:0.85rem">Clique sur « Générer une analyse » pour voir tes statistiques détaillées et des conseils pour améliorer tes ventes.</div>
+      <div id="insight-content" style="display:none; margin-top:14px">
+        <div class="kpi-grid" id="insight-kpi-grid" style="margin-bottom:18px"></div>
+
+        <p id="insight-summary" style="color:var(--ink-soft); font-size:0.92rem; line-height:1.6; margin:0 0 18px"></p>
+
+        <div id="insight-tips-wrap" style="margin-bottom:18px">
+          <h4 style="margin:0 0 8px; font-size:0.92rem">💡 Conseils pour améliorer tes ventes</h4>
+          <ul id="insight-tips" style="margin:0; padding-left:20px; font-size:0.9rem; color:var(--ink-soft); line-height:1.7"></ul>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px">
+          <div>
+            <h4 style="margin:0 0 8px; font-size:0.92rem">🏆 Meilleures ventes</h4>
+            <ul id="insight-top-sellers" style="margin:0; padding-left:20px; font-size:0.88rem; color:var(--ink-soft); line-height:1.7"></ul>
+          </div>
+          <div>
+            <h4 style="margin:0 0 8px; font-size:0.92rem">📦 Chiffre d'affaires par catégorie</h4>
+            <ul id="insight-categories" style="margin:0; padding-left:20px; font-size:0.88rem; color:var(--ink-soft); line-height:1.7"></ul>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="card">
@@ -190,20 +211,51 @@
     document.getElementById('filter-status').addEventListener('change', renderTable);
   }
 
+  function formatMAD(n) {
+    return Number(n || 0).toFixed(2).replace('.', ',') + ' MAD';
+  }
+
   async function generateInsight() {
     const btn = document.getElementById('btn-generate-insight');
-    const textEl = document.getElementById('insight-text');
     btn.disabled = true;
     btn.textContent = 'Génération…';
-    textEl.textContent = '';
     try {
-      const { insight } = await api('/api/admin/insights', { method: 'POST' });
-      textEl.textContent = insight;
+      const { summary, tips, stats } = await api('/api/admin/insights', { method: 'POST' });
+
+      document.getElementById('insight-empty').style.display = 'none';
+      document.getElementById('insight-content').style.display = '';
+
+      const trendHtml =
+        stats.trendPercent == null
+          ? ''
+          : `<span style="color:${stats.trendPercent >= 0 ? 'var(--green, #2ec4b6)' : 'var(--red, #e5484d)'}">${stats.trendPercent >= 0 ? '+' : ''}${stats.trendPercent}%</span>`;
+
+      document.getElementById('insight-kpi-grid').innerHTML = `
+        <div class="kpi-card"><span>Chiffre d'affaires total</span><strong>${formatMAD(stats.totalRevenue)}</strong></div>
+        <div class="kpi-card"><span>Commandes</span><strong>${stats.totalOrders}</strong></div>
+        <div class="kpi-card"><span>Panier moyen</span><strong>${formatMAD(stats.avgOrderValue)}</strong></div>
+        <div class="kpi-card"><span>Tendance (7 derniers jours)</span><strong>${trendHtml || '—'}</strong></div>
+      `;
+
+      document.getElementById('insight-summary').textContent = summary;
+
+      const tipsEl = document.getElementById('insight-tips');
+      tipsEl.innerHTML = (tips || []).map((t) => `<li>${t}</li>`).join('') || '<li>Rien à signaler pour l\'instant.</li>';
+
+      const topEl = document.getElementById('insight-top-sellers');
+      topEl.innerHTML = (stats.topSellers || []).length
+        ? stats.topSellers.map((s) => `<li>${s.name} — ${s.qty} vendu${s.qty > 1 ? 's' : ''} (${formatMAD(s.revenue)})</li>`).join('')
+        : '<li>Aucune vente pour le moment.</li>';
+
+      const catEl = document.getElementById('insight-categories');
+      catEl.innerHTML = (stats.categoriesRanked || []).length
+        ? stats.categoriesRanked.map((c) => `<li>${c.label} — ${formatMAD(c.revenue)}</li>`).join('')
+        : '<li>Aucune donnée pour le moment.</li>';
     } catch (err) {
       toast(err.message, 'error');
     } finally {
       btn.disabled = false;
-      btn.textContent = 'Générer un résumé';
+      btn.textContent = 'Générer une analyse';
     }
   }
 
