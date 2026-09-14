@@ -399,6 +399,7 @@ app.post('/api/admin/images/delete', async (req, res) => {
   }
   try {
     await r2.deleteProductImage(key);
+    r2.evictFromMediaCache(key);
     res.json({ ok: true });
   } catch (err) {
     console.error('Erreur suppression R2:', err);
@@ -415,15 +416,10 @@ app.get('/media/*', async (req, res) => {
   const key = req.params[0];
   if (!key || !r2.isConfigured()) return res.status(404).end();
   try {
-    const object = await r2.getObject(key);
-    // Le type exact de object.Body (flux Node.js vs Blob/ReadableStream web)
-    // peut varier selon l'environnement d'exécution : on le convertit donc
-    // toujours en Buffer via l'API du SDK plutôt que de supposer .pipe(),
-    // pour un comportement fiable quel que soit le runtime (Render inclus).
-    const bytes = await object.Body.transformToByteArray();
-    res.setHeader('Content-Type', object.ContentType || 'image/webp');
+    const { buffer, contentType } = await r2.getObject(key);
+    res.setHeader('Content-Type', contentType);
     res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
-    res.end(Buffer.from(bytes));
+    res.end(buffer);
   } catch (err) {
     if (err.name === 'NoSuchKey') return res.status(404).end();
     console.error('Erreur lecture R2:', err);
