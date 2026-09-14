@@ -136,6 +136,15 @@ section {
   white-space: nowrap;
 }
 
+/* Icône de taille fixe : sans ça, une icône SVG sans dimensions propres
+   peut grandir démesurément dès que le bouton s'étire (ex. bouton "Ajouter
+   au panier" en pleine largeur sur une fenêtre étroite). */
+.btn svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
 .btn-primary {
   background: var(--coral);
   color: var(--white);
