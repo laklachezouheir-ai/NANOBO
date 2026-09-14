@@ -92,14 +92,25 @@ puis crée un **produit en brouillon** dans NANOBO avec toutes les photos.
 Plusieurs photos envoyées ensemble (même album) créent un seul produit,
 pas un par photo.
 
-Pour préremplir directement le nom, le prix et la description, écris la
-légende de la photo (ou de la première photo de l'album) sous ce format :
+Pour préremplir directement le nom, la catégorie, le prix et la
+description, écris la légende de la photo (ou de la première photo de
+l'album) sous ce format (chaque ligne est optionnelle) :
 
 ```
 Nom: Robe rose à fleurs
+Genre: Fille
 Prix: 150
+Prix barré: 220
 Description: Robe légère pour l'été, taille 2-4 ans
 ```
+
+- `Genre` est comparé aux catégories existantes dans `/admin` (par
+  exemple "Fille" → catégorie *Filles*, "Garçon" → *Garçons*) — sans
+  tenir compte des majuscules/accents. S'il n'est pas reconnu, le bot le
+  signale et la catégorie reste à choisir manuellement.
+- `Prix barré` affiche un prix barré (promo) au-dessus du prix normal.
+- Le badge **Nouveau** est appliqué automatiquement à tous les produits
+  importés depuis Telegram.
 
 Si la légende ne suit pas ce format (ou qu'il n'y en a pas), un
 brouillon est quand même créé, à compléter dans `/admin` : ouvre la
