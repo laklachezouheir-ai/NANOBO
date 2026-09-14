@@ -406,6 +406,27 @@ app.post('/api/admin/images/delete', async (req, res) => {
   }
 });
 
+// Sert les photos stockées sur R2 via notre propre domaine, plutôt que via
+// l'URL publique R2 (r2.dev) : cette dernière ne charge pas de façon fiable
+// en <img> intégrée depuis un autre site (Cloudflare la réserve aux tests,
+// pas à la production). En passant par notre serveur, le navigateur ne voit
+// qu'une seule origine (nanobo.onrender.com), sans ce souci.
+app.get('/media/*', async (req, res) => {
+  const key = req.params[0];
+  if (!key || !r2.isConfigured()) return res.status(404).end();
+  try {
+    const object = await r2.getObject(key);
+    res.setHeader('Content-Type', object.ContentType || 'image/webp');
+    res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    if (object.ContentLength) res.setHeader('Content-Length', object.ContentLength);
+    object.Body.pipe(res);
+  } catch (err) {
+    if (err.name === 'NoSuchKey') return res.status(404).end();
+    console.error('Erreur lecture R2:', err);
+    res.status(500).end();
+  }
+});
+
 // Messages d'erreur multer (taille/format) renvoyés proprement en JSON.
 app.use((err, _req, res, next) => {
   if (err instanceof multer.MulterError || (err && /image/i.test(err.message))) {
