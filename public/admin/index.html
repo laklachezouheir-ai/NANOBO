@@ -64,6 +64,14 @@
       <div class="kpi-card"><span>Rupture de stock</span><strong id="kpi-outofstock">—</strong></div>
     </div>
 
+    <div class="card" id="insights-card" style="display:none">
+      <div class="table-toolbar" style="justify-content:space-between">
+        <strong>📊 Résumé des ventes (IA)</strong>
+        <button class="btn btn-outline btn-sm" id="btn-generate-insight">Générer un résumé</button>
+      </div>
+      <p id="insight-text" style="margin-top:8px; color:var(--ink-soft); font-size:0.9rem; line-height:1.5"></p>
+    </div>
+
     <div class="card">
       <div class="table-toolbar">
         <input type="search" id="search-input" placeholder="Rechercher un produit, une référence…">
@@ -162,6 +170,11 @@
       catSelect.appendChild(opt);
     });
 
+    if (metaInfo.aiConfigured) {
+      document.getElementById('insights-card').style.display = '';
+      document.getElementById('btn-generate-insight').addEventListener('click', generateInsight);
+    }
+
     if (!metaInfo.imageStorageConfigured) {
       document.getElementById('images-banner').innerHTML = `
         <div class="banner banner-warning">
@@ -175,6 +188,23 @@
     document.getElementById('search-input').addEventListener('input', debounce(renderTable, 200));
     document.getElementById('filter-category').addEventListener('change', renderTable);
     document.getElementById('filter-status').addEventListener('change', renderTable);
+  }
+
+  async function generateInsight() {
+    const btn = document.getElementById('btn-generate-insight');
+    const textEl = document.getElementById('insight-text');
+    btn.disabled = true;
+    btn.textContent = 'Génération…';
+    textEl.textContent = '';
+    try {
+      const { insight } = await api('/api/admin/insights', { method: 'POST' });
+      textEl.textContent = insight;
+    } catch (err) {
+      toast(err.message, 'error');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Générer un résumé';
+    }
   }
 
   async function loadProducts() {

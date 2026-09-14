@@ -134,6 +134,26 @@ Configuration (voir aussi les variables d'environnement plus bas) :
 Sans `TELEGRAM_BOT_TOKEN`, cette fonctionnalité est simplement
 désactivée — le reste du site n'est pas affecté.
 
+### Assistant IA (DeepSeek)
+
+Avec une clé [DeepSeek](https://platform.deepseek.com/) (`DEEPSEEK_API_KEY`),
+trois fonctionnalités s'activent automatiquement :
+
+- **Description produit auto-générée** — quand un produit importé depuis
+  Telegram n'a pas de description, une courte description marketing est
+  rédigée automatiquement à partir de son nom.
+- **Détection de catégorie** — si le "Genre" n'est pas précisé (ou pas
+  reconnu) dans la légende Telegram, la catégorie la plus probable est
+  déduite du nom du produit, parmi les catégories réellement configurées
+  dans `/admin/categories`.
+- **Résumé des ventes** — un bouton "Générer un résumé" apparaît sur le
+  tableau de bord (`/admin`), qui analyse les commandes et donne des
+  observations en langage simple (ce qui se vend bien, ce qui stagne...).
+
+DeepSeek utilise un modèle texte uniquement : il ne peut pas "regarder"
+une photo, seulement s'appuyer sur le nom/texte fourni. Sans
+`DEEPSEEK_API_KEY`, ces trois fonctionnalités sont simplement désactivées.
+
 ## Structure du projet
 
 ```
@@ -144,8 +164,11 @@ nanobo/
 │   ├── ordersStore.js         # CRUD commandes (data/orders.json)
 │   ├── mailer.js               # Envoi de l'e-mail de confirmation de commande (Resend)
 │   ├── telegram.js            # Import de produits en brouillon depuis un bot Telegram
+│   ├── deepseek.js            # Appel générique à l'API DeepSeek (texte)
+│   ├── insights.js            # Résumé des ventes pour l'admin (via DeepSeek)
 │   ├── r2.js                  # Upload, optimisation (sharp) & stockage des photos produit
-│   ├── config.js              # Mot de passe admin + identifiants Cloudflare R2 + Resend + Telegram
+│   ├── persistence.js         # Rend permanentes les données via R2 (survit aux redéploiements)
+│   ├── config.js              # Mot de passe admin + identifiants Cloudflare R2 + Resend + Telegram + DeepSeek
 │   └── adminAuth.js           # Sessions et middleware d'authentification admin
 ├── data/
 │   ├── products.json          # Catalogue produit (données de démonstration en seed)
@@ -199,6 +222,7 @@ Puis ouvre `http://localhost:3000` (boutique) et `http://localhost:3000/admin`
 | `RESEND_FROM_EMAIL` | Adresse d'expédition des e-mails (ex. `NANOBO <commandes@ton-domaine.com>`). | Non (utilise l'adresse de test `onboarding@resend.dev` par défaut) |
 | `TELEGRAM_BOT_TOKEN` | Jeton du bot Telegram (obtenu via @BotFather), pour l'import rapide de produits. | Non — sans lui, cette fonctionnalité est simplement désactivée |
 | `TELEGRAM_ALLOWED_CHAT_ID` | Identifiant de chat Telegram autorisé à créer des produits (le bot te le révèle à ton premier message). | Non, mais fortement recommandé une fois le bot configuré (sinon il ne crée aucun produit, par sécurité) |
+| `DEEPSEEK_API_KEY` | Clé API [DeepSeek](https://platform.deepseek.com/), pour la description auto-générée, la détection de catégorie et le résumé des ventes. | Non — sans elle, ces fonctionnalités sont simplement désactivées |
 | `PORT` | Port d'écoute du serveur. | Non (3000 par défaut) |
 
 Un compte [Cloudflare](https://dash.cloudflare.com/) gratuit suffit
@@ -248,7 +272,8 @@ l'administration a besoin d'un serveur).
    `R2_BUCKET_NAME`, `R2_PUBLIC_URL`, et si souhaité `RESEND_API_KEY` /
    `RESEND_FROM_EMAIL` pour l'envoi des e-mails de confirmation,
    `TELEGRAM_BOT_TOKEN` / `TELEGRAM_ALLOWED_CHAT_ID` pour l'import de
-   produits depuis Telegram).
+   produits depuis Telegram, et `DEEPSEEK_API_KEY` pour la description
+   auto-générée, la détection de catégorie et le résumé des ventes).
 5. Clique sur **Apply** / **Create Web Service**. Render build et démarre
    l'app, puis fournit une URL publique du type
    `https://nanobo-xxxx.onrender.com`.

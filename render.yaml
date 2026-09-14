@@ -26,3 +26,5 @@ services:
         sync: false
       - key: TELEGRAM_ALLOWED_CHAT_ID
         sync: false
+      - key: DEEPSEEK_API_KEY
+        sync: false

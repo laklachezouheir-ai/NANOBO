@@ -13,6 +13,7 @@ const orders = require('./lib/ordersStore');
 const mailer = require('./lib/mailer');
 const r2 = require('./lib/r2');
 const telegram = require('./lib/telegram');
+const insights = require('./lib/insights');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -225,7 +226,26 @@ app.get('/api/admin/meta', (_req, res) => {
     orderStatusLabels: orders.STATUS_LABELS,
     imageStorageConfigured: r2.isConfigured(),
     mailConfigured: mailer.isConfigured(),
+    aiConfigured: insights.isConfigured(),
   });
+});
+
+/* ---------- Résumé des ventes (IA, sur demande) ---------- */
+
+app.post('/api/admin/insights', async (req, res) => {
+  if (!insights.isConfigured()) {
+    return res.status(503).json({
+      code: 'AI_NOT_CONFIGURED',
+      error: "DeepSeek n'est pas configuré sur ce serveur. Ajoutez DEEPSEEK_API_KEY dans les variables d'environnement.",
+    });
+  }
+  try {
+    const result = await insights.generateSalesInsight(orders.getAll(), products.getAll(), categories.getAllSorted());
+    res.json(result);
+  } catch (err) {
+    console.error('Erreur génération résumé des ventes:', err);
+    res.status(500).json({ error: 'Échec de la génération du résumé.' });
+  }
 });
 
 /* ---------- Catégories (CRUD complet) ---------- */
